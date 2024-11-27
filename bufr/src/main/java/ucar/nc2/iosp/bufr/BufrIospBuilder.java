@@ -30,7 +30,7 @@ class BufrIospBuilder {
   private static final boolean warnUnits = false;
 
   private final Group.Builder rootGroup;
-  private final Sequence.Builder recordStructure;
+  private Sequence.Builder recordStructure;
   private final Formatter coordinates = new Formatter();
 
   private int tempNo = 1; // fishy
@@ -75,6 +75,42 @@ class BufrIospBuilder {
     }
   }
 
+  BufrIospBuilder(Message proto, List<BufrConfig> bufrConfigs, Group.Builder root, String location) {
+    this.rootGroup = root;
+
+    // global Attributes
+    AttributeContainerMutable atts = root.getAttributeContainer();
+    atts.addAttribute(CDM.HISTORY, "Read using CDM BufrIosp2");
+    atts.addAttribute("location", location);
+
+    atts.addAttribute("BUFR:categoryName", proto.getLookup().getCategoryName());
+    atts.addAttribute("BUFR:subCategoryName", proto.getLookup().getSubCategoryName());
+    atts.addAttribute("BUFR:centerName", proto.getLookup().getCenterName());
+    atts.addAttribute(BufrIosp2.centerId, proto.ids.getCenterId());
+    atts.addAttribute("BUFR:subCenter", proto.ids.getSubCenterId());
+    atts.addAttribute("BUFR:table", proto.ids.getMasterTableId());
+    atts.addAttribute("BUFR:tableVersion", proto.ids.getMasterTableVersion());
+    atts.addAttribute("BUFR:localTableVersion", proto.ids.getLocalTableVersion());
+    atts.addAttribute("Conventions", "BUFR/CDM");
+    atts.addAttribute("BUFR:edition", proto.is.getBufrEdition());
+
+    String header = proto.getHeader();
+    if (header != null && !header.isEmpty()) {
+      atts.addAttribute("WMO Header", header);
+    }
+
+    for (BufrConfig bufrConfig : bufrConfigs) {
+      String varName = proto.getLookup().getCategoryName(bufrConfig.getMessage().ids.getCategory());
+      Sequence.Builder rs = Sequence.builder().setName(varName);
+      this.rootGroup.addVariable(rs);
+      makeObsRecord(bufrConfig, rs);
+      String coordS = coordinates.toString();
+      if (!coordS.isEmpty()) {
+        rs.addAttribute(new Attribute("coordinates", coordS));
+      }
+    }
+  }
+
   Sequence.Builder getObsStructure() {
     return recordStructure;
   }
@@ -113,6 +149,44 @@ class BufrIospBuilder {
 
       } else { // replication == 1
         addVariable(rootGroup, recordStructure, fld, dkey.replication);
+      }
+    }
+  }
+
+  private void makeObsRecord(BufrConfig bufrConfig, Sequence.Builder rs) {
+    BufrConfig.FieldConverter root = bufrConfig.getRootConverter();
+    for (BufrConfig.FieldConverter fld : root.flds) {
+      DataDescriptor dkey = fld.dds;
+      if (!dkey.isOkForVariable()) {
+        continue;
+      }
+
+      if (dkey.replication == 0) {
+        addSequence(rootGroup, rs, fld);
+
+      } else if (dkey.replication > 1) {
+
+        List<BufrConfig.FieldConverter> subFlds = fld.flds;
+        List<DataDescriptor> subKeys = dkey.subKeys;
+        if (subKeys.size() == 1) { // only one member
+          DataDescriptor subDds = dkey.subKeys.get(0);
+          BufrConfig.FieldConverter subFld = subFlds.get(0);
+          if (subDds.dpi != null) {
+            addDpiStructure(rs, fld, subFld);
+
+          } else if (subDds.replication == 1) { // one member not a replication
+            Variable.Builder v = addVariable(rootGroup, rs, subFld, dkey.replication);
+            v.setSPobject(fld); // set the replicating field as SPI object
+
+          } else { // one member is a replication (two replications in a row)
+            addStructure(rootGroup, rs, fld, dkey.replication);
+          }
+        } else if (subKeys.size() > 1) {
+          addStructure(rootGroup, rs, fld, dkey.replication);
+        }
+
+      } else { // replication == 1
+        addVariable(rootGroup, rs, fld, dkey.replication);
       }
     }
   }

@@ -45,6 +45,7 @@ public class BufrConfig {
   }
 
   private String filename;
+  private Message message;
   private StandardFields.StandardFieldsFromMessage standardFields;
   private FieldConverter rootConverter;
   private int messHash;
@@ -86,6 +87,7 @@ public class BufrConfig {
 
   private BufrConfig(RandomAccessFile raf, Message m) throws IOException {
     this.filename = raf.getLocation();
+    this.message = m;
     this.messHash = m.hashCode();
     this.rootConverter = new FieldConverter(m.ids.getCenterId(), m.getRootDataDescriptor());
     standardFields = StandardFields.extract(m);
@@ -93,6 +95,10 @@ public class BufrConfig {
 
   public String getFilename() {
     return filename;
+  }
+
+  public Message getMessage() {
+    return this.message;
   }
 
   public FieldConverter getRootConverter() {

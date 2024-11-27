@@ -4,6 +4,7 @@
  */
 package ucar.ma2;
 
+import ucar.nc2.Sequence;
 import ucar.nc2.util.Indent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -360,6 +361,24 @@ public class ArraySequence extends ArrayStructure {
           rshape[0] = count;
           StructureMembers membersw = proxym.getStructureMembers().toBuilder(false).build();
           return new ArrayStructureW(membersw, rshape, result.toArray(new StructureData[0]));
+        }
+
+        // add SEQUENCE data type
+        case SEQUENCE: {
+          ArrayList<ArraySequence> result = new ArrayList<>(initial);
+          while (sdataIter.hasNext()) {
+            StructureData sdata = sdataIter.next();
+            StructureMembers.Member realm = sdata.getStructureMembers().findMember(proxym.getName());
+            ArraySequence as = sdata.getArraySequence(realm);
+            result.add(as);
+            count++;
+          }
+          ArraySequence[] da = new ArraySequence[result.size()];
+          int i = 0;
+          for (ArraySequence d : result)
+            da[i++] = d;
+          dataArray = da;
+          break;
         }
       }
     }

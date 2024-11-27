@@ -71,3 +71,7 @@ EUMETSAT.19, 254,    -1,       -1,    -1,   -1, resource:/resources/bufrTables/l
 #
 # EUMETNET OPERA - using -1 !!!!
 #255,  255,       -1,    5,   -1, resource:/resources/bufrTables/local/opera/localtabb_65535_5.csv, opera, resource:/resources/bufrTables/local/opera/localtabd_65535_5.csv, opera,
+#
+# CMA
+# CMA Bufr table
+CMA.23, 38,   0,        23,    -1,   -1, resource:/resources/bufrTables/local/cma/cma_bufr_tableb.csv, wmo_csv, resource:/resources/bufrTables/local/cma/cma_bufr_tabled.csv, wmo_csv

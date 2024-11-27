@@ -5,6 +5,7 @@
 package ucar.nc2.iosp.bufr;
 
 import ucar.nc2.iosp.bufr.tables.BufrTables;
+import ucar.nc2.iosp.bufr.tables.TableA;
 import ucar.nc2.iosp.bufr.tables.TableB;
 import ucar.nc2.iosp.bufr.tables.TableD;
 import javax.annotation.concurrent.Immutable;
@@ -22,6 +23,7 @@ public class TableLookup {
   private static final boolean showErrors = false;
 
   /////////////////////////////////////////
+  private TableA localTableA = null;
   private final TableB localTableB;
   private final TableD localTableD;
 
@@ -53,8 +55,21 @@ public class TableLookup {
     this.mode = BufrTables.Mode.localOverride;
   }
 
+  public TableLookup(BufrIdentificationSection ids, TableA a, TableB b, TableD d) throws IOException {
+    this.wmoTableB = BufrTables.getWmoTableB(ids.getMasterTableVersion());
+    this.wmoTableD = BufrTables.getWmoTableD(ids.getMasterTableVersion());
+    this.localTableA = a;
+    this.localTableB = b;
+    this.localTableD = d;
+    this.mode = BufrTables.Mode.localOverride;
+  }
+
   public String getWmoTableBName() {
     return wmoTableB.getName();
+  }
+
+  public String getLocalTableAName() {
+    return localTableA == null ? "none" : localTableA.getName();
   }
 
   public String getLocalTableBName() {
@@ -73,12 +88,24 @@ public class TableLookup {
     return mode;
   }
 
+  public TableA getLocalTableA() {
+    return localTableA;
+  }
+
   public TableB getLocalTableB() {
     return localTableB;
   }
 
   public TableD getLocalTableD() {
     return localTableD;
+  }
+
+  public TableA.Descriptor getDescriptorTableA(int code) {
+    if (localTableA != null) {
+      return localTableA.getDescriptor(code);
+    } else {
+      return null;
+    }
   }
 
   public TableB.Descriptor getDescriptorTableB(short fxy) {

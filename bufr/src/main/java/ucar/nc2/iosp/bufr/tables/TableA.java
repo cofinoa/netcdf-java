@@ -16,7 +16,9 @@ import java.util.Map;
 public class TableA {
   private static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TableA.class);
   private static final String TABLEA_FILENAME = "wmo/BUFR_37_0_0_TableA_en.xml";
-  private static Map<Integer, String> tableA;
+  private static Map<Integer, Descriptor> tableA;
+  private final String name;
+  private final String location;
 
   /*
    * <BUFR_19_1_1_TableA_en>
@@ -37,7 +39,7 @@ public class TableA {
     String filename = BufrTables.RESOURCE_PATH + TABLEA_FILENAME;
     try (InputStream is = CodeFlagTables.class.getResourceAsStream(filename)) {
 
-      HashMap<Integer, String> map = new HashMap<>(100);
+      HashMap<Integer, Descriptor> map = new HashMap<>(100);
       SAXBuilder builder = new SAXBuilder();
       builder.setExpandEntities(false);
       org.jdom2.Document tdoc = builder.build(is);
@@ -51,7 +53,8 @@ public class TableA {
 
         try {
           int code = Integer.parseInt(codeS);
-          map.put(code, desc);
+          Descriptor descriptor = new Descriptor(code, desc);
+          map.put(code, descriptor);
         } catch (NumberFormatException e) {
           log.debug("NumberFormatException on line " + line + " in " + codeS);
         }
@@ -64,6 +67,18 @@ public class TableA {
     }
   }
 
+  public TableA(String name, String location) {
+    this.name = name;
+    this.location = location;
+    tableA = new HashMap<>();
+  }
+
+  public Descriptor getDescriptor(int code) {
+    if (tableA == null)
+      init();
+    return tableA.get(code);
+  }
+
   /**
    * data category name, from table A
    *
@@ -73,8 +88,92 @@ public class TableA {
   public static String getDataCategory(int cat) {
     if (tableA == null)
       init();
-    String result = tableA.get(cat);
-    return result != null ? result : "Unknown category=" + cat;
+    Descriptor descriptor = tableA.get(cat);
+    return descriptor != null ? descriptor.getDescription() : "Unknown category=" + cat;
+  }
+
+  /**
+   * data category name, from table A
+   *
+   * @param cat data category
+   * @return category name, or null if not found
+   */
+  public static String getDataCategoryName(int cat) {
+    if (tableA == null)
+      init();
+    Descriptor descriptor = tableA.get(cat);
+    return descriptor != null ? descriptor.getName() : "obs_" + cat;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public TableA.Descriptor addDescriptor(int code, String description) {
+    TableA.Descriptor d = new TableA.Descriptor(code, description);
+    tableA.put(code, d);
+    return d;
+  }
+
+  public static class Descriptor implements Comparable<Descriptor> {
+    private int code;
+    private String name;
+    private String description;
+    private boolean localOverride;
+
+    Descriptor(int code, String description) {
+      this.code = code;
+      this.description = description;
+      this.name = "obs_" + String.valueOf(code);
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String getDescription() {
+      return this.description;
+    }
+
+    /**
+     * Get code
+     *
+     * @return Code
+     */
+    public int getCode() {
+      return this.code;
+    }
+
+    public String toString() {
+      return String.valueOf(code) + " " + getName() + " " +
+              this.description;
+    }
+
+    @Override
+    public int compareTo(Descriptor o) {
+      return code - o.getCode();
+    }
+
+    public boolean isLocal() {
+      return ((code >= 102) && (code <= 239));
+    }
+
+    public void setLocalOverride(boolean isOverride) {
+      this.localOverride = isOverride;
+    }
+
+    public boolean getLocalOverride() {
+      return localOverride;
+    }
+
   }
 
 }

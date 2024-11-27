@@ -789,8 +789,65 @@ public class Variable extends CDMNode implements VariableSimpleIF, ProxyReader, 
       List<String> memList = new ArrayList<>();
       memList.add(this.getShortName());
       Structure s = getParentStructure().select(memList);
-      ArrayStructure as = (ArrayStructure) s.read();
-      return as.extractMemberArray(as.findMember(getShortName()));
+
+      // s.read() may return an ArrayObject with sequence data type when the client is sequence.
+      // That's way we need the code to read the data array from it.
+      Array a = s.read();
+      if (a instanceof ArrayStructure) {
+        ArrayStructure as = (ArrayStructure) a;
+        return as.extractMemberArray(as.findMember(getShortName()));
+      } else {
+        IndexIterator iter = a.getIndexIterator();
+        List<Array> arrays = new ArrayList<>();
+        int len = 0;
+        DataType dataType1 = DataType.SEQUENCE;
+        while (iter.hasNext()) {
+          ArrayStructure as = (ArrayStructure) iter.getObjectNext();
+          if (as == null) {
+            arrays.add(null);
+          } else {
+            Array array = as.extractMemberArray(as.findMember(getShortName()));
+            if (len == 0) {
+              dataType1 = array.getDataType();
+            }
+            arrays.add(array);
+            len += (int) array.getSize();
+          }
+        }
+
+        if (arrays.size() == 1) {
+          return arrays.get(0);
+        } else {
+          Array r;
+          IndexIterator rIter;
+          switch (dataType1) {
+            case SEQUENCE:
+            case STRUCTURE:
+              len = arrays.size();
+              r = Array.factory(dataType1, new int[]{len});
+              for (int i = 0; i < len; i++) {
+                if (arrays.get(i).getSize() > 0)
+                  r.setObject(i, arrays.get(i).getObject(0));
+              }
+              break;
+            default:
+              r = Array.factory(dataType1, new int[]{len});
+              rIter = r.getIndexIterator();
+              for (Array array : arrays) {
+                if (array != null) {
+                  IndexIterator aIter = array.getIndexIterator();
+                  while (aIter.hasNext()) {
+                    if (rIter.hasNext()) {
+                      rIter.setObjectNext(aIter.getObjectNext());
+                    }
+                  }
+                }
+              }
+              break;
+          }
+          return r;
+        }
+      }
     }
 
     try {
