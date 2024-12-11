@@ -15,30 +15,30 @@
 # users just like we do for commit author emails.
 # docs/*  docs@example.com
 
-* @tdrwenski
+* @lesserwhirls
 
 #####################
 # top level modules #
 #####################
 
-httpservices/** @DennisHeimbigner @tdrwenski
-netcdf4/** @DennisHeimbigner @tdrwenski
+httpservices/** @DennisHeimbigner @lesserwhirls
+netcdf4/** @DennisHeimbigner @lesserwhirls
 
 ###########################################
 # classpath / not module specific matches #
 ###########################################
 
-**/iosp/nids/** @dopplershift @tdrwenski
+**/iosp/nids/** @dopplershift @lesserwhirls
 
-**/opendap/** @DennisHeimbigner @tdrwenski
-**/dap4/** @DennisHeimbigner @tdrwenski
+**/opendap/** @DennisHeimbigner @lesserwhirls
+**/dap4/** @DennisHeimbigner @lesserwhirls
 
 ######################
 # general file types #
 ######################
 
 *.py @dopplershift
-**/test/**/*.py @tdrwenski
+**/test/**/*.py @lesserwhirls
 
 ####################
 # individual files #

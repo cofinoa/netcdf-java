@@ -6,6 +6,8 @@ import opendap.dap.DAS;
 import opendap.dap.DConnect2;
 import opendap.dap.DDS;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import ucar.unidata.util.test.category.NotPullRequest;
 
 public class TestDodsV {
 
@@ -30,11 +32,9 @@ public class TestDodsV {
   }
 
   @Test
+  @Category(NotPullRequest.class)
   public void testStuff() throws IOException, DAP2Exception {
     // doit("http://localhost:8080/thredds/dodsC/ncdodsTest/conventions/zebra/SPOL_3Volumes.nc");
-    doit("http://iridl.ldeo.columbia.edu/SOURCES/.CAYAN/dods");
+    doit("https://iridl.ldeo.columbia.edu/SOURCES/.CAYAN/dods");
   }
-
-
-
 }
