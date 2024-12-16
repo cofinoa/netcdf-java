@@ -154,13 +154,34 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
     if (!protoMessage.isTablesComplete())
       throw new IllegalStateException("BUFR file has incomplete tables");
 
+    // get all prototype messages - contains different message category in a Bufr data file
+    protoMessages = new ArrayList<>();
+    protoMessages.add(protoMessage);
+    int category = protoMessage.ids.getCategory();
+    while (scanner.hasNext()) {
+      Message message = scanner.next();
+      if (message.ids.getCategory() != category) {
+        protoMessages.add(message);
+        category = message.ids.getCategory();
+      }
+    }
+
     // just get the fields
     config = BufrConfig.openFromMessage(raf, protoMessage, iospParam);
 
     // this fills the netcdf object
-    Construct2 construct = new Construct2(protoMessage, config, ncfile);
-    Structure obsStructure = construct.getObsStructure();
+    if (this.protoMessages.size() == 1) {
+      Construct2 construct = new Construct2(protoMessage, config, ncfile);
+    } else {
+      List<BufrConfig> configs = new ArrayList<>();
+      for (Message message : protoMessages) {
+        configs.add(BufrConfig.openFromMessage(raf, message, iospParam));
+      }
+      Construct2 construct = new Construct2(protoMessage, configs, ncfile);
+    }
+
     ncfile.finish();
+    buildFinish(ncfile);
     isSingle = false;
   }
 
