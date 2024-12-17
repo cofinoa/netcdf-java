@@ -44,10 +44,10 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
     debugIter = debugFlag.isSet("Bufr/iter");
   }
 
-  //private Structure obsStructure;
-  //private Message protoMessage; // prototypical message: all messages in the file must be the same.
+  // private Structure obsStructure;
+  // private Message protoMessage; // prototypical message: all messages in the file must be the same.
   private MessageScanner scanner;
-  private List<Message> protoMessages;  // prototypical messages: the messages with different category.
+  private List<Message> protoMessages; // prototypical messages: the messages with different category.
   private List<RootVariable> rootVariables;
   private HashSet<Integer> messHash;
   private boolean isSingle;

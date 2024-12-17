@@ -824,14 +824,14 @@ public class Variable extends CDMNode implements VariableSimpleIF, ProxyReader, 
             case SEQUENCE:
             case STRUCTURE:
               len = arrays.size();
-              r = Array.factory(dataType1, new int[]{len});
+              r = Array.factory(dataType1, new int[] {len});
               for (int i = 0; i < len; i++) {
                 if (arrays.get(i).getSize() > 0)
                   r.setObject(i, arrays.get(i).getObject(0));
               }
               break;
             default:
-              r = Array.factory(dataType1, new int[]{len});
+              r = Array.factory(dataType1, new int[] {len});
               rIter = r.getIndexIterator();
               for (Array array : arrays) {
                 if (array != null) {

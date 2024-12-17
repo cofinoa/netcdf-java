@@ -153,8 +153,7 @@ public class TableA {
     }
 
     public String toString() {
-      return String.valueOf(code) + " " + getName() + " " +
-              this.description;
+      return String.valueOf(code) + " " + getName() + " " + this.description;
     }
 
     @Override
