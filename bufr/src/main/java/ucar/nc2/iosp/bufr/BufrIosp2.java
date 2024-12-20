@@ -5,10 +5,8 @@
 package ucar.nc2.iosp.bufr;
 
 import java.io.IOException;
-import java.util.Formatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 import org.jdom2.Element;
 import ucar.ma2.Array;
 import ucar.ma2.ArraySequence;
@@ -46,9 +44,11 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
     debugIter = debugFlag.isSet("Bufr/iter");
   }
 
-  private Structure obsStructure;
-  private Message protoMessage; // prototypical message: all messages in the file must be the same.
+  // private Structure obsStructure;
+  // private Message protoMessage; // prototypical message: all messages in the file must be the same.
   private MessageScanner scanner;
+  private List<Message> protoMessages; // prototypical messages: the messages with different category.
+  private List<RootVariable> rootVariables;
   private HashSet<Integer> messHash;
   private boolean isSingle;
   private BufrConfig config;
@@ -69,25 +69,57 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
     super.open(raf, rootGroup.getNcfile(), cancelTask);
 
     scanner = new MessageScanner(raf);
-    protoMessage = scanner.getFirstDataMessage();
+    Message protoMessage = scanner.getFirstDataMessage();
     if (protoMessage == null)
       throw new IOException("No data messages in the file= " + raf.getLocation());
     if (!protoMessage.isTablesComplete())
       throw new IllegalStateException("BUFR file has incomplete tables");
 
+    // get all prototype messages - contains different message category in a Bufr data file
+    protoMessages = new ArrayList<>();
+    protoMessages.add(protoMessage);
+    int category = protoMessage.ids.getCategory();
+    while (scanner.hasNext()) {
+      Message message = scanner.next();
+      if (message.ids.getCategory() != category) {
+        protoMessages.add(message);
+        category = message.ids.getCategory();
+      }
+    }
+
     // just get the fields
     config = BufrConfig.openFromMessage(raf, protoMessage, iospParam);
 
     // this fills the netcdf object
-    new BufrIospBuilder(protoMessage, config, rootGroup, raf.getLocation());
+    if (this.protoMessages.size() == 1) {
+      new BufrIospBuilder(protoMessage, config, rootGroup, raf.getLocation());
+    } else {
+      List<BufrConfig> configs = new ArrayList<>();
+      for (Message message : protoMessages) {
+        configs.add(BufrConfig.openFromMessage(raf, message, iospParam));
+      }
+      new BufrIospBuilder(protoMessage, configs, rootGroup, raf.getLocation());
+    }
     isSingle = false;
   }
 
   @Override
   public void buildFinish(NetcdfFile ncfile) {
-    obsStructure = (Structure) ncfile.findVariable(obsRecordName);
-    // The proto DataDescriptor must have a link to the Sequence object to read nested Sequences.
-    connectSequences(obsStructure.getVariables(), protoMessage.getRootDataDescriptor().getSubKeys());
+    // support multiple root variables in one Bufr data file
+    this.rootVariables = new ArrayList<>();
+    if (this.protoMessages.size() == 1) {
+      Structure obsStructure = (Structure) ncfile.findVariable(obsRecordName);
+      // The proto DataDescriptor must have a link to the Sequence object to read nested Sequences.
+      connectSequences(obsStructure.getVariables(), protoMessages.get(0).getRootDataDescriptor().getSubKeys());
+      this.rootVariables.add(new RootVariable(protoMessages.get(0), obsStructure));
+    } else {
+      for (int i = 0; i < this.protoMessages.size(); i++) {
+        Structure variable = (Structure) ncfile.getVariables().get(i);
+        Message message = protoMessages.get(i);
+        connectSequences(variable.getVariables(), message.getRootDataDescriptor().getSubKeys());
+        this.rootVariables.add(new RootVariable(message, variable));
+      }
+    }
   }
 
   private void connectSequences(List<Variable> variables, List<DataDescriptor> dataDescriptors) {
@@ -116,19 +148,40 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
     super.open(raf, ncfile, cancelTask);
 
     scanner = new MessageScanner(raf);
-    protoMessage = scanner.getFirstDataMessage();
+    Message protoMessage = scanner.getFirstDataMessage();
     if (protoMessage == null)
       throw new IOException("No data messages in the file= " + ncfile.getLocation());
     if (!protoMessage.isTablesComplete())
       throw new IllegalStateException("BUFR file has incomplete tables");
 
+    // get all prototype messages - contains different message category in a Bufr data file
+    protoMessages = new ArrayList<>();
+    protoMessages.add(protoMessage);
+    int category = protoMessage.ids.getCategory();
+    while (scanner.hasNext()) {
+      Message message = scanner.next();
+      if (message.ids.getCategory() != category) {
+        protoMessages.add(message);
+        category = message.ids.getCategory();
+      }
+    }
+
     // just get the fields
     config = BufrConfig.openFromMessage(raf, protoMessage, iospParam);
 
     // this fills the netcdf object
-    Construct2 construct = new Construct2(protoMessage, config, ncfile);
-    obsStructure = construct.getObsStructure();
+    if (this.protoMessages.size() == 1) {
+      Construct2 construct = new Construct2(protoMessage, config, ncfile);
+    } else {
+      List<BufrConfig> configs = new ArrayList<>();
+      for (Message message : protoMessages) {
+        configs.add(BufrConfig.openFromMessage(raf, message, iospParam));
+      }
+      Construct2 construct = new Construct2(protoMessage, configs, ncfile);
+    }
+
     ncfile.finish();
+    buildFinish(ncfile);
     isSingle = false;
   }
 
@@ -136,7 +189,7 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
   public void open(RandomAccessFile raf, NetcdfFile ncfile, Message single) throws IOException {
     this.raf = raf;
 
-    protoMessage = single;
+    Message protoMessage = single;
     protoMessage.getRootDataDescriptor(); // construct the data descriptors, check for complete tables
     if (!protoMessage.isTablesComplete())
       throw new IllegalStateException("BUFR file has incomplete tables");
@@ -145,7 +198,7 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
 
     // this fills the netcdf object
     Construct2 construct = new Construct2(protoMessage, config, ncfile);
-    obsStructure = construct.getObsStructure();
+    Structure obsStructure = construct.getObsStructure();
     isSingle = true;
 
     ncfile.finish();
@@ -175,26 +228,65 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
 
   @Override
   public Array readData(Variable v2, Section section) {
-    findRootSequence();
-    return new ArraySequence(obsStructure.makeStructureMembers(), new SeqIter(), nelems);
+    RootVariable rootVariable = findRootSequence(v2);
+    Structure obsStructure = rootVariable.getVariable();
+    return new ArraySequence(obsStructure.makeStructureMembers(), new SeqIter(rootVariable), nelems);
   }
 
   @Override
   public StructureDataIterator getStructureIterator(Structure s, int bufferSize) {
-    findRootSequence();
-    return isSingle ? new SeqIterSingle() : new SeqIter();
+    RootVariable rootVariable = findRootSequence(s);
+    return isSingle ? new SeqIterSingle(rootVariable) : new SeqIter(rootVariable);
   }
 
-  private void findRootSequence() {
-    this.obsStructure = (Structure) this.ncfile.findVariable(BufrIosp2.obsRecordName);
+  private Structure findRootSequence() {
+    return (Structure) this.ncfile.findVariable(BufrIosp2.obsRecordName);
+  }
+
+  // find root sequence from root variable list
+  private RootVariable findRootSequence(Variable var) {
+    for (RootVariable rootVariable : this.rootVariables) {
+      if (rootVariable.getVariable().getShortName().equals(var.getShortName())) {
+        return rootVariable;
+      }
+    }
+    return null;
+  }
+
+  // root variable contains prototype message and corresponding variable
+  private class RootVariable {
+    private Message protoMessage;
+    private Structure variable;
+
+    public RootVariable(Message message, Structure variable) {
+      this.protoMessage = message;
+      this.variable = variable;
+    }
+
+    public Message getProtoMessage() {
+      return this.protoMessage;
+    }
+
+    public Structure getVariable() {
+      return this.variable;
+    }
   }
 
   private class SeqIter implements StructureDataIterator {
     StructureDataIterator currIter;
     int recnum;
+    // add its own prototype message and observation structure
+    Message protoMessage;
+    Structure obsStructure;
 
-    SeqIter() {
+    SeqIter(Message message, Structure structure) {
+      this.protoMessage = message;
+      this.obsStructure = structure;
       reset();
+    }
+
+    SeqIter(RootVariable rootVariable) {
+      this(rootVariable.protoMessage, rootVariable.variable);
     }
 
     @Override
@@ -286,9 +378,18 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
   private class SeqIterSingle implements StructureDataIterator {
     StructureDataIterator currIter;
     int recnum;
+    // add its own prototype message and observation structure
+    Message protoMessage;
+    Structure obsStructure;
 
-    SeqIterSingle() {
+    SeqIterSingle(Message message, Structure structure) {
+      protoMessage = message;
+      obsStructure = structure;
       reset();
+    }
+
+    SeqIterSingle(RootVariable rootVariable) {
+      this(rootVariable.protoMessage, rootVariable.variable);
     }
 
     @Override
@@ -350,7 +451,7 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
   public String getDetailInfo() {
     Formatter ff = new Formatter();
     ff.format("%s", super.getDetailInfo());
-    protoMessage.dump(ff);
+    protoMessages.get(0).dump(ff);
     ff.format("%n");
     config.show(ff);
     return ff.toString();

@@ -80,6 +80,46 @@ class Construct2 {
     ncfile.finish();
   }
 
+  Construct2(Message proto, List<BufrConfig> bufrConfigs, ucar.nc2.NetcdfFile nc) throws IOException {
+    this.ncfile = nc;
+
+    // global Attributes
+    ncfile.addAttribute(null, new Attribute(CDM.HISTORY, "Read using CDM BufrIosp2"));
+    ncfile.addAttribute(null, "location", nc.getLocation());
+
+    ncfile.addAttribute(null, "BUFR:categoryName", proto.getLookup().getCategoryName());
+    ncfile.addAttribute(null, "BUFR:subCategoryName", proto.getLookup().getSubCategoryName());
+    ncfile.addAttribute(null, "BUFR:centerName", proto.getLookup().getCenterName());
+    ncfile.addAttribute(null, new Attribute("BUFR:category", proto.ids.getCategory()));
+    ncfile.addAttribute(null, new Attribute("BUFR:subCategory", proto.ids.getSubCategory()));
+    ncfile.addAttribute(null, new Attribute("BUFR:localSubCategory", proto.ids.getLocalSubCategory()));
+    ncfile.addAttribute(null, new Attribute(BufrIosp2.centerId, proto.ids.getCenterId()));
+    ncfile.addAttribute(null, new Attribute("BUFR:subCenter", proto.ids.getSubCenterId()));
+    // ncfile.addAttribute(null, "BUFR:tableName", proto.ids.getMasterTableFilename()));
+    ncfile.addAttribute(null, new Attribute("BUFR:table", proto.ids.getMasterTableId()));
+    ncfile.addAttribute(null, new Attribute("BUFR:tableVersion", proto.ids.getMasterTableVersion()));
+    ncfile.addAttribute(null, new Attribute("BUFR:localTableVersion", proto.ids.getLocalTableVersion()));
+    ncfile.addAttribute(null, "Conventions", "BUFR/CDM");
+    ncfile.addAttribute(null, new Attribute("BUFR:edition", proto.is.getBufrEdition()));
+
+    centerId = proto.ids.getCenterId();
+
+    String header = proto.getHeader();
+    if (header != null && !header.isEmpty())
+      ncfile.addAttribute(null, new Attribute("WMO Header", header));
+
+    for (BufrConfig bufrConfig : bufrConfigs) {
+      String varName = proto.getLookup().getCategoryName(bufrConfig.getMessage().ids.getCategory());
+      Sequence rs = new Sequence(ncfile, null, null, varName);
+      makeObsRecord(bufrConfig, rs);
+      String coordS = coordinates.toString();
+      if (!coordS.isEmpty())
+        rs.addAttribute(new Attribute("coordinates", coordS));
+    }
+
+    ncfile.finish();
+  }
+
   Sequence getObsStructure() {
     return recordStructure;
   }
@@ -120,6 +160,45 @@ class Construct2 {
 
       } else { // replication == 1
         addVariable(recordStructure, fld, dkey.replication);
+      }
+    }
+  }
+
+  private void makeObsRecord(BufrConfig bufrConfig, Sequence rs) {
+    ncfile.addVariable(null, rs);
+
+    BufrConfig.FieldConverter root = bufrConfig.getRootConverter();
+    for (BufrConfig.FieldConverter fld : root.flds) {
+      DataDescriptor dkey = fld.dds;
+      if (!dkey.isOkForVariable())
+        continue;
+
+      if (dkey.replication == 0) {
+        addSequence(rs, fld);
+
+      } else if (dkey.replication > 1) {
+
+        List<BufrConfig.FieldConverter> subFlds = fld.flds;
+        List<DataDescriptor> subKeys = dkey.subKeys;
+        if (subKeys.size() == 1) { // only one member
+          DataDescriptor subDds = dkey.subKeys.get(0);
+          BufrConfig.FieldConverter subFld = subFlds.get(0);
+          if (subDds.dpi != null) {
+            addDpiStructure(rs, fld, subFld);
+
+          } else if (subDds.replication == 1) { // one member not a replication
+            Variable v = addVariable(rs, subFld, dkey.replication);
+            v.setSPobject(fld); // set the replicating field as SPI object
+
+          } else { // one member is a replication (two replications in a row)
+            addStructure(rs, fld, dkey.replication);
+          }
+        } else if (subKeys.size() > 1) {
+          addStructure(rs, fld, dkey.replication);
+        }
+
+      } else { // replication == 1
+        addVariable(rs, fld, dkey.replication);
       }
     }
   }

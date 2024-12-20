@@ -127,9 +127,12 @@ public class BufrTableLookup {
     return subcatName;
   }
 
-
   public String getCategoryName() {
     return TableA.getDataCategory(getCategory());
+  }
+
+  public String getCategoryName(int cat) {
+    return TableA.getDataCategoryName(cat);
   }
 
   public String getCategoryNo() {

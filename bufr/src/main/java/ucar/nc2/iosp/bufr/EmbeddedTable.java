@@ -7,6 +7,7 @@ package ucar.nc2.iosp.bufr;
 
 import ucar.ma2.*;
 import ucar.nc2.*;
+import ucar.nc2.iosp.bufr.tables.TableA;
 import ucar.nc2.iosp.bufr.tables.TableB;
 import ucar.nc2.iosp.bufr.tables.TableD;
 import ucar.nc2.iosp.bufr.tables.WmoXmlReader;
@@ -33,14 +34,16 @@ public class EmbeddedTable {
 
   private List<Message> messages = new ArrayList<>();
   private boolean tableRead;
+  private TableA a;
   private TableB b;
   private TableD d;
-  private Structure seq2, seq3, seq4;
+  private Structure seq1, seq2, seq3, seq4;
   private TableLookup tlookup;
 
   EmbeddedTable(Message m, RandomAccessFile raf) {
     this.raf = raf;
     this.ids = m.ids;
+    a = new TableA("embed", raf.getLocation());
     b = new TableB("embed", raf.getLocation());
     d = new TableD("embed", raf.getLocation());
   }
@@ -51,10 +54,19 @@ public class EmbeddedTable {
 
   private void read2() throws IOException {
     Message proto = messages.get(0);
+
+    // make root sub key data descriptors name as null, so the following construct
+    // will have seq2 and seq3 variables
+    DataDescriptor root = proto.getRootDataDescriptor();
+    for (DataDescriptor ds : root.subKeys) {
+      ds.name = null;
+    }
+
     BufrConfig config = BufrConfig.openFromMessage(raf, proto, null);
     Construct2 construct = new Construct2(proto, config, new NetcdfFileSubclass());
 
     Sequence obs = construct.getObsStructure();
+    seq1 = (Structure) obs.findVariable("seq1");
     seq2 = (Structure) obs.findVariable("seq2");
     seq3 = (Structure) obs.findVariable("seq3");
     seq4 = (Structure) seq3.findVariable("seq4");
@@ -81,7 +93,12 @@ public class EmbeddedTable {
       if (showB)
         System.out.printf("%s%n", m);
       if (m.getDataType() == DataType.SEQUENCE) {
-        if (m.getName().equals("seq2")) {
+        if (m.getName().equals("seq1")) {
+          ArraySequence seq = data.getArraySequence(m);
+          StructureDataIterator iter = seq.getStructureDataIterator();
+          while (iter.hasNext())
+            addTableEntryA(iter.next());
+        } else if (m.getName().equals("seq2")) {
           ArraySequence seq = data.getArraySequence(m);
           StructureDataIterator iter = seq.getStructureDataIterator();
           while (iter.hasNext())
@@ -94,6 +111,43 @@ public class EmbeddedTable {
         }
       }
     }
+  }
+
+  private void addTableEntryA(StructureData sdata) {
+    int scale = 0, refVal = 0, width = 0;
+    String entry = "", line1 = "", line2 = "";
+    List<StructureMembers.Member> members = sdata.getMembers();
+    List<Variable> vars = seq1.getVariables();
+    for (int i = 0; i < vars.size(); i++) {
+      Variable v = vars.get(i);
+      StructureMembers.Member m = members.get(i);
+      String data = sdata.getScalarString(m);
+      Attribute att = v.attributes().findAttribute(BufrIosp2.fxyAttName);
+      switch (att.getStringValue()) {
+        case "0-0-1":
+          entry = sdata.getScalarString(m);
+          break;
+        case "0-0-2":
+          line1 = sdata.getScalarString(m);
+          break;
+        case "0-0-3":
+          line2 = sdata.getScalarString(m);
+          break;
+      }
+    }
+
+    int code = Integer.parseInt(entry);
+
+    // split name and description from appended line 1 and 2
+    String desc = (line1 + line2).trim();
+    String name = "";
+    int pos = desc.indexOf(' ');
+    if (pos > 0) {
+      name = desc.substring(0, pos);
+    }
+
+    TableA.Descriptor d = a.addDescriptor(code, desc);
+    d.setName(name);
   }
 
   private void addTableEntryB(StructureData sdata) {
@@ -255,7 +309,7 @@ public class EmbeddedTable {
     if (!tableRead) {
       read2();
       tableRead = true;
-      tlookup = new TableLookup(ids, b, d);
+      tlookup = new TableLookup(ids, a, b, d);
     }
     return tlookup;
   }
