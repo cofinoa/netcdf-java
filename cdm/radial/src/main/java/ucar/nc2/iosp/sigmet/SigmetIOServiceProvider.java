@@ -350,7 +350,8 @@ public class SigmetIOServiceProvider extends AbstractIOServiceProvider {
       var_name = var_name_original;
       int bytesPerBin = 1;
       List<List<Ray>> allRays = volScan.getGroup(data_name[dty]);
-      if (allRays.size() > 0 && allRays.get(0).size() > 0)
+      if (allRays != null && allRays.size() > 0 && allRays.get(0) != null && allRays.get(0).size() > 0
+          && allRays.get(0).get(0) != null)
         bytesPerBin = allRays.get(0).get(0).getBytesPerBin();
 
       DataType dType = calcDataType(dty, bytesPerBin);

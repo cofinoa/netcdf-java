@@ -224,7 +224,7 @@ public class SigmetVolumeScan {
       cur_len = len;
 
       if (nsweep == number_sweeps & rays_count == beg) {
-        return;
+        break;
       }
 
       if (beg_rec) {
