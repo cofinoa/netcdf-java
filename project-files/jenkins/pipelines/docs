@@ -1,0 +1,40 @@
+pipeline {
+    agent  { label 'main' }
+    stages {
+        stage('Build documentation') {
+            steps {
+                sh '''docker run --rm \
+                      -e SRC_DIR=/netcdf-java/docs/src/site \
+                      -e DOCS_UID=$(id -u) \
+                      -v .:/netcdf-java \
+                      -v ./docs/build/site:/site \
+                      docker.unidata.ucar.edu/unidata-jekyll-docs:0.0.4 build
+                '''
+            }
+        }
+        stage('Publish documentation') {
+            agent {
+                docker {
+                    image 'docker.unidata.ucar.edu/thredds-test-environment:latest'
+                    // Run the container on the node specified at the
+                    // top-level of the Pipeline, in the same workspace,
+                    // rather than on a new node entirely:
+                    reuseNode true
+                }
+            }
+            steps {
+                withCredentials([file(credentialsId: 'thredds_vault', variable: 'TV'), file(credentialsId: 'vault_pw', variable: 'AVP')]) {
+                    sh '''#!/bin/bash -l
+                    select-java temurin 11
+                    set +x
+                    ./gradlew \
+                      -Pnexus.username=`get_pw NEXUS_USER` \
+                      -Pnexus.password=`get_pw NEXUS_PW` \
+                      -x :docs:buildJekyllSite \
+                      :docs:publishAsVersionedUserGuide
+                    '''
+                }
+            }
+        }
+    }
+}
