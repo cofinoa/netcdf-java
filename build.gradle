@@ -21,8 +21,6 @@ buildscript {
       filter {
         includeModule 'com.burgstaller', 'okhttp-digest'
         includeModule 'org.ysb33r.gradle', 'grolifant'
-        includeModule 'edu.ucar.unidata.site', 'jekyll-plugin'
-        includeModule 'edu.ucar.unidata.site', 'jekyll-gems'
         includeModule 'edu.ucar.unidata', 'unidata-nexus-gradle'
       }
     }
@@ -35,7 +33,6 @@ buildscript {
     classpath buildPlugins.protobuf
     classpath buildPlugins.depcheck
     classpath buildPlugins.nexus
-    classpath buildPlugins.jekyll
   }
 }
 
