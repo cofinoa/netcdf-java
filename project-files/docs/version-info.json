@@ -4,7 +4,7 @@
   "releases" : [
     {
       "version" : "5.0",
-      "include" : "1",
+      "include" : "0",
       "releaseDate": "2019-07-29",
       "status" : "",
       "docsets": {
@@ -16,7 +16,7 @@
     },
     {
       "version" : "5.1",
-      "include" : "1",
+      "include" : "0",
       "releaseDate": "2019-09-18",
       "status" : "",
       "docsets": {
@@ -28,7 +28,7 @@
     },
     {
       "version" : "5.2",
-      "include" : "1",
+      "include" : "0",
       "releaseDate": "2019-10-23",
       "status" : "",
       "docsets": {
@@ -52,7 +52,7 @@
     },
     {
       "version" : "5.4",
-      "include" : "1",
+      "include" : "0",
       "releaseDate": "2020-12-07",
       "status" : "",
       "docsets": {
@@ -64,7 +64,7 @@
     },
     {
       "version" : "5.5",
-      "include" : "1",
+      "include" : "0",
       "releaseDate": "2022-06-02",
       "status" : "",
       "docsets": {
