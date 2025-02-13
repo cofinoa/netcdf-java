@@ -1,4 +1,4 @@
-# Code table 0: Identification of centres
+# COMMON CODE TABLE C-1: Identification of originating/generating centre (GRIB1, BUFR3)
 0 0 Absent
 1 ammc Melbourne (WMC)
 2 2 Melbourne (WMC)
@@ -64,24 +64,18 @@
 96 96 Athens
 97 97 European Space Agency (ESA)
 98 ecmf European Centre for Medium-Range Weather Forecasts
-99 99 DeBilt, Netherlands
-#100 to 109 Reserved for centres in Region I which are not in the list above
+99 knmi DeBilt, Netherlands
 110 110 Hong-Kong
-#111 to 133 Reserved for centres in Region II which are not in the list above
-#134 to 153 Reserved for centres in Region I which are not listed above
-#154 to 159 Reserved for centres in Region III which are not in the list above
 160 160 US NOAA/NESDIS
-# 161 to 185 Reserved for centres in Region IV which are not in the list above
-# 186 to 198 Reserved for centres in Region I which are not listed above
-# 199 to 209 Reserved for centres in Region V which are not in the list above
+173 nasa US National Aeronautics and Space Administration (NASA)
 195 wiix Indonesia (NMC)
 204 niwa  National Institute of Water and Atmospheric Research (NIWA - New Zealand)
 # 205-209 Reserved
 210 210  Frascati (ESA/ESRIN)
 211 211  Lannion
 212 212  Lisboa
-213 213  Reykjavik
-214 lemm INM
+213 birk Reykjavik
+214 lemm INM Madrid
 215 lssw Zurich
 216 216  Service ARGOS Toulouse
 218 habp Budapest
@@ -90,10 +84,10 @@
 233 eidb Dublin
 235 ingv INGV
 239 crfc CERFAX
-244 vuwien VUWien
-245 knmi KNMI
-246 ifmk IfM-Kiel
-247 hadc Hadley Centre
+244 244 The former Yugoslav Republic of Macedonia (NMC)
+245 245 Ukraine (NMC)
+246 246 Republic of Moldova (NMC)
+247 247 Operational Programme for the Exchange of weather RAdar information (OPERA) - EUMETNET
 250 cosmo COnsortium for Small scale MOdelling (COSMO)
 251 251 Meteorological Cooperation on Operational NWP (MetCoOp)
 252 mpim Max Planck Institute for Meteorology (MPI-M)

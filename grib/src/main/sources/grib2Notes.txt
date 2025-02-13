@@ -438,3 +438,6 @@ download
       tables, but they also have center abbreviations that are needed to understand the localConcepts files.
       It does look like the localConcepts files are local parameters and probably local overrides of WMO parameeters, by
       center. Likely the same as grib1, which sean parsed and added a while ago. So that code could be generalized/reused.
+
+2025-02-14 sarms:
+    - Upgraded ecmwf grib2 tables to eccodes-2.40.0.

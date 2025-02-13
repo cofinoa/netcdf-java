@@ -18,7 +18,7 @@
 16 16 Snow melt (kg m-2)
 17 17 Snow age (d)
 18 18 Absolute humidity (kg m-3)
-19 19 Precipitation type ((Code table 4.201))
+19 19 Precipitation type (Code table 4.201)
 20 20 Integrated liquid water (kg m-2)
 21 21 Condensate (kg/kg)
 22 22 Cloud mixing ratio (kg/kg)
@@ -29,13 +29,13 @@
 27 27 Maximum relative humidity (%)
 28 28 Maximum absolute humidity (kg m-3)
 29 29 Total snowfall (m)
-30 30 Precipitable water category ((Code table 4.202))
+30 30 Precipitable water category (Code table 4.202)
 31 31 Hail (m)
 32 32 Graupel (snow pellets) (kg/kg)
-33 33 Categorical rain ((Code table 4.222))
-34 34 Categorical freezing rain ((Code table 4.222))
-35 35 Categorical ice pellets ((Code table 4.222))
-36 36 Categorical snow ((Code table 4.222))
+33 33 Categorical rain (Code table 4.222)
+34 34 Categorical freezing rain (Code table 4.222)
+35 35 Categorical ice pellets (Code table 4.222)
+36 36 Categorical snow (Code table 4.222)
 37 37 Convective precipitation rate (kg m-2 s-1)
 38 38 Horizontal moisture divergence (kg kg-1 s-1)
 39 39 Per cent frozen precipitation (%)
@@ -62,7 +62,7 @@
 60 60 Snow depth water equivalent (kg m-2)
 61 61 Snow density (kg m-3)
 62 62 Snow evaporation (kg m-2)
-63 63 Reserved 
+63 63 Reserved
 64 64 Total column integrated water vapour (kg m-2)
 65 65 Rain precipitation rate (kg m-2 s-1)
 66 66 Snow precipitation rate (kg m-2 s-1)
@@ -88,7 +88,6 @@
 86 86 Specific snow water content (kg/kg)
 87 87 Stratiform precipitation rate (kg m-2 s-1)
 88 88 Categorical convective precipitation (Code table 4.222)
-# 89 Reserved
 90 90 Total kinematic moisture flux (kg kg-1 m s-1)
 91 91 u-component (zonal) kinematic moisture flux (kg kg-1 m s-1)
 92 92 v-component (meridional) kinematic moisture flux (kg kg-1 m s-1)
@@ -121,6 +120,4 @@
 119 119 Unbalanced component of specific cloud liquid water content (kg kg-1)
 120 120 Unbalanced component of specific cloud ice water content (kg kg-1)
 121 121 Fraction of snow cover (Proportion)
-# 122-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+255 255 Missing
