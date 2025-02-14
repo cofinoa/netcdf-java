@@ -13,3 +13,10 @@
    - unzip and put BUFR_32_0_0_Table(A|C|D)_en.xml, BUFRCREX_32_0_0_(CodeFlag|TableB)_en.xml into resources/bufrTables/wmo
    - modify resources/bufrTables/local/tablelookup.csv
    - modify ucar.nc2.iosp.bufr.tables.CodeFlagTables, ucar.nc2.iosp.bufr.tables.WmoXmlReader, ucar.nc2.iosp.bufr.tables.TableA
+
+2025-02-14 sarms
+ download from https://community.wmo.int/en/activity-areas/wis/2023-11-30
+   - put BUFR4-v41.zip file into src/main/sources/wmo/
+   - unzip and put xml/BUFR_Table(A|C|D)_en.xml, xml/BUFRCREX_(CodeFlag|TableB)_en.xml into resources/bufrTables/wmo (rename to include version in name)
+   - modify resources/bufrTables/local/tablelookup.csv
+   - modify ucar.nc2.iosp.bufr.tables.CodeFlagTables, ucar.nc2.iosp.bufr.tables.WmoXmlReader, ucar.nc2.iosp.bufr.tables.TableA
