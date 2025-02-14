@@ -176,3 +176,5 @@ Notes for grib-1 tables (global)
  12/01/2017 sarms
  - Start using grib1 tables for ecmwf from the package ecCodes
  - src/main/sources/ecmwfGribApi/README.txt is now src/main/sources/ecmwfEcCodes/README.txt
+
+2025-02-13: Updated ecmwfEcCodes tables to version 2.40.0.

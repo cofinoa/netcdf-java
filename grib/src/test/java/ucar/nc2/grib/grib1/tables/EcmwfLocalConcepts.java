@@ -21,6 +21,7 @@ import java.util.*;
  * This is run offline
  */
 public class EcmwfLocalConcepts {
+  private static final String ECCODES_VERSION = "v2.40.0";
   // super hash map keys
   private static final String SHORTNAME_ID = "shortName";
   private static final String DESCRIPTION_ID = "description";
@@ -52,7 +53,7 @@ public class EcmwfLocalConcepts {
       sourcesPath = classPath.split("/grib")[0];
     }
     ecmwfLocalConceptsLoc =
-        sourcesPath + sep + "grib" + sep + "src" + sep + "main" + sep + "sources" + sep + "ecmwfEcCodes" + sep;
+        String.join(File.separator, sourcesPath, "grib", "src", "main", "sources", "ecmwfEcCodes", ECCODES_VERSION, "");
     // initialize input streams for reading the localConcept files
     try {
       parseLocalConcept(ecmwfLocalConceptsLoc + "shortName.def", SHORTNAME_ID);
@@ -185,7 +186,7 @@ public class EcmwfLocalConcepts {
     String grib1Info;
     List<String> tableNums = new ArrayList<>();
     HashMap<String, String> paramInfo;
-    Path dir = Paths.get(ecmwfLocalConceptsLoc.replace("sources/", "resources/resources/grib1/"));
+    Path dir = Paths.get(ecmwfLocalConceptsLoc.replace("sources/", "resources/resources/grib1/")).getParent();
     for (String tableNum : localConcepts.keySet()) {
       tableNums.add(tableNum);
       String fileName = "2.98." + tableNum + ".table";

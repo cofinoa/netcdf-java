@@ -7,7 +7,7 @@
 5 5 Water runoff (kg m-2)
 6 6 Evapotranspiration (kg-2 s-1)
 7 7 Model terrain height (m)
-8 8 Land use ((Code table 4.212))
+8 8 Land use (Code table 4.212)
 9 9 Volumetric soil moisture content (Proportion)
 10 10 Ground heat flux (W m-2)
 11 11 Moisture availability (%)
@@ -38,6 +38,4 @@
 36 36 Tile fraction (Proportion)
 37 37 Tile percentage (%)
 38 38 Soil volumetric ice content (water equivalent) (m3 m-3)
-# 39-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+255 255 Missing

@@ -65,12 +65,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 199 ;
 	}
-#Potential evaporation rate
-'W m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 200 ;
-	}
 #Snow cover
 '%' = {
 	 discipline = 0 ;
@@ -101,7 +95,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 205 ;
 	}
-#Water equivalent of accumulated snow depth
+#Water equivalent of accumulated snow depth (deprecated)
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -149,23 +143,17 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 193 ;
 	}
-#Zonal flux of gravity wave stress
+#Instantaneous eastward gravity wave surface stress
 'N m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 194 ;
 	}
-#Meridional flux of gravity wave stress
+#Instantaneous northward gravity wave surface stress
 'N m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 195 ;
-	}
-#Planetary boundary layer height
-'m' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 196 ;
 	}
 #5-wave geopotential height anomaly
 'gpm' = {
@@ -173,31 +161,31 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 197 ;
 	}
-#Downward short-wave radiation flux
+#Surface downward short-wave radiation flux
 'W m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 192 ;
 	}
-#Upward short-wave radiation flux
+#Surface upward short-wave radiation flux
 'W m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 193 ;
 	}
-#UV index 
+#UV index
 'Numeric' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 196 ;
 	}
-#Downward long-wave radiation flux
+#Surface downward long-wave radiation flux
 'W m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 192 ;
 	}
-#Upward long-wave radiation flux
+#Surface upward long-wave radiation flux
 'W m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -617,13 +605,13 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 201 ;
 	}
-#Latitude of Presure Point
+#Latitude of Pressure Point
 'deg' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 202 ;
 	}
-#Longitude of Presure Point
+#Longitude of Pressure Point
 'deg' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -942,7 +930,7 @@
 	 parameterNumber = 197 ;
 	}
 #Leaf Area Index
-'~' = {
+'Numeric' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 198 ;
@@ -1367,13 +1355,13 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 221 ;
 	}
-#Water Vapor Flux Convergance (Vertical Int)
+#Water Vapor Flux Convergence (Vertical Int)
 'kg m**-2' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 222 ;
 	}
-#Water Condensate Flux Convergance (Vertical Int)
+#Water Condensate Flux Convergence (Vertical Int)
 'kg m**-2' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -1583,7 +1571,7 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 193 ;
 	}
-#Barotropic Kinectic Energy
+#Barotropic Kinetic Energy
 'J kg**-1' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -1602,7 +1590,7 @@
 	 parameterNumber = 196 ;
 	}
 #Ocean Heat Content
-'Jm-2' = {
+'J m**-2' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 197 ;
@@ -1624,6 +1612,282 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 234 ;
+	}
+#Simulated Brightness Temperature for AMSRE on Aqua, Channel 10
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 11 ;
+	}
+#Simulated Brightness Temperature for AMSRE on Aqua, Channel 11
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 12 ;
+	}
+#Simulated Brightness Temperature for AMSRE on Aqua, Channel 12
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 13 ;
+	}
+#Simulated Brightness Temperature for AMSRE on Aqua, Channel 9
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 10 ;
+	}
+#Simulated Brightness Counts for GOES 12, Channel 3
+'Byte' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 4 ;
+	}
+#Simulated Brightness Counts for GOES 12, Channel 4
+'Byte' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 5 ;
+	}
+#Simulated Brightness Temperature for GOES 11, Channel 2
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 6 ;
+	}
+#Simulated Brightness Temperature for GOES 11, Channel 3
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 7 ;
+	}
+#Simulated Brightness Temperature for GOES 11, Channel 4
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 8 ;
+	}
+#Simulated Brightness Temperature for GOES 11, Channel 5
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 9 ;
+	}
+#Simulated Brightness Temperature for GOES 12, Channel 2
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 0 ;
+	}
+#Simulated Brightness Temperature for GOES 12, Channel 3
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 1 ;
+	}
+#Simulated Brightness Temperature for GOES 12, Channel 4
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 2 ;
+	}
+#Simulated Brightness Temperature for GOES 12, Channel 6
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 3 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-10
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 23 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-11
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 24 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-12
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 25 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-13
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 26 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-14
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 27 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-15
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 28 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-16
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 29 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-7
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 20 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-8
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 21 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-16, Band-9
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 22 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-10
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 39 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-11
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 40 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-12
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 41 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-13
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 42 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-14
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 43 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-15
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 44 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-16
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 45 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-7
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 36 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-8
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 37 ;
+	}
+#Simulated Brightness Temperature for ABI GOES-17, Band-9
+'K' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 38 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-16, Band-1
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 14 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-16, Band-2
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 15 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-16, Band-3
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 16 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-16, Band-4
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 17 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-16, Band-5
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 18 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-16, Band-6
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 19 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-17, Band-1
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 30 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-17, Band-2
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 31 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-17, Band-3
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 32 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-17, Band-4
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 33 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-17, Band-5
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 34 ;
+	}
+#Simulated Reflectance Factor for ABI GOES-17, Band-6
+'~' = {
+	 discipline = 3 ;
+	 parameterCategory = 192 ;
+	 parameterNumber = 35 ;
 	}
 #Ventilation Rate
 'm**2 s**-1' = {

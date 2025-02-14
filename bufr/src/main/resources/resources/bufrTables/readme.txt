@@ -373,3 +373,6 @@ BUFR Tables log
 11/23/2014 caron
   download src/main/sources/wmo/BUFRCREX_22_0_1.zip
   from http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
+
+2025-02-14 sarms
+  updated wmo tables to v41
