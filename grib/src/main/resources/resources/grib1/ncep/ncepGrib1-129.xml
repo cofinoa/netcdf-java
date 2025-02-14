@@ -534,22 +534,22 @@
   </parameter>
   <parameter code="235">
     <shortName>MAXREF</shortName>
-    <description>Hourly Maximum of Simulated Reflectivity at 1 km AGL</description>
+    <description>Hourly Maximum of Simulated Reflectivity</description>
     <units>dbZ</units>
   </parameter>
   <parameter code="236">
     <shortName>MXUPHL</shortName>
-    <description>Hourly Maximum of Updraft Helicity over layer 2km to 5 km AGL</description>
+    <description>Hourly Maximum of Updraft Helicity</description>
     <units>m2/s2</units>
   </parameter>
   <parameter code="237">
     <shortName>MAXUVV</shortName>
-    <description>Hourly Maximum of Upward Vertical Velocity in the lowest 400hPa</description>
+    <description>Hourly Maximum of Upward Vertical Velocity</description>
     <units>m/s</units>
   </parameter>
   <parameter code="238">
     <shortName>MAXDVV</shortName>
-    <description>Hourly Maximum of Downward Vertical Velocity in the lowest 400hPa</description>
+    <description>Hourly Maximum of Downward Vertical Velocity</description>
     <units>m/s</units>
   </parameter>
   <parameter code="239">

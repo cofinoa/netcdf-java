@@ -74,3 +74,8 @@
 02/02/2021 sarms
   - updated ncep grib1 tables. Only real change was an addition to table a. Other changes were limited to
     switching from http to https in the source attribute of the parameter tables.
+
+2025-02-14
+  - updated ncep grib1 tables using grib\src\test\java\ucar\nc2\grib\grib1\table\NcepHtmlScraper.java
+  - A few new additions to table a, but most changes are related to parameter descriptions to include level information.
+  
