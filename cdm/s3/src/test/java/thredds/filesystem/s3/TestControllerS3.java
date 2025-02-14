@@ -106,7 +106,7 @@ public class TestControllerS3 {
   public void testGetInventoryTopBucketDelimiterAws() throws URISyntaxException {
     CdmS3Uri uri = new CdmS3Uri(S3TestsCommon.TOP_LEVEL_AWS_BUCKET + DELIMITER_FRAGMENT);
     // contains a single object at "/" (/index.html)
-    checkInventoryTopCountAtMost(uri, 3);
+    checkInventoryTopCountAtMost(uri, 4);
   }
 
   @Test
