@@ -79,11 +79,13 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
     protoMessages = new ArrayList<>();
     protoMessages.add(protoMessage);
     int category = protoMessage.ids.getCategory();
+    List<Integer> categories = new ArrayList<>();
+    categories.add(category);
     while (scanner.hasNext()) {
       Message message = scanner.next();
-      if (message.ids.getCategory() != category) {
+      if (!categories.contains(message.ids.getCategory())) {
         protoMessages.add(message);
-        category = message.ids.getCategory();
+        categories.add(message.ids.getCategory());
       }
     }
 
@@ -158,11 +160,13 @@ public class BufrIosp2 extends AbstractIOServiceProvider {
     protoMessages = new ArrayList<>();
     protoMessages.add(protoMessage);
     int category = protoMessage.ids.getCategory();
+    List<Integer> categories = new ArrayList<>();
+    categories.add(category);
     while (scanner.hasNext()) {
       Message message = scanner.next();
-      if (message.ids.getCategory() != category) {
+      if (!categories.contains(message.ids.getCategory())) {
         protoMessages.add(message);
-        category = message.ids.getCategory();
+        categories.add(message.ids.getCategory());
       }
     }
 
