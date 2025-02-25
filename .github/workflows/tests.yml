@@ -6,13 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # test against latest 8, 11 of zulu and temurin java
-        java-version: [ 8, 11]
-        java-vendor: [ 'zulu', 'temurin' ]
+        # test against latest 8, 11, 17 of zulu and temurin java
+        java-version: [8, 11, 17]
+        java-vendor: ['zulu', 'temurin', 'corretto']
     steps:
       - uses: actions/checkout@v4
       - name: Build and test with Gradle (${{ matrix.java-vendor }} ${{ matrix.java-version }})
-        uses: Unidata/thredds-test-action@v2
+        uses: Unidata/thredds-test-action@v3
         with:
           java-vendor: ${{ matrix.java-vendor }}
           java-version: ${{ matrix.java-version }}
