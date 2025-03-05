@@ -42,26 +42,11 @@ class BufrIospBuilder {
 
     // global Attributes
     AttributeContainerMutable atts = root.getAttributeContainer();
-    atts.addAttribute(CDM.HISTORY, "Read using CDM BufrIosp2");
+    addCommonGlobalAttributes(atts, proto, location);
+
     if (bufrConfig.getFeatureType() != null) {
       atts.addAttribute(CF.FEATURE_TYPE, bufrConfig.getFeatureType().toString());
     }
-    atts.addAttribute("location", location);
-
-    atts.addAttribute("BUFR:categoryName", proto.getLookup().getCategoryName());
-    atts.addAttribute("BUFR:subCategoryName", proto.getLookup().getSubCategoryName());
-    atts.addAttribute("BUFR:centerName", proto.getLookup().getCenterName());
-    atts.addAttribute("BUFR:category", proto.ids.getCategory());
-    atts.addAttribute("BUFR:subCategory", proto.ids.getSubCategory());
-    atts.addAttribute("BUFR:localSubCategory", proto.ids.getLocalSubCategory());
-    atts.addAttribute(BufrIosp2.centerId, proto.ids.getCenterId());
-    atts.addAttribute("BUFR:subCenter", proto.ids.getSubCenterId());
-    atts.addAttribute("BUFR:table", proto.ids.getMasterTableId());
-    atts.addAttribute("BUFR:tableVersion", proto.ids.getMasterTableVersion());
-    atts.addAttribute("BUFR:localTableVersion", proto.ids.getLocalTableVersion());
-    atts.addAttribute("Conventions", "BUFR/CDM");
-    atts.addAttribute("BUFR:edition", proto.is.getBufrEdition());
-
 
     String header = proto.getHeader();
     if (header != null && !header.isEmpty()) {
@@ -80,12 +65,30 @@ class BufrIospBuilder {
 
     // global Attributes
     AttributeContainerMutable atts = root.getAttributeContainer();
+    addCommonGlobalAttributes(atts, proto, location);
+
+    for (BufrConfig bufrConfig : bufrConfigs) {
+      String varName = proto.getLookup().getCategoryName(bufrConfig.getMessage().ids.getCategory());
+      Sequence.Builder rs = Sequence.builder().setName(varName);
+      this.rootGroup.addVariable(rs);
+      makeObsRecord(bufrConfig, rs);
+      String coordS = coordinates.toString();
+      if (!coordS.isEmpty()) {
+        rs.addAttribute(new Attribute("coordinates", coordS));
+      }
+    }
+  }
+
+  private void addCommonGlobalAttributes(AttributeContainerMutable atts, Message proto, String location) {
     atts.addAttribute(CDM.HISTORY, "Read using CDM BufrIosp2");
     atts.addAttribute("location", location);
 
     atts.addAttribute("BUFR:categoryName", proto.getLookup().getCategoryName());
     atts.addAttribute("BUFR:subCategoryName", proto.getLookup().getSubCategoryName());
     atts.addAttribute("BUFR:centerName", proto.getLookup().getCenterName());
+    atts.addAttribute("BUFR:category", proto.ids.getCategory());
+    atts.addAttribute("BUFR:subCategory", proto.ids.getSubCategory());
+    atts.addAttribute("BUFR:localSubCategory", proto.ids.getLocalSubCategory());
     atts.addAttribute(BufrIosp2.centerId, proto.ids.getCenterId());
     atts.addAttribute("BUFR:subCenter", proto.ids.getSubCenterId());
     atts.addAttribute("BUFR:table", proto.ids.getMasterTableId());
@@ -97,17 +100,6 @@ class BufrIospBuilder {
     String header = proto.getHeader();
     if (header != null && !header.isEmpty()) {
       atts.addAttribute("WMO Header", header);
-    }
-
-    for (BufrConfig bufrConfig : bufrConfigs) {
-      String varName = proto.getLookup().getCategoryName(bufrConfig.getMessage().ids.getCategory());
-      Sequence.Builder rs = Sequence.builder().setName(varName);
-      this.rootGroup.addVariable(rs);
-      makeObsRecord(bufrConfig, rs);
-      String coordS = coordinates.toString();
-      if (!coordS.isEmpty()) {
-        rs.addAttribute(new Attribute("coordinates", coordS));
-      }
     }
   }
 
