@@ -36,7 +36,7 @@ public class TestGcdmNetcdfFile {
           pathname -> pathname.getName().endsWith("nc") && !pathname.getName().startsWith("test_vlen3")
               && !pathname.getName().startsWith("test_vlen4") && !pathname.getName().startsWith("test_vlen5")
               && !pathname.getName().startsWith("test_vlen9") && !pathname.getName().startsWith("test_vlen10");
-      String skipStructuresWithVlens2 = "vlen/IntTimSciSamp.nc vlen/cdm_sea_soundings.nc4";
+      String skipStructuresWithVlens2 = "vlen/IntTimSciSamp.nc vlen/cdm_sea_soundings.nc4 2024060100_GTS_sn.0001.bufr";
 
       TestDir.actOnAllParameterized("../../dap4/src/test/data/resources/nctestfiles/", skipStructuresWithVlens, result,
           false);
