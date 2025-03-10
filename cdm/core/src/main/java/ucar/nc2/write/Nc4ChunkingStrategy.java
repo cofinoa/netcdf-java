@@ -5,7 +5,9 @@
 
 package ucar.nc2.write;
 
+import ucar.ma2.DataType;
 import ucar.nc2.Attribute;
+import ucar.nc2.Structure;
 import ucar.nc2.Variable;
 import ucar.nc2.constants.CDM;
 import javax.annotation.concurrent.Immutable;
@@ -52,7 +54,20 @@ public abstract class Nc4ChunkingStrategy implements Nc4Chunking {
 
   @Override
   public int getDeflateLevel(Variable v) {
-    return deflateLevel;
+    return isCompressible(v) ? deflateLevel : 0;
+  }
+
+  // compression should not be applied to variable-sized variables
+  // see Unidata/netcdf-java#1420
+  private boolean isCompressible(Variable v) {
+    if (v.getDataType().equals(DataType.STRING) || v.isVariableLength())
+      return false;
+
+    if (v.getDataType().equals(DataType.STRUCTURE)) {
+      Structure s = (Structure) v;
+      return s.getVariables().stream().allMatch(this::isCompressible);
+    }
+    return true;
   }
 
   @Override
