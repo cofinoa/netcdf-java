@@ -1,0 +1,20 @@
+apply from: "$rootDir/gradle/any/dependencies.gradle"
+apply from: "$rootDir/gradle/any/java-library.gradle"
+
+description = 'Java bindings for decoding libaec compression using JNA'
+ext.title = 'libaec compression decoder using JNA'
+
+dependencies {
+    api enforcedPlatform(project(':netcdf-java-platform'))
+    testImplementation enforcedPlatform(project(':netcdf-java-testing-platform'))
+
+    api 'net.java.dev.jna:jna'
+    implementation 'org.slf4j:slf4j-api'
+
+    testImplementation project(':cdm-test-utils')
+
+    testImplementation 'com.google.truth:truth'
+
+    testRuntimeOnly project(':native-compression:libaec-native')
+    testRuntimeOnly 'ch.qos.logback:logback-classic'
+}
