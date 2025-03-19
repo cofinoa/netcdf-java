@@ -1,0 +1,93 @@
+#
+# Build libaec on windows (x86-64), linux (x86-64, aarch64), and mac
+# (x86-64, aarch64) and combine into a single artifact for use by
+# netCDF-Java.
+#
+# The version of libaec is used twice in this workflow - once in the
+# ref of the checkout, and once in the name of the final artifact.
+# Be sure to update both places if incrementing the version of
+# libaec being used.
+#
+name: libaec build using CMake on multiple platforms
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+
+      matrix:
+        build_env: [
+          {os: ubuntu-24.04, c_compiler: gcc, lib: 'src/libaec.so', jna_id: 'linux-x86-64'},
+          {os: ubuntu-24.04-arm, c_compiler: gcc, lib: 'src/libaec.so', jna_id: 'linux-aarch64'},
+          {os: windows-2022, c_compiler: cl, lib: 'src\\Release\\aec.dll', jna_id: 'win32-x86-64'},
+          {os: macos-14, c_compiler: clang, lib: 'src/libaec.dylib', jna_id: 'darwin-aarch64'},
+          {os: macos-13, c_compiler: clang, lib: 'src/libaec.dylib', jna_id: 'darwin-x86-64'},
+        ]
+        build_type: [Release]
+
+    runs-on: ${{ matrix.build_env.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'MathisRosenhauer/libaec'
+          ref: 'v1.1.3'
+
+      - name: Set shared values
+        id: strings
+        shell: bash
+        run: |
+          echo "build-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-dir }}
+          -DCMAKE_C_COMPILER=${{ matrix.build_env.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -S ${{ github.workspace }}
+
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-dir }} --config ${{ matrix.build_type }}
+
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-dir }}
+        run: ctest --build-config ${{ matrix.build_type }}
+
+      - name: Prepare ${{ matrix.build_env.jna_id }} library for archive
+        shell: bash
+        working-directory: ${{ steps.strings.outputs.build-dir }}
+        run: |
+          mkdir resources
+          mkdir resources/${{ matrix.build_env.jna_id }}
+          cp ../LICENSE.txt resources/${{ matrix.build_env.jna_id }}/libaec-LICENSE.txt
+          cp ${{ matrix.build_env.lib }} resources/${{ matrix.build_env.jna_id }}
+
+      - name: Upload ${{ matrix.build_env.jna_id }} artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libaec-${{ matrix.build_env.jna_id }}
+          path: ${{ steps.strings.outputs.build-dir }}/resources
+
+  merge:
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: libaec-*
+          path: native/resources/
+          merge-multiple: true
+
+      - name: Display contents of the combined native artifact
+        run: find native/ -type f -exec ls -lh {} \;
+
+      - name: Upload merged artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libaec-native-1.1.3-${{ github.sha }}
+          path: native/
