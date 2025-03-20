@@ -61,3 +61,6 @@ thredds.tgz
 
 # dependency check NVD files
 project-files/owasp-dependency-check/nvd
+
+# native binary distribution files
+project-files/native
