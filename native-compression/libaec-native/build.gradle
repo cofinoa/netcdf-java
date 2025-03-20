@@ -1,0 +1,52 @@
+import java.security.DigestInputStream
+import java.security.MessageDigest
+
+apply from: "$rootDir/gradle/any/java-library.gradle"
+
+description = 'Jar distribution of native libraries for libaec compression.'
+ext.title = 'Native libraries for libaec.'
+
+// zip file produced by GitHub workflow
+def libaecNative = 'libaec-native-1.1.3-1ef165d829f330d72d199d3c4655c327d339604d.zip'
+
+// sha256 checksum from GitHub workflow output
+def expectedChecksum = 'f8273bf7eef9aef6bf4766301d978a2dea7cefcad72a2d7c2d655299d5847a4b'
+
+def resourceZip = new File("${rootDir}/project-files/native/libaec/${libaecNative}")
+
+def fetchNativeResources = tasks.register("fetchNativeResources") {
+    outputs.file resourceZip
+    doLast {
+        if (!resourceZip.exists()) {
+            def actualChecksum = ''
+            def resourceUrl = "https://downloads.unidata.ucar.edu/netcdf-java/native/libaec/${libaecNative}"
+            new URL(resourceUrl).withInputStream {
+                ips ->
+                    DigestInputStream dips = new DigestInputStream(ips, MessageDigest.getInstance('SHA-256'))
+                    resourceZip.withOutputStream { ops ->
+                        ops << dips
+                    }
+                    actualChecksum = dips.getMessageDigest().digest().encodeHex().toString()
+            }
+            if (actualChecksum != expectedChecksum) {
+                resourceZip.delete()
+                String msg =
+                        String.format('Error: checksum on libaec.zip does not match expected ' +
+                                'value.\n  Expected: %s\n  Actual: %s\n', expectedChecksum, actualChecksum)
+                throw new RuntimeException(msg);
+            }
+        }
+    }
+}
+
+def processNativeResources = tasks.register("processNativeResources", Copy) {
+    inputs.file resourceZip
+    from zipTree(resourceZip)
+    destinationDir(file("$buildDir/resources/main"))
+    eachFile { details ->
+        details.path = details.path.replaceFirst("resources/", "")
+    }
+    dependsOn(fetchNativeResources)
+}
+
+processResources.dependsOn(processNativeResources)
