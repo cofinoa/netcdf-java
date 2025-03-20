@@ -1,7 +1,10 @@
 on:
   workflow_dispatch:
   pull_request:
-
+    paths:
+      - 'native-compression/libaec-jna/**'
+      - 'native-compression/libaec-native/**'
+      - 'native-compression/build.gradle'
 
 jobs:
   tests:
