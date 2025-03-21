@@ -575,7 +575,7 @@ public class NetcdfFiles {
       try {
         if (suffix.equalsIgnoreCase("Z")) {
           // Z file can only contain one file - copy the whole thing
-          try (InputStream in = new UncompressInputStream(new FileInputStream(baseFilename))) {
+          try (InputStream in = new UncompressInputStream(new BufferedInputStream(new FileInputStream(baseFilename)))) {
             copy(in, fout, 100000);
           }
           if (NetcdfFile.debugCompress) {
@@ -584,7 +584,7 @@ public class NetcdfFiles {
 
         } else if (suffix.equalsIgnoreCase("zip")) {
           // find specified zip entry, if it exists
-          try (ZipInputStream zin = new ZipInputStream(new FileInputStream(baseFilename))) {
+          try (ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(baseFilename)))) {
             // If a desired zipentry ID was appended to method's filename parameter, then itempath
             // is of length > 1 and ID starts at itempath char offset 1.
             String itemName = (itempath.length() > 1) ? itempath.substring(1) : "";
@@ -606,7 +606,7 @@ public class NetcdfFiles {
 
         } else if (suffix.equalsIgnoreCase("bz2")) {
           // bz2 can only contain one file - copy the whole thing
-          try (InputStream in = new CBZip2InputStream(new FileInputStream(baseFilename), true)) {
+          try (InputStream in = new CBZip2InputStream(new BufferedInputStream(new FileInputStream(baseFilename)), true)) {
             copy(in, fout, 100000);
           }
           if (NetcdfFile.debugCompress)
@@ -614,7 +614,7 @@ public class NetcdfFiles {
 
         } else if (suffix.equalsIgnoreCase("gzip") || suffix.equalsIgnoreCase("gz")) {
           // gzip/gz concatenates streams - copy the whole thing
-          try (InputStream in = new GZIPInputStream(new FileInputStream(baseFilename))) {
+          try (InputStream in = new GZIPInputStream(new BufferedInputStream(new FileInputStream(baseFilename)))) {
             copy(in, fout, 100000);
           }
 
