@@ -606,7 +606,8 @@ public class NetcdfFiles {
 
         } else if (suffix.equalsIgnoreCase("bz2")) {
           // bz2 can only contain one file - copy the whole thing
-          try (InputStream in = new CBZip2InputStream(new BufferedInputStream(new FileInputStream(baseFilename)), true)) {
+          try (InputStream in =
+              new CBZip2InputStream(new BufferedInputStream(new FileInputStream(baseFilename)), true)) {
             copy(in, fout, 100000);
           }
           if (NetcdfFile.debugCompress)
