@@ -1,10 +1,16 @@
 /*
- * Copyright (c) 1998-2021 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
 package ucar.nc2.grib.grib2;
 
+import static edu.ucar.unidata.compression.jna.libaec.LibAec.AEC_OK;
+
+import com.sun.jna.Memory;
+import edu.ucar.unidata.compression.jna.libaec.LibAec;
+import edu.ucar.unidata.compression.jna.libaec.LibAec.AecStream;
+import java.nio.ByteBuffer;
 import javax.annotation.Nullable;
 import ucar.nc2.grib.GribNumbers;
 import ucar.nc2.grib.GribUtils;
@@ -65,7 +71,7 @@ public class Grib2DataReader {
   }
 
   /*
-   * Code Table Code table 5.0 - Data representation template number (5.0)
+   * Code table 5.0 - Data representation template number (5.0)
    * 0: Grid point data - simple packing
    * 1: Matrix value at grid point - simple packing
    * 2: Grid point data - complex packing
@@ -73,10 +79,12 @@ public class Grib2DataReader {
    * 4: Grid point data - IEEE floating point data
    * 40: Grid point data - JPEG 2000 code stream format
    * 41: Grid point data - Portable Network Graphics (PNG)
+   * 42: Grid point data - CCSDS recommended lossless compression
    * 50: Spectral data - simple packing
    * 51: Spherical harmonics data - complex packing
    * 61: Grid point data - simple packing with logarithm pre-processing
    * 200: Run length packing with level values
+   * 50002: Second order packing
    * 65535: Missing
    */
 
@@ -110,6 +118,9 @@ public class Grib2DataReader {
         break;
       case 41:
         data = getData41(raf, (Grib2Drs.Type0) gdrs);
+        break;
+      case 42:
+        data = getData42(raf, (Grib2Drs.Type42) gdrs);
         break;
       case 50002:
         data = getData50002(raf, (Grib2Drs.Type50002) gdrs);
@@ -1071,6 +1082,80 @@ public class Grib2DataReader {
 
     return ret;
 
+  }
+
+  private float[] getData42(RandomAccessFile raf, Grib2Drs.Type42 gdrs) throws IOException {
+    byte[] decodedData;
+
+    // read CCSDS encoded stream from message
+    int encodedLength = dataLength - 5;
+    byte[] inputData = new byte[encodedLength];
+    raf.readFully(inputData);
+
+    int nbytesPerSample = (gdrs.numberOfBits + 7) / 8;
+
+    try (Memory inputMemory = new Memory(encodedLength);
+        Memory outputMemory = new Memory((long) nbytesPerSample * totalNPoints)) {
+
+      // set encoding parameters
+      AecStream aecStreamDecode = AecStream.create(gdrs.numberOfBits, gdrs.blockSize, gdrs.referenceSampleInterval,
+          gdrs.compressionOptionsMask);
+
+      // load data from grib message into memory
+      inputMemory.write(0, inputData, 0, inputData.length);
+
+      aecStreamDecode.setInputMemory(inputMemory);
+      aecStreamDecode.setOutputMemory(outputMemory);
+
+      // decode
+      int ok = LibAec.aec_buffer_decode(aecStreamDecode);
+      if (ok != AEC_OK) {
+        System.out.printf("AEC Error: %s%n", ok);
+      }
+
+      // read decoded data from native memory
+      decodedData = new byte[nbytesPerSample * totalNPoints];
+      outputMemory.read(0, decodedData, 0, decodedData.length);
+    }
+
+    // will use this to read out a long value using nbytesPerSample bytes
+    // see long getNextLong(ByteBuffer bb, int numberOfBytes)
+    ByteBuffer bb = ByteBuffer.wrap(decodedData);
+
+    // decode following regulation 92.9.4, Note 4
+    int D = gdrs.decimalScaleFactor;
+    float DD = (float) Math.pow((double) 10, (double) D);
+    float R = gdrs.referenceValue;
+    int E = gdrs.binaryScaleFactor;
+    float EE = (float) Math.pow(2.0, (double) E);
+    float[] data = new float[decodedData.length];
+    if (bitmap == null) {
+      for (int i = 0; i < totalNPoints; i++) {
+        data[i] = (R + getNextLong(bb, nbytesPerSample) * EE) / DD;
+      }
+    } else {
+      for (int i = 0; i < totalNPoints; i++) {
+        if (GribNumbers.testBitIsSet(bitmap[i / 8], i % 8)) {
+          data[i] = (R + getNextLong(bb, nbytesPerSample) * EE) / DD;
+        } else {
+          data[i] = staticMissingValue;
+        }
+      }
+    }
+    return data;
+  }
+
+  private long getNextLong(ByteBuffer bb, int numberOfBytes) throws IOException {
+    switch (numberOfBytes) {
+      case 1:
+        return Byte.toUnsignedLong(bb.get());
+      case 2:
+        return Short.toUnsignedLong(bb.getShort());
+      case 4:
+        return Integer.toUnsignedLong(bb.getInt());
+      default:
+        throw new IOException("Invalid number of bytes per sample for GDR42: " + numberOfBytes);
+    }
   }
 
   /*
