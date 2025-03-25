@@ -11,6 +11,8 @@ dependencies {
 
   api project(':cdm:cdm-core')
 
+  implementation project(':native-compression:libaec-jna')
+
   implementation 'com.google.protobuf:protobuf-java'
   implementation 'org.jdom:jdom2'
   implementation 'com.google.code.findbugs:jsr305'
@@ -19,11 +21,15 @@ dependencies {
   implementation 'com.beust:jcommander'
   implementation 'com.google.re2j:re2j'
   implementation 'org.slf4j:slf4j-api'
+  implementation 'net.java.dev.jna:jna'
 
   testImplementation project(':cdm-test-utils')
   testImplementation project(':udunits')
 
   testImplementation 'com.google.truth:truth'
   testImplementation 'org.jsoup:jsoup'
+
+  testRuntimeOnly project(':native-compression:libaec-native')
+
   testRuntimeOnly 'ch.qos.logback:logback-classic'
 }

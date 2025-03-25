@@ -23,6 +23,8 @@ dependencies {
     api project(':grib')
     api project(':httpservices')
     api project(':legacy')
+    api project(':native-compression:libaec-jna')
+    api project(':native-compression:libaec-native')
     api project(':netcdf4')
     api project(':opendap')
     api project(':dap4')

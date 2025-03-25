@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -22,15 +22,17 @@ public abstract class Grib2Drs {
 
   public static Grib2Drs factory(int template, RandomAccessFile raf) throws IOException {
     switch (template) {
-      case 0:
-      case 41:
+      case 0: // simple packing
+      case 41: // PNG
         return new Type0(raf);
-      case 2:
+      case 2: // complex packing
         return new Type2(raf);
-      case 3:
+      case 3: // complex packing and spatial differencing
         return new Type3(raf);
-      case 40:
+      case 40: // JPEG2000
         return new Type40(raf);
+      case 42: // CCSDS
+        return new Type42(raf);
       case 50002: // ECMWF's second order packing
         return new Type50002(raf);
       default:
@@ -438,6 +440,63 @@ public abstract class Grib2Drs {
       result = 31 * result + compressionMethod;
       result = 31 * result + compressionRatio;
       return result;
+    }
+  }
+
+
+  /*
+   * Data representation template 5.42 – Grid point data - CCSDS recommended lossless compression
+   * Note: For most templates, details of the packing process are described in Regulation 92.9.4.
+   * Octet No. Contents
+   * 12-15 Reference value (R) (IEEE 32-bit floating-point value)
+   * 16-17 Binary scale factor (E)
+   * 18-19 Decimal scale factor (D)
+   * 20 Number of bits required to hold the resulting scaled and referenced data values. (see Note 1)
+   * 21 Type of original field values (see Code Table 5.1)
+   * --- additions to Type0 below ---
+   * 22 CCSDS compression options mask (see Note 3)
+   * 23 Block size
+   * 24-25 Reference sample interval
+   */
+  public static class Type42 extends Type0 {
+
+    int compressionOptionsMask, blockSize, referenceSampleInterval;
+
+    Type42(RandomAccessFile raf) throws IOException {
+      super(raf);
+      this.compressionOptionsMask = raf.read();
+      this.blockSize = raf.read();
+      this.referenceSampleInterval = GribNumbers.uint2(raf);
+      System.out.println("hello");
+    }
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this).add("compressionOptionsMask", compressionOptionsMask)
+          .add("blockSize", blockSize).add("referenceSampleInterval", referenceSampleInterval).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      if (!super.equals(o)) {
+        return false;
+      }
+
+      Type42 type2 = (Type42) o;
+
+      if (compressionOptionsMask != type2.compressionOptionsMask) {
+        return false;
+      }
+      if (blockSize != type2.blockSize) {
+        return false;
+      }
+      return referenceSampleInterval == type2.referenceSampleInterval;
     }
   }
 

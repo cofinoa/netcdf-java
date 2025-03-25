@@ -81,7 +81,7 @@ public class TestLibAec {
     try (Memory inputMemory = new Memory(expectedEncoded.length * Byte.BYTES);
         Memory outputMemory = new Memory(origData.length * Integer.BYTES)) {
       // set encoding parameters
-      AecStream aecStreamEncode = AecStream.create(bitsPerSample, blockSize, rsi, flags);
+      AecStream aecStreamDecode = AecStream.create(bitsPerSample, blockSize, rsi, flags);
 
       // load expected encoded data into native memory
       byte[] expectedEncodedBytes = new byte[expectedEncoded.length];
@@ -90,18 +90,18 @@ public class TestLibAec {
       }
       inputMemory.write(0, expectedEncodedBytes, 0, expectedEncodedBytes.length);
 
-      aecStreamEncode.setInputMemory(inputMemory);
-      aecStreamEncode.setOutputMemory(outputMemory);
+      aecStreamDecode.setInputMemory(inputMemory);
+      aecStreamDecode.setOutputMemory(outputMemory);
 
       // decode
-      int ok = LibAec.aec_buffer_decode(aecStreamEncode);
+      int ok = LibAec.aec_buffer_decode(aecStreamDecode);
       assertThat(ok).isEqualTo(AEC_OK);
 
       // check expected number of bytes decoded
-      assertThat(aecStreamEncode.total_out.intValue()).isEqualTo(origData.length * Integer.BYTES);
+      assertThat(aecStreamDecode.total_out.intValue()).isEqualTo(origData.length * Integer.BYTES);
 
-      // read encoded data from native memory
-      int[] decodedData = new int[aecStreamEncode.total_out.intValue() / Integer.BYTES];
+      // read decoded data from native memory
+      int[] decodedData = new int[aecStreamDecode.total_out.intValue() / Integer.BYTES];
       outputMemory.read(0, decodedData, 0, decodedData.length);
 
       // compare decoded data to original values
@@ -150,23 +150,23 @@ public class TestLibAec {
         Memory outputMemory = new Memory(origData.length * Integer.BYTES)) {
 
       // set encoding parameters
-      AecStream aecStreamEncode = AecStream.create(bitsPerSample, blockSize, rsi, flags);
+      AecStream aecStreamDecode = AecStream.create(bitsPerSample, blockSize, rsi, flags);
 
       // load encoded data into memory
       inputMemory.write(0, encodedData, 0, encodedData.length);
 
-      aecStreamEncode.setInputMemory(inputMemory);
-      aecStreamEncode.setOutputMemory(outputMemory);
+      aecStreamDecode.setInputMemory(inputMemory);
+      aecStreamDecode.setOutputMemory(outputMemory);
 
       // decode
-      int ok = LibAec.aec_buffer_decode(aecStreamEncode);
+      int ok = LibAec.aec_buffer_decode(aecStreamDecode);
       assertThat(ok).isEqualTo(AEC_OK);
 
       // check expected number of bytes decoded
-      assertThat(aecStreamEncode.total_out.intValue()).isEqualTo(origData.length * Integer.BYTES);
+      assertThat(aecStreamDecode.total_out.intValue()).isEqualTo(origData.length * Integer.BYTES);
 
-      // read encoded data from native memory
-      int[] decodedData = new int[aecStreamEncode.total_out.intValue() / Integer.BYTES];
+      // read decoded data from native memory
+      int[] decodedData = new int[aecStreamDecode.total_out.intValue() / Integer.BYTES];
       outputMemory.read(0, decodedData, 0, decodedData.length);
 
       // compare decoded data to original values
