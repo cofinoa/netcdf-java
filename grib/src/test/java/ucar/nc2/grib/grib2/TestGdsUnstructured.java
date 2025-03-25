@@ -1,12 +1,15 @@
 package ucar.nc2.grib.grib2;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import ucar.ma2.Array;
 import ucar.nc2.AttributeContainer;
 import ucar.nc2.Group;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dataset.NetcdfDatasets;
+import ucar.unidata.util.test.TestDir;
+import ucar.unidata.util.test.category.NeedsCdmUnitTest;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -97,10 +100,11 @@ public class TestGdsUnstructured {
     assertEquals("isLatLon", false, usGds.isLatLon());
   }
 
-  // @Test
+  @Test
+  @Category(NeedsCdmUnitTest.class)
   public void testIconGrib2FileRead() throws IOException {
-    // TODO: upload data somewhere (5.9 MB)
-    String iconFile = ".../icon_global_icosahedral_single-level_2025031912_004_T_2M.grib2.bz2";
+    String iconFile =
+        TestDir.cdmUnitTestDir + "/formats/grib2/ugrid/icon_global_icosahedral_single-level_2025031912_004_T_2M.grib2";
     // Open the GRIB2 file as a NetcdfDataset (netCDF-Java will handle the GRIB indexing and reading)
     try (NetcdfDataset ds = NetcdfDatasets.openDataset(iconFile)) {
       // Ensure the dataset opened
