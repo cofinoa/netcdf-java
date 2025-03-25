@@ -14,10 +14,13 @@ import ucar.unidata.geoloc.*;
 import ucar.unidata.geoloc.projection.LatLonProjection;
 import ucar.unidata.geoloc.projection.RotatedPole;
 import ucar.unidata.geoloc.projection.Stereographic;
+import ucar.unidata.geoloc.projection.UnstructuredProjection;
 import ucar.unidata.geoloc.projection.sat.MSGnavigation;
+
 import javax.annotation.concurrent.Immutable;
 import java.util.Arrays;
 import java.util.Formatter;
+import java.util.UUID;
 
 /**
  * Template-specific fields for Grib2SectionGridDefinition
@@ -62,6 +65,11 @@ public abstract class Grib2Gds {
         result = new SpaceViewPerspective(data);
         break;
 
+      // General Unstructured Grid
+      case 101:
+        result = new GdsUnstructured(data, template);
+        break;
+
       // LOOK NCEP specific
       case 204:
         result = new CurvilinearOrthogonal(data);
@@ -85,6 +93,9 @@ public abstract class Grib2Gds {
   protected final byte[] data;
 
   public int template;
+
+  public int numberOfDataPoints;
+
   public int center;
   public float earthRadius, majorAxis, minorAxis; // in meters
   protected int scanMode;
@@ -102,13 +113,20 @@ public abstract class Grib2Gds {
     this.data = data;
     this.template = template;
 
-    earthShape = getOctet(15);
-    earthRadius = getScaledValue(16);
-    majorAxis = getScaledValue(21);
-    minorAxis = getScaledValue(26);
+    this.numberOfDataPoints = getOctet4(7);
 
-    nx = getOctet4(31);
-    ny = getOctet4(35);
+    earthShape = getOctet(15);
+
+    // the following does not apply to template 101 (unstructured data)
+    // TODO most probably also for other templates
+    if (template != 101) {
+      earthRadius = getScaledValue(16);
+      majorAxis = getScaledValue(21);
+      minorAxis = getScaledValue(26);
+
+      nx = getOctet4(31);
+      ny = getOctet4(35);
+    }
   }
 
   protected void finish() {
@@ -503,8 +521,8 @@ public abstract class Grib2Gds {
       // ProjectionPoint startP = proj.latLonToProj(LatLonPoint.create(la1, lo1));
       double startx = lo1; // startP.getX();
       double starty = la1; // startP.getY();
-      return new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode, proj, startx, deltaLon, starty,
-          deltaLat, getNxRaw(), getNyRaw(), getNptsInLine());
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, startx, deltaLon,
+          starty, deltaLat, getNxRaw(), getNyRaw(), getNptsInLine());
     }
 
     public void testHorizCoordSys(Formatter f) {
@@ -625,8 +643,8 @@ public abstract class Grib2Gds {
       // LatLonPoint startLL = proj.projToLatLon(ProjectionPoint.create(lo1, la1));
       // double startx = startLL.getLongitude();
       // double starty = startLL.getLatitude();
-      return new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode, proj, lo1, deltaLon, la1, deltaLat,
-          getNxRaw(), getNyRaw(), getNptsInLine());
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, lo1, deltaLon, la1,
+          deltaLat, getNxRaw(), getNyRaw(), getNptsInLine());
     }
 
     public void testHorizCoordSys(Formatter f) {
@@ -838,7 +856,7 @@ public abstract class Grib2Gds {
       double startx = startP.getX();
       double starty = startP.getY();
 
-      return new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode, proj, startx, dX, starty, dY,
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, startx, dX, starty, dY,
           getNxRaw(), getNyRaw(), getNptsInLine());
     }
 
@@ -1010,7 +1028,7 @@ public abstract class Grib2Gds {
       }
 
       ProjectionPointImpl start = (ProjectionPointImpl) proj.latLonToProj(LatLonPoint.create(la1, lo1));
-      return new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode, proj, start.getX(), dX,
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, start.getX(), dX,
           start.getY(), dY, getNxRaw(), getNyRaw(), getNptsInLine());
     }
 
@@ -1185,7 +1203,7 @@ public abstract class Grib2Gds {
 
       LatLonPoint startLL = LatLonPoint.create(la1, lo1);
       ProjectionPointImpl start = (ProjectionPointImpl) proj.latLonToProj(startLL);
-      return new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode, proj, start.getX(), dX,
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, start.getX(), dX,
           start.getY(), dY, getNxRaw(), getNyRaw(), getNptsInLine());
     }
 
@@ -1272,7 +1290,7 @@ public abstract class Grib2Gds {
 
       LatLonPoint startLL = LatLonPoint.create(la1, lo1);
       ProjectionPointImpl start = (ProjectionPointImpl) proj.latLonToProj(startLL);
-      return new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode, proj, start.getX(), dX,
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, start.getX(), dX,
           start.getY(), dY, getNxRaw(), getNyRaw(), getNptsInLine());
     }
 
@@ -1438,7 +1456,7 @@ public abstract class Grib2Gds {
        * }
        */
 
-      GdsHorizCoordSys coordSys = new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode,
+      GdsHorizCoordSys coordSys = new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode,
           new LatLonProjection(), lo1, deltaLon, 0, 0, getNxRaw(), getNyRaw(), getNptsInLine());
       coordSys.setGaussianLats(Nparellels, la1, la2);
 
@@ -1680,8 +1698,8 @@ public abstract class Grib2Gds {
       }
 
       MSGnavigation proj = new MSGnavigation(LaP, LoP, majorAxis, minorAxis, Nr * majorAxis, scale_x, scale_y);
-      return new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode, proj, startx, incrx, starty, incry,
-          getNxRaw(), getNyRaw(), getNptsInLine());
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, startx, incrx, starty,
+          incry, getNxRaw(), getNyRaw(), getNptsInLine());
     }
 
     public void testHorizCoordSys(Formatter f) {
@@ -1701,6 +1719,124 @@ public abstract class Grib2Gds {
       f.format("    end at latlon= %s%n", endLL);
     }
 
+  }
+
+  /**
+   * GRIB2 Grid Definition Template 3.101: General Unstructured Grid.
+   * Parses and stores metadata for unstructured grids (e.g., ICON model grids),
+   * including grid identifiers and UUID.
+   *
+   * https://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc/grib2_temp3-101.shtml
+   */
+  public static class GdsUnstructured extends Grib2Gds {
+    // Template 3.101 specific fields
+    protected final int numberOfGridUsed;
+    protected final int numberOfGridInReference;
+    protected final UUID horizontalGridUUID;
+
+    /**
+     * Construct a GdsUnstructured from a GRIB2 GDS byte array.
+     * 
+     * @param data The full GDS section bytes.
+     * @param template Template number (should be 101 for this class).
+     */
+    protected GdsUnstructured(byte[] data, int template) {
+      super(data, template); // let base class parse common fields (Earth shape, etc.)
+
+      // Octets are 1-indexed in spec, but data[] is 0-indexed.
+      // Octet 16-18: 3-byte unsigned integer for numberOfGridUsed
+      this.numberOfGridUsed = GribNumbers.int3(getOctet(16), getOctet(17), getOctet(18));
+      // Octet 19: 1-byte unsigned integer for numberOfGridInReference
+      this.numberOfGridInReference = data[19] & 0xFF;
+      // Octets 20-35: 16-byte UUID for horizontal grid
+      long msb = 0, lsb = 0;
+      for (int i = 20; i <= 27; i++) { // first 8 bytes -> most significant bits
+        msb = (msb << 8) | (getOctet(i) & 0xff);
+      }
+      for (int i = 28; i <= 35; i++) { // next 8 bytes -> least significant bits
+        lsb = (lsb << 8) | (getOctet(i) & 0xff);
+      }
+      this.horizontalGridUUID = new UUID(msb, lsb);
+
+      // Set lastOctet position to 35 + 1 = 36 (if needed by base class logic)
+      this.lastOctet = 36; // indicates we've read through octet 35
+    }
+
+    /** Unstructured grids are not regular lat/lon grids. */
+    @Override
+    public boolean isLatLon() {
+      return false;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (!(obj instanceof GdsUnstructured))
+        return false;
+      if (!super.equals(obj))
+        return false;
+      GdsUnstructured other = (GdsUnstructured) obj;
+      return this.numberOfGridUsed == other.numberOfGridUsed
+          && this.numberOfGridInReference == other.numberOfGridInReference
+          && this.horizontalGridUUID.equals(other.horizontalGridUUID);
+    }
+
+    @Override
+    public int hashCode() {
+      // Combine base class hash with hash of new fields
+      int result = super.hashCode();
+      result = 31 * result + numberOfGridUsed;
+      result = 31 * result + numberOfGridInReference;
+      result = 31 * result + horizontalGridUUID.hashCode();
+      return result;
+    }
+
+    @Override
+    public GdsHorizCoordSys makeHorizCoordSys() {
+      // Use a standard LatLonProjection (an identity projection)
+      ProjectionImpl proj = new UnstructuredProjection(earthShape, numberOfGridUsed, numberOfGridInReference,
+          horizontalGridUUID.toString());
+      // Define a global bounding box: latitudes -90 to 90, longitudes -180 to 180.
+      double startx = -180.0; // lon
+      double starty = -90.0; // lat
+      double dx = 360.0;
+      double dy = 180.0;
+      // Set minimal grid dimensions; these are dummy values since the grid is unstructured.
+      int nx = numberOfDataPoints;
+      int ny = 1;
+      int[] nptsInLine = null;
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, startx, dx, starty, dy,
+          nx, ny, nptsInLine) {
+        @Override
+        public ucar.unidata.geoloc.LatLonRect getLatLonBB() {
+          return new ucar.unidata.geoloc.LatLonRect(ucar.unidata.geoloc.LatLonPoint.create(starty, startx), dy, dx);
+        }
+
+        @Override
+        public String makeId() {
+          return getNameShort() + "_" + earthShape + "-" + numberOfGridUsed + "-" + numberOfGridInReference + "_"
+              + horizontalGridUUID.toString();
+        }
+
+        @Override
+        public String makeDescription() {
+          return getNameShort() + ": earthShape " + earthShape + ", numberOfGridUsed " + numberOfGridUsed
+              + ", numberOfGridInReference " + numberOfGridInReference + ", UUID " + horizontalGridUUID.toString();
+        }
+      };
+    }
+
+    @Override
+    public void testHorizCoordSys(Formatter f) {
+      GdsHorizCoordSys cs = makeHorizCoordSys();
+      f.format("%s testHorizCoordSys%n", getClass().getName());
+      f.format("  Projection: %s%n", cs.proj.getClass().getName());
+      f.format("  Start (proj): (%f, %f)%n", cs.startx, cs.starty);
+      f.format("  dx = %f, dy = %f%n", cs.dx, cs.dy);
+      f.format("  Grid dimensions: nx = %d, ny = %d%n", cs.nx, cs.ny);
+      f.format("  LatLon bounding box: %s%n", cs.getLatLonBB());
+    }
   }
 
   /*
@@ -1760,7 +1896,7 @@ public abstract class Grib2Gds {
 
     public GdsHorizCoordSys makeHorizCoordSys() {
       LatLonProjection proj = new LatLonProjection();
-      return new GdsHorizCoordSys(getNameShort(), template, getOctet4(7), scanMode, proj, 0, 1, 0, 1, getNxRaw(),
+      return new GdsHorizCoordSys(getNameShort(), template, numberOfDataPoints, scanMode, proj, 0, 1, 0, 1, getNxRaw(),
           getNyRaw(), getNptsInLine());
     }
 

@@ -631,7 +631,7 @@ public class NetcdfFile implements FileCacheable, Closeable {
 
       try {
         if (suffix.equalsIgnoreCase("Z")) {
-          try (InputStream in = new UncompressInputStream(new FileInputStream(filename))) {
+          try (InputStream in = new UncompressInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             copy(in, fout, 100000);
           }
           if (debugCompress)
@@ -639,7 +639,7 @@ public class NetcdfFile implements FileCacheable, Closeable {
 
         } else if (suffix.equalsIgnoreCase("zip")) {
 
-          try (ZipInputStream zin = new ZipInputStream(new FileInputStream(filename))) {
+          try (ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             ZipEntry ze = zin.getNextEntry();
             if (ze != null) {
               copy(zin, fout, 100000);
@@ -649,7 +649,7 @@ public class NetcdfFile implements FileCacheable, Closeable {
           }
 
         } else if (suffix.equalsIgnoreCase("bz2")) {
-          try (InputStream in = new CBZip2InputStream(new FileInputStream(filename), true)) {
+          try (InputStream in = new CBZip2InputStream(new BufferedInputStream(new FileInputStream(filename)), true)) {
             copy(in, fout, 100000);
           }
           if (debugCompress)
@@ -657,7 +657,7 @@ public class NetcdfFile implements FileCacheable, Closeable {
 
         } else if (suffix.equalsIgnoreCase("gzip") || suffix.equalsIgnoreCase("gz")) {
 
-          try (InputStream in = new GZIPInputStream(new FileInputStream(filename))) {
+          try (InputStream in = new GZIPInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             copy(in, fout, 100000);
           }
 
