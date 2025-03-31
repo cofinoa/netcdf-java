@@ -11,19 +11,6 @@ buildscript {
   repositories {
     mavenCentral()
     gradlePluginPortal()
-    exclusiveContent {
-      forRepository {
-        maven {
-          url "https://artifacts.unidata.ucar.edu/repository/unidata-all/"
-        }
-      }
-      // only look for unidata plugin related artifacts from the unidata-all repo
-      filter {
-        includeModule 'com.burgstaller', 'okhttp-digest'
-        includeModule 'org.ysb33r.gradle', 'grolifant'
-        includeModule 'edu.ucar.unidata', 'unidata-nexus-gradle'
-      }
-    }
   }
 
   dependencies {
@@ -32,7 +19,6 @@ buildscript {
     classpath buildPlugins.spotless
     classpath buildPlugins.protobuf
     classpath buildPlugins.depcheck
-    classpath buildPlugins.nexus
   }
 }
 
