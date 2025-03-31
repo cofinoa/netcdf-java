@@ -792,6 +792,46 @@ public class TestCoverageSubsetTime {
     }
   }
 
+  @Test
+  public void testDiscontiguousIntervalSubsetTimeRangeStartNoInInterval() throws IOException, InvalidRangeException {
+    String endpoint = TestDir.cdmUnitTestDir + "datasets/NDFD-CONUS-5km/NDFD-CONUS-5km.ncx4";
+    String covName = "Minimum_temperature_height_above_ground_12_Hour_Minimum";
+
+    logger.debug("testDiscontiguousIntervalTime Dataset {} coverage {}", endpoint, covName);
+
+    try (FeatureDatasetCoverage featureDatasetCoverage = CoverageDatasetFactory.open(endpoint)) {
+      assertThat(featureDatasetCoverage).isNotNull();
+      CoverageCollection coverageCollection = featureDatasetCoverage.findCoverageDataset(FeatureType.GRID);
+      assertThat(coverageCollection).isNotNull();
+      Coverage coverage = coverageCollection.findCoverage(covName);
+      assertThat(coverage).isNotNull();
+
+      SubsetParams params = new SubsetParams();
+
+      // key point of test - start time lands between two discontiguous time windows
+      CalendarDate subsetTimeStart = CalendarDate.parseISOformat(null, "2013-12-18T20:00:00Z");
+      CalendarDate subsetTimeEnd = CalendarDate.parseISOformat(null, "2013-12-19T13:00:00Z");
+      // expect: any interval containing or ending on the start or end times
+      // idx keep interval
+      // 0 N ( 84.000000, 96.000000) == (2013-12-15T12:00:00Z, 2013-12-16T00:00:00Z)
+      // 1 N (108.000000, 120.000000) == (2013-12-16T12:00:00Z, 2013-12-17T00:00:00Z)
+      // 2 N (132.000000, 144.000000) == (2013-12-17T12:00:00Z, 2013-12-18T00:00:00Z)
+      // 3 Y (156.000000, 168.000000) == (2013-12-18T12:00:00Z, 2013-12-19T00:00:00Z)
+      // 4 Y (180.000000, 192.000000) == (2013-12-19T12:00:00Z, 2013-12-20T00:00:00Z)
+      // 5 N (204.000000, 216.000000) == (2013-12-20T12:00:00Z, 2013-12-21T00:00:00Z)
+      int expectedStartIndex = 3;
+      int expectedEndIndex = 4;
+      params.setTimeRange(CalendarDateRange.of(subsetTimeStart, subsetTimeEnd));
+      logger.debug("  subset {}", params);
+
+      GeoReferencedArray geo = coverage.readData(params);
+      assertThat(geo).isNotNull();
+      CoverageCoordAxis timeAxis = geo.findCoordAxis("time1");
+      assertThat(timeAxis).isNotNull();
+      assertThat(timeAxis.getSpacing()).isEqualTo(Spacing.discontiguousInterval);
+      assertThat(timeAxis.getRange()).isEqualTo(new Range(expectedStartIndex, expectedEndIndex));
+    }
+  }
   ///////////////////////////////////////////////////////////////////////////////////////////
   // ENsemble
 
