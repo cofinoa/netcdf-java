@@ -205,12 +205,15 @@ class CoordAxisHelper {
   // same contract as findCoordElement(); in addition, -1 is returned when the target is not contained in any interval
   private int findCoordElementDiscontiguousInterval(double target, boolean bounded) {
     int idx = findSingleHit(target);
-    // multiple hits = choose closest (definition of closest will be based on axis type)
-    if (idx == MULTIPLE_HITS) {
-      return findClosestDiscontiguousInterval(target);
-    }
     if (bounded && (idx >= axis.getNcoords())) {
       return -1;
+    }
+    // multiple hits = choose closest (definition of closest will be based on axis type)
+    // - OR -
+    // idx will be Ncoords if target not contained within an interval window - however, that
+    // does not mean target isn't between two discontiguous windows, so find the closest one
+    if (idx == MULTIPLE_HITS || idx == axis.getNcoords()) {
+      return findClosestDiscontiguousInterval(target);
     }
     return idx;
   }
@@ -272,28 +275,25 @@ class CoordAxisHelper {
     int idxFound = -1;
 
     for (int i = 0; i < axis.getNcoords(); i++) {
-      // only check if target is in discontiguous interval i
-      if (intervalContains(target, i)) {
-        // find the end of the time interval
-        double coord = axis.getCoordEdge2(i);
-        // We want to make sure the interval includes our target point, and that means the end of the interval
-        // must be greater than or equal to the target.
-        if (coord >= target) {
-          // compute the width (in time) of the interval
-          double width = coord - axis.getCoordEdge1(i);
-          // we want to identify the interval with the end point closest to our target
-          // why? Because a statistic computed over a time window will only have meaning at the end
-          // of that interval, so the closer we can get to that the better.
-          double diff = Math.abs(coord - target);
-          // Here we minimize the difference between the end of an interval and our target value. If multiple
-          // intervals result in the same difference value, we will pick the one with the smallest non-zero
-          // width interval.
-          boolean tiebreaker = (diff == minDiff) && (width != 0) && (width < useValue);
-          if (diff < minDiff || tiebreaker) {
-            minDiff = diff;
-            idxFound = i;
-            useValue = width;
-          }
+      // find the end of the time interval
+      double coord = axis.getCoordEdge2(i);
+      // We want to make sure the interval includes our target point, and that means the end of the interval
+      // must be greater than or equal to the target.
+      if (coord >= target) {
+        // compute the width (in time) of the interval
+        double width = coord - axis.getCoordEdge1(i);
+        // we want to identify the interval with the end point closest to our target
+        // why? Because a statistic computed over a time window will only have meaning at the end
+        // of that interval, so the closer we can get to that the better.
+        double diff = Math.abs(coord - target);
+        // Here we minimize the difference between the end of an interval and our target value. If multiple
+        // intervals result in the same difference value, we will pick the one with the smallest non-zero
+        // width interval.
+        boolean tiebreaker = (diff == minDiff) && (width != 0) && (width < useValue);
+        if (diff < minDiff || tiebreaker) {
+          minDiff = diff;
+          idxFound = i;
+          useValue = width;
         }
       }
     }
