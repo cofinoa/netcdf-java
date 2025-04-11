@@ -46,6 +46,7 @@ dependencies {
   ncIdv project(':visad:cdm-vis5d')
   ncIdv project(':httpservices')
   ncIdv project(':legacy')
+  ncIdv project(':native-compression:libaec-native')
 
   netcdfAll enforcedPlatform(project(':netcdf-java-platform'))
   netcdfAll project(':cdm:cdm-core')
