@@ -40,6 +40,7 @@ dependencies {
   testImplementation 'junit:junit'
 
   runtimeOnly project(':cdm:cdm-s3')
+  runtimeOnly project(':cdm:cdm-zarr')
 
   // constrained by netcdf-java-platform
   runtimeOnly 'ch.qos.logback:logback-classic'
