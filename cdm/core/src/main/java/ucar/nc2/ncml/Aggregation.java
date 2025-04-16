@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2020 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE.txt for license information.
  */
 package ucar.nc2.ncml;
@@ -777,6 +777,11 @@ public abstract class Aggregation implements AggregationIF {
     }
   }
 
+  public static boolean instanceOfDatasetProxyReader(Object obj) {
+    if (obj == null)
+      return false;
+    return obj instanceof DatasetProxyReader;
+  }
 
   protected class DatasetProxyReader implements ProxyReader {
     Dataset dataset;

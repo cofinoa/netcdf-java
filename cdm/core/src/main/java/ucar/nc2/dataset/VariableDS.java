@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 package ucar.nc2.dataset;
@@ -494,9 +494,28 @@ public class VariableDS extends Variable implements VariableEnhanced, EnhanceSca
   // do not call directly
   @Override
   public Array reallyRead(Variable client, CancelTask cancelTask) throws IOException {
-    if (orgVar == null)
+    if (orgVar == null) {
+      // possible aggregation
+      if (this.proxyReader != null && this.proxyReader instanceof ucar.nc2.ncml.Aggregation) {
+        return this.proxyReader.reallyRead(client, cancelTask);
+      }
       return getMissingDataArray(shape);
+    }
 
+    if (client instanceof CoordinateAxis) {
+      // If orgVar is a VariableDS (orgVar of a CoordinateAxis using the non-builder
+      // API, for example), call reallyRead on it, otherwise, enhancements will get
+      // applied twice in a second _read() call triggered by calling read() on the
+      // VariableDS.
+      if (orgVar instanceof VariableDS && !orgVar.hasCachedData()) {
+        return orgVar.reallyRead(client, cancelTask);
+      }
+      // Some aggregations use a DatasetProxyReader for reading a coordinate axis
+      // variable, so check to see if that's what we have and, if so, use it.
+      if (ucar.nc2.ncml.Aggregation.instanceOfDatasetProxyReader(this.proxyReader)) {
+        return this.proxyReader.reallyRead(client, cancelTask);
+      }
+    }
     return orgVar.read();
   }
 
@@ -508,9 +527,28 @@ public class VariableDS extends Variable implements VariableEnhanced, EnhanceSca
     if ((null == section) || section.computeSize() == getSize())
       return reallyRead(client, cancelTask);
 
-    if (orgVar == null)
-      return getMissingDataArray(section.getShape());
+    if (orgVar == null) {
+      // possible aggregation
+      if (this.proxyReader != null && this.proxyReader instanceof ucar.nc2.ncml.Aggregation) {
+        return this.proxyReader.reallyRead(client, section, cancelTask);
+      }
+      return getMissingDataArray(shape);
+    }
 
+    if (client instanceof CoordinateAxis) {
+      // If orgVar is a VariableDS (orgVar of a CoordinateAxis using the non-builder
+      // API, for example), call reallyRead on it, otherwise, enhancements will get
+      // applied twice in a second _read() call triggered by calling read() on the
+      // VariableDS.
+      if (orgVar instanceof VariableDS && !orgVar.hasCachedData()) {
+        return orgVar.reallyRead(client, section, cancelTask);
+      }
+      // Some aggregations use a DatasetProxyReader for reading a coordinate axis
+      // variable, so check to see if that's what we have and, if so, use it.
+      if (ucar.nc2.ncml.Aggregation.instanceOfDatasetProxyReader(this.proxyReader)) {
+        return this.proxyReader.reallyRead(client, section, cancelTask);
+      }
+    }
     return orgVar.read(section);
   }
 
