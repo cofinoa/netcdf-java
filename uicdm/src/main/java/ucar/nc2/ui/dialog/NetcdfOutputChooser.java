@@ -1,10 +1,13 @@
 /*
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
+ * See LICENSE for license information.
+ *
  * Created by JFormDesigner on Thu Nov 15 14:02:02 MST 2012
  */
 
 package ucar.nc2.ui.dialog;
 
-import ucar.nc2.NetcdfFileWriter;
+import java.util.Arrays;
 import ucar.nc2.util.ListenerManager;
 import ucar.nc2.write.Nc4Chunking;
 import javax.swing.*;
@@ -44,8 +47,8 @@ public class NetcdfOutputChooser extends JDialog {
       location = location.substring(0, pos);
 
     // change suffix
-    NetcdfFileWriter.Version version = (NetcdfFileWriter.Version) netcdfVersion.getSelectedItem();
-    String suffix = (version == null) ? ".nc" : version.getSuffix();
+    NetcdfFileFormat version = (NetcdfFileFormat) netcdfVersion.getSelectedItem();
+    String suffix = (version != null && version.isNetcdf4Format()) ? ".nc4" : ".nc";
     if (filename.endsWith(".nc") && suffix.equals(".nc"))
       suffix = ".sub.nc";
     location += suffix;
@@ -105,10 +108,11 @@ public class NetcdfOutputChooser extends JDialog {
     label1 = new JLabel();
     outputFilename = new JTextField();
     label2 = new JLabel();
-    netcdfVersion = new JComboBox(NetcdfFileWriter.Version.values());
+    netcdfVersion = new JComboBox<>(
+        Arrays.stream(NetcdfFileFormat.values()).filter(format -> format != NetcdfFileFormat.INVALID).toArray());
     panel1 = new JPanel();
     label3 = new JLabel();
-    chunking = new JComboBox(Nc4Chunking.Strategy.values());
+    chunking = new JComboBox<>(Nc4Chunking.Strategy.values());
     deflate = new JCheckBox();
     shuffle = new JCheckBox();
     buttonBar = new JPanel();
