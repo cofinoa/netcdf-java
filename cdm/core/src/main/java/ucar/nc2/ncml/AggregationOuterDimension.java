@@ -1,6 +1,8 @@
 /*
- * Copyright (c) 1998-2020 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
+ * See LICENSE.txt for license information.
  */
+
 package ucar.nc2.ncml;
 
 import java.io.IOException;
@@ -554,7 +556,8 @@ public abstract class AggregationOuterDimension extends Aggregation implements P
     protected int ncoord; // number of coordinates in outer dimension for this dataset
     protected String coordValue; // if theres a coordValue on the netcdf element - may be multiple, blank separated
     protected Date coordValueDate; // if its a date
-    protected boolean isStringValued;
+    final DataType coordDataType; // coordinate data type
+    final String coordUdunit; // coordinate udunit string, if numeric
     private int aggStart, aggEnd; // index in aggregated dataset; aggStart <= i < aggEnd
 
     /**
@@ -586,19 +589,22 @@ public abstract class AggregationOuterDimension extends Aggregation implements P
         }
       }
 
+      DataType aggCoordDataType = DataType.DOUBLE;
+      String aggUdunit = null;
       if ((type == Type.joinNew) || (type == Type.joinExistingOne) || (type == Type.forecastModelRunCollection)) {
         if (coordValueS == null) {
           this.coordValue = extractCoordNameFromFilename(this.getLocation());
-          this.isStringValued = true;
+          aggCoordDataType = DataType.STRING;
         } else {
           try {
             Double.parseDouble(coordValueS);
           } catch (NumberFormatException e) {
-            this.isStringValued = true;
+            aggCoordDataType = DataType.STRING;
           }
         }
       }
-
+      this.coordDataType = aggCoordDataType;
+      this.coordUdunit = null;
       // allow coordValue attribute on JOIN_EXISTING, may be multiple values separated by blanks or commas
       if ((type == Type.joinExisting) && (coordValueS != null)) {
         StringTokenizer stoker = new StringTokenizer(coordValueS, " ,");
@@ -625,10 +631,19 @@ public abstract class AggregationOuterDimension extends Aggregation implements P
       // default is that the coordinates are just the filenames
       // this can be overriden by an explicit declaration, which will replace the variable afte ther agg is processed in
       // NcMLReader
+      DataType aggCoordDataType = DataType.DOUBLE;
+      String coordUdunit = null;
       if ((type == Type.joinNew) || (type == Type.joinExistingOne) || (type == Type.forecastModelRunCollection)) {
-        this.coordValue = extractCoordNameFromFilename(this.getLocation());
-        this.isStringValued = true;
+        if (numericTimeSettings != null) {
+          String[] settings = numericTimeSettings.split(" ", 2);
+          aggCoordDataType = DataType.getType(settings[0]);
+          coordUdunit = settings[1];
+        } else {
+          aggCoordDataType = DataType.STRING;
+        }
       }
+      this.coordDataType = aggCoordDataType;
+      this.coordUdunit = coordUdunit;
 
       if (null != dateFormatMark) {
         String filename = cd.getName(); // LOOK operates on name, not path

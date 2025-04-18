@@ -1,6 +1,8 @@
 /*
- * Copyright (c) 1998-2020 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
+ * See LICENSE.txt for license information.
  */
+
 package ucar.nc2.internal.ncml;
 
 import org.jdom2.Element;
@@ -95,6 +97,7 @@ public abstract class Aggregation implements ucar.nc2.ncml.AggregationIF {
 
   // experimental
   protected String dateFormatMark;
+  protected String numericTimeSettings;
   // protected EnumSet<NetcdfDataset.Enhance> enhance = null; // default no enhancement
   protected boolean isDate;
   protected DateFormatter dateFormatter = new DateFormatter();
@@ -153,13 +156,17 @@ public abstract class Aggregation implements ucar.nc2.ncml.AggregationIF {
    * @param subdirs equals "false" if should not descend into subdirectories
    * @param olderThan files must be older than this time (now - lastModified >= olderThan); must be a time unit, may ne
    *        bull
+   * @param numericTimeSettings numeric time settings (data type and udunits compatible string,
+   *        e.g. "float seconds since 1985-10-18T12:31:00", may be null)
    */
   public void addDatasetScan(Element crawlableDatasetElement, String dirName, String suffix, String regexpPatternString,
-      String dateFormatMark, Set<NetcdfDataset.Enhance> enhanceMode, String subdirs, String olderThan) {
+      String dateFormatMark, Set<NetcdfDataset.Enhance> enhanceMode, String subdirs, String olderThan,
+      String numericTimeSettings) {
 
     datasetManager.addDirectoryScan(dirName, suffix, regexpPatternString, subdirs, olderThan, enhanceMode);
 
     this.dateFormatMark = dateFormatMark;
+    this.numericTimeSettings = numericTimeSettings;
     if (dateFormatMark != null) {
       isDate = true;
       if (type == Type.joinExisting)

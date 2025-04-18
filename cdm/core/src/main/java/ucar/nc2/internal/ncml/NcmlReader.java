@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.nc2.internal.ncml;
 
 import java.io.FileNotFoundException;
@@ -1526,6 +1527,7 @@ public class NcmlReader {
       String olderS = scanElem.getAttributeValue("olderThan");
 
       String dateFormatMark = scanElem.getAttributeValue("dateFormatMark");
+      String numericTimeSettings = scanElem.getAttributeValue("numericTimeSettings");
       Set<NetcdfDataset.Enhance> enhanceMode = NetcdfDataset.parseEnhanceMode(scanElem.getAttributeValue("enhance"));
 
       // possible relative location
@@ -1534,7 +1536,7 @@ public class NcmlReader {
       // can embed a full-blown crawlableDatasetImpl element
       Element cdElement = scanElem.getChild("crawlableDatasetImpl", ncNS); // ok if null
       agg.addDatasetScan(cdElement, dirLocation, suffix, regexpPatternString, dateFormatMark, enhanceMode, subdirs,
-          olderS);
+          olderS, numericTimeSettings);
 
       if ((cancelTask != null) && cancelTask.isCancel()) {
         return agg;

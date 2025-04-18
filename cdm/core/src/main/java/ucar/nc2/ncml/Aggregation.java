@@ -2,6 +2,7 @@
  * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE.txt for license information.
  */
+
 package ucar.nc2.ncml;
 
 import org.jdom2.Element;
@@ -153,6 +154,7 @@ public abstract class Aggregation implements AggregationIF {
 
   // experimental
   protected String dateFormatMark;
+  protected String numericTimeSettings;
   // protected EnumSet<NetcdfDataset.Enhance> enhance = null; // default no enhancement
   protected boolean isDate;
   protected DateFormatter dateFormatter = new DateFormatter();
@@ -199,6 +201,7 @@ public abstract class Aggregation implements AggregationIF {
     explicitDatasets.add(nested);
   }
 
+
   /**
    * Add a dataset scan
    *
@@ -214,10 +217,33 @@ public abstract class Aggregation implements AggregationIF {
    */
   public void addDatasetScan(Element crawlableDatasetElement, String dirName, String suffix, String regexpPatternString,
       String dateFormatMark, Set<NetcdfDataset.Enhance> enhanceMode, String subdirs, String olderThan) {
+    addDatasetScan(crawlableDatasetElement, dirName, suffix, regexpPatternString, dateFormatMark, enhanceMode, subdirs,
+        olderThan, null);
+  }
+
+  /**
+   * Add a dataset scan
+   *
+   * @param crawlableDatasetElement defines a CrawlableDataset, or null
+   * @param dirName scan this directory
+   * @param suffix filter on this suffix (may be null)
+   * @param regexpPatternString include if full name matches this regular expression (may be null)
+   * @param dateFormatMark create dates from the filename (may be null)
+   * @param enhanceMode how should files be enhanced
+   * @param subdirs equals "false" if should not descend into subdirectories
+   * @param olderThan files must be older than this time (now - lastModified >= olderThan); must be a time unit, may ne
+   *        bull
+   * @param numericTimeSettings numeric time settings (data type and udunits compatible string,
+   *        e.g. "float seconds since 1985-10-18T12:31:00", may be null)
+   */
+  public void addDatasetScan(Element crawlableDatasetElement, String dirName, String suffix, String regexpPatternString,
+      String dateFormatMark, Set<NetcdfDataset.Enhance> enhanceMode, String subdirs, String olderThan,
+      String numericTimeSettings) {
 
     datasetManager.addDirectoryScan(dirName, suffix, regexpPatternString, subdirs, olderThan, enhanceMode);
 
     this.dateFormatMark = dateFormatMark;
+    this.numericTimeSettings = numericTimeSettings;
     if (dateFormatMark != null) {
       isDate = true;
       if (type == Type.joinExisting)

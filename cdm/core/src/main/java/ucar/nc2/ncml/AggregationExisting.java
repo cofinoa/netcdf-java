@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -71,7 +71,13 @@ public class AggregationExisting extends AggregationOuterDimension {
       }
 
     } else {
-      coordCacheVar = new CoordValueVar(dimName, DataType.STRING, "");
+      DataType coordDataType = DataType.STRING;
+      String coordUnits = null;
+      if (typicalDataset instanceof AggregationOuterDimension.DatasetOuterDimension) {
+        coordDataType = ((AggregationOuterDimension.DatasetOuterDimension) typicalDataset).coordDataType;
+        coordUnits = ((AggregationOuterDimension.DatasetOuterDimension) typicalDataset).coordUdunit;
+      }
+      coordCacheVar = new CoordValueVar(dimName, coordDataType, coordUnits);
     }
     if (coordCacheVar != null) {
       cacheList.add(coordCacheVar); // coordinate variable is always cached
@@ -128,8 +134,14 @@ public class AggregationExisting extends AggregationOuterDimension {
         // replace aggregation coordinate variable
         ncDataset.getRootGroup().removeVariable(joinAggCoord.getShortName());
       }
-
-      joinAggCoord = new VariableDS(ncDataset, null, null, dimName, DataType.STRING, dimName, null, null);
+      DataType coordDataType = DataType.STRING;
+      String coordUnits = null;
+      if (typicalDataset instanceof AggregationOuterDimension.DatasetOuterDimension) {
+        coordDataType = ((AggregationOuterDimension.DatasetOuterDimension) typicalDataset).coordDataType;
+        coordUnits = ((AggregationOuterDimension.DatasetOuterDimension) typicalDataset).coordUdunit;
+      }
+      coordCacheVar = new CoordValueVar(dimName, coordDataType, coordUnits);
+      joinAggCoord = new VariableDS(ncDataset, null, null, dimName, coordDataType, dimName, coordUnits, null);
       joinAggCoord.setProxyReader(this);
       ncDataset.getRootGroup().addVariable(joinAggCoord);
       aggVars.add(joinAggCoord);
@@ -137,6 +149,9 @@ public class AggregationExisting extends AggregationOuterDimension {
       joinAggCoord.addAttribute(new ucar.nc2.Attribute(_Coordinate.AxisType, "Time"));
       joinAggCoord.addAttribute(new Attribute(CDM.LONG_NAME, "time coordinate"));
       joinAggCoord.addAttribute(new ucar.nc2.Attribute(CF.STANDARD_NAME, "time"));
+      if (coordUnits != null && !coordUnits.equals("")) {
+        joinAggCoord.addAttribute(new Attribute(CF.UNITS, coordUnits));
+      }
     }
 
     if (timeUnitsChange && joinAggCoord != null) {
