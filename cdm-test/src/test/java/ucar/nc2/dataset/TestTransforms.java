@@ -309,8 +309,8 @@ public class TestTransforms {
     // should be compatible with vunit
     if (vunit != null) {
       String vertCoordUnit = vt.getUnitString();
-      assert vunit.isCompatible(vertCoordUnit) : vertCoordUnit + " not udunits compatible with "
-          + vunit.getUnitString();
+      assert vunit.isCompatible(vertCoordUnit)
+          : vertCoordUnit + " not udunits compatible with " + vunit.getUnitString();
     }
 
     return vt;

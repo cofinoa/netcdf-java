@@ -28,8 +28,8 @@ public class TestResolve {
     logger.debug("ACD service= {}", s);
 
     assert getAccessURL(cat, "nest11").equals("http://www.acd.ucar.edu/dods/testServer/flux/CO2.nc");
-    assert getAccessURL(cat, "nest12").equals(base + "netcdf/data/flux/NO2.nc") : getAccessURL(cat, "nest12") + " != "
-        + ClientCatalogUtil.makeFilepath() + "netcdf/data/flux/NO2.nc";
+    assert getAccessURL(cat, "nest12").equals(base + "netcdf/data/flux/NO2.nc")
+        : getAccessURL(cat, "nest12") + " != " + ClientCatalogUtil.makeFilepath() + "netcdf/data/flux/NO2.nc";
 
     assert getMetadataURL(cat, "nest1", "NETCDF").equals("any.xml");
     assert getMetadataURL(cat, "nest1", "ADN").equals("http://you/corrupt.xml");

@@ -756,8 +756,8 @@ public class HorizCoordSys {
     int stride = Math.max(1, (int) Math.ceil(numTotal / (double) maxToInclude));
     int numIncluded = (int) Math.ceil(numTotal / (double) stride);
 
-    assert numIncluded <= maxToInclude : String.format("We're set to include %d points, but we wanted a max of %d.",
-        numIncluded, maxToInclude);
+    assert numIncluded <= maxToInclude
+        : String.format("We're set to include %d points, but we wanted a max of %d.", numIncluded, maxToInclude);
     return stride;
   }
 
@@ -766,9 +766,9 @@ public class HorizCoordSys {
     // Widen to long to avoid possible overflow, because last two arguments will often be Integer.MAX_VALUE.
     long maxBoundaryPoints = 2 * (long) maxPointsInYEdge + 2 * (long) maxPointsInXEdge;
 
-    assert numBoundaryPoints <= maxBoundaryPoints : String.format(
-        "We should be returning a maximum of %d boundary points, but we're returning %d instead.", maxBoundaryPoints,
-        numBoundaryPoints);
+    assert numBoundaryPoints <= maxBoundaryPoints
+        : String.format("We should be returning a maximum of %d boundary points, but we're returning %d instead.",
+            maxBoundaryPoints, numBoundaryPoints);
   }
 
   /**

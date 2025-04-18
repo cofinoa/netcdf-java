@@ -75,8 +75,8 @@ public class UtilsTestStructureArray {
       List<StructureMembers.Member> members = sdata.getMembers();
       for (StructureMembers.Member m : members) {
         Array sdataArray = sdata.getArray(m);
-        assert (sdataArray.getElementType() == m.getDataType().getPrimitiveClassType()) : sdataArray.getElementType()
-            + " != " + m.getDataType().getPrimitiveClassType();
+        assert (sdataArray.getElementType() == m.getDataType().getPrimitiveClassType())
+            : sdataArray.getElementType() + " != " + m.getDataType().getPrimitiveClassType();
 
         Array sdataArray2 = sdata.getArray(m.getName());
         UtilsMa2Test.testEquals(sdataArray, sdataArray2);

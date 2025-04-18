@@ -22,8 +22,8 @@ public abstract class NcMeasureType {
         .format("%s appeared in the list of data variables but not in the StructureData.", dataVar.getShortName());
 
     Array dataArray = pointFeat.getDataAll().getArray(firstDataMember);
-    assert dataArray.getSize() == 1 : String.format("Expected array to be scalar, but its shape was %s.",
-        Arrays.toString(dataArray.getShape()));
+    assert dataArray.getSize() == 1
+        : String.format("Expected array to be scalar, but its shape was %s.", Arrays.toString(dataArray.getShape()));
 
     double dataVal = dataArray.getDouble(0);
     value.setDoubleValue(dataVal);

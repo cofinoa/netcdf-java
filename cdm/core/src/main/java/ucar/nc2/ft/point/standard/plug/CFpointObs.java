@@ -420,8 +420,8 @@ public class CFpointObs extends TableConfigurerImpl {
             // zDim = z.getDimension(0);
           }
         } else { // 1d time
-          assert z.getRank() != 1
-              || !time.getDimension(0).equals(z.getDimension(0)) : "time and z dimensions must be different";
+          assert z.getRank() != 1 || !time.getDimension(0).equals(z.getDimension(0))
+              : "time and z dimensions must be different";
         }
 
         TableConfig profileTable = makeMultidimInner(ds, stationTable, info.childDim, info, errlog);
