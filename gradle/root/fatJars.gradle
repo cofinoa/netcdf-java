@@ -20,7 +20,7 @@ if (!name.equals(rootProject.name)) {
 
 // need this to resolve dependencies defined through the netcdf-java-platform project
 apply from: "$rootDir/gradle/any/dependencies.gradle"
-apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'com.gradleup.shadow'
 
 // todo: this indicates we need have too much logic in our script plugin
 // This script plugin is a candidate for moving into buildSrc.

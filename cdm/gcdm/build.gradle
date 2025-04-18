@@ -82,6 +82,7 @@ task startDaemon(type: JavaExecFork) {
   stopAfter = test
   waitForPort = 16111
   waitForOutput = 'Server started, listening on 16111'
+  dependsOn testClasses
 }
 
 test.dependsOn(startDaemon)
