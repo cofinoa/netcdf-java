@@ -1,4 +1,8 @@
-/* Copyright Unidata */
+/*
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
+ * See LICENSE.txt for license information.
+ */
+
 package ucar.nc2.internal.ncml;
 
 import java.io.IOException;
@@ -11,6 +15,7 @@ import java.util.StringTokenizer;
 import javax.annotation.Nullable;
 import thredds.inventory.MFile;
 import ucar.ma2.Array;
+import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 import ucar.ma2.Section;
@@ -32,7 +37,8 @@ class AggDatasetOuter extends AggDataset {
   @Nullable
   final String coordValue; // if theres a coordValue on the netcdf element - may be multiple, blank separated
   final Date coordValueDate; // if its a date
-  final boolean isStringValued; // if coordinat is a String
+  final DataType coordDataType; // coordinate data type
+  final String coordUdunit; // coordinate udunit string, if numeric
 
   // not final because of deffered read
   int ncoord; // number of coordinates in outer dimension
@@ -68,18 +74,18 @@ class AggDatasetOuter extends AggDataset {
       }
     }
 
-    boolean isString = false;
+    DataType aggCoordDataType = DataType.DOUBLE;
     if ((aggregationOuter.type == Type.joinNew) || (aggregationOuter.type == Type.joinExistingOne)
         || (aggregationOuter.type == Type.forecastModelRunCollection)) {
       if (coordValueS == null) {
         coordValueS = extractCoordNameFromFilename(this.getLocation());
-        isString = true;
+        aggCoordDataType = DataType.STRING;
       } else {
         // we just need to know if its string valued
         try {
           Double.parseDouble(coordValueS);
         } catch (NumberFormatException e) {
-          isString = true;
+          aggCoordDataType = DataType.STRING;
         }
       }
     }
@@ -90,8 +96,10 @@ class AggDatasetOuter extends AggDataset {
       this.ncoord = stoker.countTokens();
     }
 
-    this.isStringValued = isString; // LOOK ??
+    coordDataType = aggCoordDataType;
     this.coordValue = coordValueS;
+    // not dealing with scan
+    this.coordUdunit = "";
     this.coordValueDate = null; // LOOK why isnt this set?
   }
 
@@ -115,13 +123,21 @@ class AggDatasetOuter extends AggDataset {
     // default is that the coordinates are just the filenames
     // this can be overriden by an explicit declaration, which will replace the variable after ther agg is processed in
     // NcMLReader
+    DataType aggCoordDataType = DataType.DOUBLE;
+    String coordUdunit = "";
     if ((aggregationOuter.type == Type.joinNew) || (aggregationOuter.type == Type.joinExistingOne)
         || (aggregationOuter.type == Type.forecastModelRunCollection)) {
       coordValueS = extractCoordNameFromFilename(this.getLocation());
-      this.isStringValued = true;
-    } else {
-      this.isStringValued = false; // LOOK ??
+      if (aggregationOuter.numericTimeSettings != null) {
+        String[] settings = aggregationOuter.numericTimeSettings.split(" ", 2);
+        aggCoordDataType = DataType.getType(settings[0]);
+        coordUdunit = settings[1];
+      } else {
+        aggCoordDataType = DataType.STRING;
+      }
     }
+    this.coordDataType = aggCoordDataType;
+    this.coordUdunit = coordUdunit;
 
     if (null != aggregationOuter.dateFormatMark) {
       String filename = cd.getName(); // LOOK operates on name, not path

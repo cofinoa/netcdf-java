@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -149,7 +149,7 @@ public class AggregationNew extends AggregationOuter {
   private DataType getCoordinateType() {
     List<AggDataset> nestedDatasets = getDatasets();
     AggDatasetOuter first = (AggDatasetOuter) nestedDatasets.get(0);
-    return first.isStringValued ? DataType.STRING : DataType.DOUBLE;
+    return first.coordDataType;
   }
 
 }

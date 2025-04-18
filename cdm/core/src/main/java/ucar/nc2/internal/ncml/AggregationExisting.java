@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -76,7 +76,13 @@ class AggregationExisting extends AggregationOuter {
       }
 
     } else {
-      coordCacheVar = new CoordValueVar(dimName, DataType.STRING, "");
+      DataType coordDataType = DataType.STRING;
+      String coordUnits = "";
+      if (typicalDataset instanceof AggDatasetOuter) {
+        coordDataType = ((AggDatasetOuter) typicalDataset).coordDataType;
+        coordUnits = ((AggDatasetOuter) typicalDataset).coordUdunit;
+      }
+      coordCacheVar = new CoordValueVar(dimName, coordDataType, coordUnits);
     }
     if (coordCacheVar != null) {
       cacheList.add(coordCacheVar); // coordinate variable is always cached
@@ -134,8 +140,14 @@ class AggregationExisting extends AggregationOuter {
     if (type == Type.joinExistingOne) {
       // replace aggregation coordinate variable
       joinAggCoordOpt.ifPresent(joinAgg -> rootGroup.removeVariable(joinAgg.shortName));
+      DataType coordDataType = DataType.STRING;
+      String coordUnits = "";
+      if (typicalDataset instanceof AggDatasetOuter) {
+        coordDataType = ((AggDatasetOuter) typicalDataset).coordDataType;
+        coordUnits = ((AggDatasetOuter) typicalDataset).coordUdunit;
+      }
 
-      joinAggCoord = VariableDS.builder().setName(dimName).setDataType(DataType.STRING).setParentGroupBuilder(rootGroup)
+      joinAggCoord = VariableDS.builder().setName(dimName).setDataType(coordDataType).setParentGroupBuilder(rootGroup)
           .setDimensionsByName(dimName);
       joinAggCoord.setProxyReader(this);
       rootGroup.addVariable(joinAggCoord);
@@ -144,6 +156,9 @@ class AggregationExisting extends AggregationOuter {
       joinAggCoord.addAttribute(new Attribute(_Coordinate.AxisType, "Time"));
       joinAggCoord.addAttribute(new Attribute(CDM.LONG_NAME, "time coordinate"));
       joinAggCoord.addAttribute(new Attribute(CF.STANDARD_NAME, "time"));
+      if (coordUnits != null && !coordUnits.equals("")) {
+        joinAggCoord.addAttribute(new Attribute(CF.UNITS, coordUnits));
+      }
     }
 
     if (timeUnitsChange && joinAggCoord != null) {
