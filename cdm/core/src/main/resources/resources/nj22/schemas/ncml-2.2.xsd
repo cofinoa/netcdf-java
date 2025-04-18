@@ -2,7 +2,8 @@
 <xsd:schema targetNamespace="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2"
-            elementFormDefault="qualified">
+            elementFormDefault="qualified"
+            version="2.2.0">
   
   <!-- XML encoding of Netcdf container object -->
   <xsd:element name="netcdf">
