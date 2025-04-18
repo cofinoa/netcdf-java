@@ -235,6 +235,7 @@ These are the ways that coordinate values may be assigned to a `joinExisting` co
   </aggregation>
   ~~~
 * If there is exactly one time slice in each file of the `joinExisting` aggregation, and you are using a scan element to dynamically scan the files in a directory, then you can use the `dateFormatMark` attribute to derive the date from the filename.
+  * You can combine `dateFormatMark` with `numericTimeSettings` to produce a time variable with numeric values and a UDUNITS compatible unit.
 * If you do not specify a coordinate variable, one must exist in each of the nested datasets, and the coordinate values will be read from it, just like any other aggregation variable.
   In this case, when the units of the aggregation coordinate change on the existing coordinate variables, you must add **timeUnitsChange=\"true\"** on the aggregation element:
   ~~~xml

@@ -190,7 +190,7 @@ See [Dataset URLs](dataset_urls.html) for more information on the location attri
 
 ### Assign coordinate values to unknown number of datasets.
 
-You dont have to know the number of files found in the scan, but they must be evenly spaced, and they must be in alphabetic order.
+You don't have to know the number of files found in the scan, but they must be evenly spaced, and they must be in alphabetic order.
 
 ~~~xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -207,7 +207,7 @@ You dont have to know the number of files found in the scan, but they must be ev
 </netcdf>
 ~~~
 
-### Scan directory, assign date coordinate value from filename.
+### Scan directory, assign date coordinate value (ISO time strings) from filename.
 
 The date coordinate must be derivable from the filename, using the dateFormatMark attribute.
 
@@ -217,6 +217,23 @@ The date coordinate must be derivable from the filename, using the dateFormatMar
   <aggregation dimName="time" type="joinNew">
     <variableAgg name="T"/>
     <scan location="/data/goes/" suffix=".gini" dateFormatMark="SUPER-NATIONAL_1km_SFC-T_#yyyyMMdd_HHmm" />
+  </aggregation>
+</netcdf> 
+~~~
+
+### Scan directory, assign date coordinate value (numeric, UDUNITS compatible) from filename.
+
+The date coordinate must be derivable from the filename, using the dateFormatMark attribute.
+The numericTimeSettings consists of a data type plus a UDUNITS time unit.
+These should be chosen carefully, as truncation can occur.
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8"?>
+<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+  <aggregation dimName="time" type="joinNew">
+    <variableAgg name="T"/>
+    <scan location="/data/goes/" suffix=".gini" dateFormatMark="SUPER-NATIONAL_1km_SFC-T_#yyyyMMdd_HHmm"
+      numericTimeSettings="int minutes since 2015-06-07T12:00:00Z"/>
   </aggregation>
 </netcdf> 
 ~~~
@@ -254,30 +271,6 @@ Overrides existing coordinate variable, if any.
       coordValue="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"/>
    <netcdf location="file:src/test/data/ncml/nc/feb.nc"
       coordValue="31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58"/>
- </aggregation>
-</netcdf>
-~~~
-
-### Scan directory, assign date coordinate value from filename.
-
-Each file must have exactly one time slice.
-The date coordinate must be derivable from the filename, using the `dateFormatMark` attribute.
-
-~~~xml
-<?xml version="1.0" encoding="UTF-8"?>
-<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
-  <aggregation dimName="time" type="joinExisting">
-    <scan dateFormatMark="CG#yyyyDDD_HHmmss" location="src/test/data/ncml/nc/cg/" suffix=".nc" subdirs="false" />
-  </aggregation>
-</netcdf>
-
-<?xml version="1.0" encoding="UTF-8"?>
-<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
- <aggregation dimName="time" type="joinExisting" timeUnitsChange="true"> 
-  <netcdf location="20060925_0600.nc" ncoords="2"/>
-  <netcdf location="20060925_1200.nc" ncoords="2"/>
-  <netcdf location="20060925_1800.nc" ncoords="2"/>
-  <netcdf location="20060926_0000.nc" ncoords="2"/>
  </aggregation>
 </netcdf>
 ~~~

@@ -27,7 +27,8 @@ Aggregation specific elements are listed in <font color="darkred">red. The forec
 <xsd:schema targetNamespace="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2"
-  elementFormDefault="qualified">
+  elementFormDefault="qualified"
+  version="2.2.1">
 ~~~
 
 ### netcdf Element
@@ -446,30 +447,31 @@ The aggregation element allows multiple datasets to be combined into a single lo
 (11)   <xsd:attribute name="olderThan" type="xsd:string" />
 (12)   <xsd:attribute name="dateFormatMark" type="xsd:string" />
 (13)   <xsd:attribute name="enhance" type="xsd:string"/>
+(14)   <xsd:attribute name="numericTimeSettings" type="xsd:string"/>
       </xsd:complexType>
      </xsd:element>
 
-(14) <xsd:element name="scanFmrc" minOccurs="0" maxOccurs="unbounded">
+(15) <xsd:element name="scanFmrc" minOccurs="0" maxOccurs="unbounded">
       <xsd:complexType>
 (7)    <xsd:attribute name="location" type="xsd:string" 
 (8)    <xsd:attribute name="regExp" type="xsd:string" />use="required"/>
 (9)    <xsd:attribute name="suffix" type="xsd:string" />
 (10)   <xsd:attribute name="subdirs" type="xsd:boolean" default="true"/>
 (11)   <xsd:attribute name="olderThan" type="xsd:string" />
-(15)   <xsd:attribute name="runDateMatcher" type="xsd:string" />
+(16)   <xsd:attribute name="runDateMatcher" type="xsd:string" />
        <xsd:attribute name="forecastDateMatcher" type="xsd:string" />
        <xsd:attribute name="forecastOffsetMatcher" type="xsd:string" />
       </xsd:complexType>
      </xsd:element>
     </xsd:sequence>
     
-(16) <xsd:attribute name="type" type="AggregationType" use="required"/>
-(17) <xsd:attribute name="dimName" type="xsd:token" />
-(18) <xsd:attribute name="recheckEvery" type="xsd:string" />
-(19) <xsd:attribute name="timeUnitsChange" type="xsd:boolean"/>
+(17) <xsd:attribute name="type" type="AggregationType" use="required"/>
+(18) <xsd:attribute name="dimName" type="xsd:token" />
+(19) <xsd:attribute name="recheckEvery" type="xsd:string" />
+(20) <xsd:attribute name="timeUnitsChange" type="xsd:boolean"/>
 
       <!-- fmrc only  -->
-(20) <xsd:attribute name="fmrcDefinition" type="xsd:string" />
+(21) <xsd:attribute name="fmrcDefinition" type="xsd:string" />
 
 </xsd:complexType>
 </xsd:element>
@@ -482,7 +484,7 @@ The aggregation element allows multiple datasets to be combined into a single lo
  **promoteGlobalAttribute** element.
 4. Specify which variables should be cached (outer aggregation only) with a **cacheVariable** element.
 5. Nested **netcdf** datasets can be explicitly listed.
-6. Nested netcdf datasets can be implictly specified with a **scan** element.
+6. Nested netcdf datasets can be implicitly specified with a **scan** element.
 7. The scan directory **location**.
 8. If you specify a **regExp**, only files with whose full pathnames match the regular expression will be included.
 9. If you specify a **suffix**, only files with that ending will be included. A regExp attribute will override, that is, 
@@ -495,17 +497,18 @@ The aggregation element allows multiple datasets to be combined into a single lo
 13. You can optionally specify that the files should be opened in **enhance** mode (default is *None*).
  Generally you should do this if the ncml needs to operate on the dataset after the CoordSysBuilder has augmented it. 
  Otherwise, you should not enhance.
-14. A specialized **scanFmrc** element can be used for a forecastModelRunSingleCollection aggregation, where forecast 
+14. **numericTimeSettings** is used in conjunction with **dateFormatMark** to create a numeric, UDUNITS compatible aggregated time variable. See more below.
+15. A specialized **scanFmrc** element can be used for a forecastModelRunSingleCollection aggregation, where forecast 
  model run data is stored in multiple files, with one forecast time per file.
-15. For scanFmrc, the run date and the forecast date is extracted from the file pathname using a **runDateMatcher** and 
+16. For scanFmrc, the run date and the forecast date is extracted from the file pathname using a **runDateMatcher** and 
  either a **forecastDateMatcher** or a **forecastOffsetMatcher** attribute. See more below.
-16. You must specify an **aggregation type**.
-17. For all types except joinUnion, you must specify the **dimension name** to join.
-18. The **recheckEvery** allows you to rescan periodically to see if the set of files has changed.
-19. Only for *joinExisting* and *forecastModelRunCollection* types: if **timeUnitsChange** is set to true, the units of the 
+17. You must specify an **aggregation type**.
+18. For all types except joinUnion, you must specify the **dimension name** to join.
+19. The **recheckEvery** allows you to rescan periodically to see if the set of files has changed.
+20. Only for *joinExisting* and *forecastModelRunCollection* types: if **timeUnitsChange** is set to true, the units of the 
  joined coordinate variable may change, so examine them and do any appropriate conversion so that the aggregated 
  coordinate values have consistent units.
-20. Experimental, do not use.
+21. Experimental, do not use.
 
 ##### DateFormatMark
 A **dateFormatMark** is used on joinNew types to create date coordinate values out of the filename. It consists of a 
@@ -520,6 +523,16 @@ A **dateFormatMark** is used on joinNew types to create date coordinate values o
  A dateFormatMark can be used on a *joinExisting* type only if there is a single time in each file of the aggregation,
  in which case the coordinate values of the time can be created from the filename, instead of having to open each file
  and read it.
+
+##### numericTimeSettings
+**numericTimeSettings** can be combined with a **dateFormatMark** to produce a numeric, UDUNITS compatible time variable.
+**numericTimeSettings** consists of a data type plus a UDUNITS compatible time unit.
+Care must be taken when choosing these parameters to prevent truncation.
+ ```
+            Filename: SUPER-NATIONAL_1km_SFC-T_20051206_2300.gini 
+      DateFormatMark: SUPER-NATIONAL_1km_SFC-T_#yyyyMMdd_HHmm
+ numericTimeSettings: int minutes since 2005-12-01T00:00:00Z"
+ ```
 
 ##### ScanFmrc
 
