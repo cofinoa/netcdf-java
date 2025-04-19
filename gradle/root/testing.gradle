@@ -124,6 +124,7 @@ gradle.projectsEvaluated {
     //finalizedBy jacocoRootReport
   }
 
+  /**
   task rootTestReport(type: TestReport, group: 'Reports') {
     description = 'Generates an aggregate test report'
     destinationDir = file("$buildDir/reports/allTests")
@@ -142,6 +143,8 @@ gradle.projectsEvaluated {
     // Wait until all Test tasks have run. This creates a task *ordering*, not a dependency.
     mustRunAfter subprojectTestTasks
   }
+  **/
 }
+
 
 apply plugin: 'base'  // Gives us the "clean" task for removing rootTestReport's output.
