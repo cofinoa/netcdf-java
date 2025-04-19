@@ -189,7 +189,7 @@ tasks.withType(JavaCompile).configureEach {
   options.compilerArgs = ['-Xlint:deprecation']
 }
 
-apply plugin: 'com.diffplug.gradle.spotless'
+apply plugin: 'com.diffplug.spotless'
 spotless {
   java {
     // target java files in the test directory

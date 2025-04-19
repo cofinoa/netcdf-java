@@ -44,12 +44,6 @@ tasks.withType(JacocoReport).all {  // Will apply to ":<subproject>:jacocoTestRe
   group = 'Reports'
   dependsOn tasks.withType(Test)
 
-  reports {
-    xml.enabled = false
-    html.enabled = true
-    csv.enabled = false
-  }
-
   // By default, JacocoReport runs onlyIf ALL of the executionData exist. We want it to run if ANY exists.
   setOnlyIf {
     executionData.any {

@@ -228,9 +228,9 @@ public class ArrayStructureMA extends ArrayStructure {
       if (numRecords == -1) {
         numRecords = firstDimLen;
       } else {
-        assert numRecords == firstDimLen : String.format(
-            "Expected all structure members to have the same first" + "dimension length, but %d != %d.", numRecords,
-            firstDimLen);
+        assert numRecords == firstDimLen
+            : String.format("Expected all structure members to have the same first" + "dimension length, but %d != %d.",
+                numRecords, firstDimLen);
       }
 
       memberArrayMap.put(m.getName(), array);

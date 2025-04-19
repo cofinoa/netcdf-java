@@ -75,13 +75,6 @@ jacocoFullTestReport.configure {
       it.exists()
     }
   }
-
-  // just the html here, as it's only for devs and not something that gets submitted elsewhere
-  reports {
-    xml.enabled = false
-    html.destination file("${buildDir}/reports/allTests")
-    csv.enabled = false
-  }
 }
 
 check.configure {

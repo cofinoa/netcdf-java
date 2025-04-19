@@ -6,8 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # test against latest 8, 11, 17 of zulu and temurin java
-        java-version: [8, 11, 17]
+        # test against latest 8, 11, 17, 21 of zulu and temurin java
+        java-version: [8, 11, 17, 21]
         java-vendor: ['zulu', 'temurin', 'corretto']
     steps:
       - uses: actions/checkout@v4

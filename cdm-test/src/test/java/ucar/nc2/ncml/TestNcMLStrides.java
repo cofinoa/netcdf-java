@@ -100,8 +100,8 @@ public class TestNcMLStrides extends TestCase {
     Index ci = correct.getIndex();
     Index di = data.getIndex();
     for (int i = 0; i < data.getSize(); i++)
-      assert (data.getInt(di.set(i)) == correct.getInt(ci.set(i))) : stride + " index " + i + " = "
-          + data.getInt(di.set(i)) + " != " + correct.getInt(ci.set(i));
+      assert (data.getInt(di.set(i)) == correct.getInt(ci.set(i)))
+          : stride + " index " + i + " = " + data.getInt(di.set(i)) + " != " + correct.getInt(ci.set(i));
   }
 
 }
