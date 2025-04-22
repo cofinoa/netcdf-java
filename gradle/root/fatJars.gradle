@@ -144,7 +144,7 @@ def createChecksumsTask = tasks.register('createChecksums') {
   group = 'publishing'
   description = 'Create .sha1, .sha256, and .md5 checksum files for the fatJars.'
   doLast {
-    String sourceDir = "${rootProject.getBuildDir()}/libs"
+    String sourceDir = "${rootProject.getBuildDir()}/distributions"
     def files = fileTree(dir: "${sourceDir}", include: '**/*.jar')
     def algorithms = ["MD5", "SHA-1", "SHA-256"]
     algorithms.each { algorithm ->
@@ -177,7 +177,7 @@ def createChecksumsTask = tasks.register('createChecksums') {
         }
         String checksum = sb.toString()
         def ext = algorithm.toLowerCase().replace("-", "")
-        String outputFilename = "${buildDir}/libs/${jarFile.getName()}.${ext}"
+        String outputFilename = "${buildDir}/distributions/${jarFile.getName()}.${ext}"
         new File(outputFilename).withWriter { writer ->
           writer.write checksum
         }
