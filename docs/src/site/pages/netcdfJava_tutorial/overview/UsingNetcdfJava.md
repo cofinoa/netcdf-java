@@ -134,7 +134,7 @@ To ease the use of this feature, we now distribute a jar file containing the nat
 |:-|:-:|:-:
 | Linux | <span class="glyphicon glyphicon-ok" style="color: green;"></span> | <span class="glyphicon glyphicon-ok" style="color: green;">
 | MacOS | <span class="glyphicon glyphicon-ok" style="color: green;"> | <span class="glyphicon glyphicon-ok" style="color: green;">
-| Windows | <span class="glyphicon glyphicon-ok" style="color: green;"> | <span class="glyphicon glyphicon-remove" style="color: red;">
+| Windows | <span class="glyphicon glyphicon-ok" style="color: green;"> | <span class="glyphicon glyphicon-ok" style="color: green;">
 
 If you are using on the of the supported platform/architecture combinations above, you may include the `edu.ucar:libaec-native:${netcdfJavaVersion}` artifact in your project to bypass the need to install libaec on your system.
 Otherwise, libaec will need to be installed and reachable in your system library path in order to read data compressed using libaec.

@@ -5,6 +5,7 @@ on:
       - 'native-compression/libaec-jna/**'
       - 'native-compression/libaec-native/**'
       - 'native-compression/build.gradle'
+      - '.github/workflows/test-native-compression.yml'
 
 jobs:
   tests:
@@ -14,6 +15,7 @@ jobs:
           ubuntu-24.04,
           ubuntu-24.04-arm,
           windows-2022,
+          windows-11-arm,
           macos-14,
           macos-13
         ]
@@ -22,10 +24,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 11
+        if: ${{ matrix.os != 'windows-11-arm' }}
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
+      - name: Set up JDK 21
+        if: ${{ matrix.os == 'windows-11-arm' }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -36,7 +45,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Run libaec JNA tests
-        run: ./gradlew clean :native-compression:libaec-jna:test
+        run: ./gradlew clean :native-compression:libaec-jna:simpleTests
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
