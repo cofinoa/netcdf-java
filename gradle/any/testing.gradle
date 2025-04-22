@@ -17,7 +17,9 @@ tasks.withType(Test).all {
 
   useJUnit {
     // if we are not explicitly trying to run all tests, allow some categories to be ignored
-    if (!runAllTests) {
+    // test tasks named 'simpleTests' do not depend on cdm-test-utils, so do not apply category
+    // filters (e.g. :native-compression:libaec-jna:simpleTests)
+    if (!runAllTests && !name.equals('simpleTests')) {
       if (isJenkins) {
         excludeCategories 'ucar.unidata.util.test.category.NotJenkins'
       }
