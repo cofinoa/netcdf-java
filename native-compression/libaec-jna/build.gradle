@@ -4,17 +4,34 @@ apply from: "$rootDir/gradle/any/java-library.gradle"
 description = 'Java bindings for decoding libaec compression using JNA'
 ext.title = 'libaec compression decoder using JNA'
 
+sourceSets {
+    simpleTests {
+        //resources.srcDirs = [file('src/simpleTests/resources')]
+        compileClasspath += sourceSets.main.output + configurations.compileClasspath
+        runtimeClasspath += output + sourceSets.main.output + configurations.runtimeClasspath
+    }
+}
+
+// unloaded test task using "configuration avoidance"
+def simpleTests = tasks.register('simpleTests', Test) {
+    group = 'verification'
+    description = 'Runs tests that do not depend on cdm-test-utils (specifically cdm-core)'
+    testClassesDirs = sourceSets.simpleTests.output.classesDirs
+    classpath = sourceSets.simpleTests.runtimeClasspath
+}
+
+test.dependsOn(simpleTests)
+
 dependencies {
     api enforcedPlatform(project(':netcdf-java-platform'))
-    testImplementation enforcedPlatform(project(':netcdf-java-testing-platform'))
+    simpleTestsImplementation enforcedPlatform(project(':netcdf-java-platform'))
+    simpleTestsImplementation enforcedPlatform(project(':netcdf-java-testing-platform'))
 
     api 'net.java.dev.jna:jna'
     implementation 'org.slf4j:slf4j-api'
 
-    testImplementation project(':cdm-test-utils')
+    simpleTestsImplementation 'com.google.truth:truth'
 
-    testImplementation 'com.google.truth:truth'
-
-    testRuntimeOnly project(':native-compression:libaec-native')
-    testRuntimeOnly 'ch.qos.logback:logback-classic'
+    simpleTestsRuntimeOnly project(':native-compression:libaec-native')
+    simpleTestsRuntimeOnly 'ch.qos.logback:logback-classic'
 }
