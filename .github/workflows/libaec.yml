@@ -1,7 +1,7 @@
 #
-# Build libaec on windows (x86-64), linux (x86-64, aarch64), and mac
-# (x86-64, aarch64) and combine into a single artifact for use by
-# netCDF-Java.
+# Build libaec on windows (x86-64, aarch64), linux (x86-64, aarch64),
+# and mac (x86-64, aarch64) and combine into a single artifact for use
+# by netCDF-Java.
 #
 # The version of libaec is used twice in this workflow - once in the
 # ref of the checkout, and once in the name of the final artifact.
