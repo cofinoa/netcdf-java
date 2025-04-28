@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -2859,6 +2859,8 @@ public class Nc4Iosp extends AbstractIOServiceProvider implements IOServiceProvi
     if (att.getShortName().equals(CDM.NCPROPERTIES))
       return;
     if (att.getShortName().equals(CDM.ISNETCDF4))
+      return;
+    if (att.getShortName().equals(CDM.ARRAYDIMENSIONS))
       return;
 
     int ret = 0;
