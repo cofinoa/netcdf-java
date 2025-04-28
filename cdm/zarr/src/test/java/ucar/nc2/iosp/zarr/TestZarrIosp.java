@@ -352,4 +352,42 @@ public class TestZarrIosp {
     assertThat(sArray).isInstanceOf(ArrayLong.D0.class);
     assertThat(sArray.getLong(0)).isEqualTo(0L);
   }
+
+  @Test
+  public void testGeozarrSharedDimension() throws IOException {
+    NetcdfFile ncfile = NetcdfFiles.open(SCALAR_GEOZARR_DATA);
+
+    Dimension xdim = ncfile.findDimension("x");
+    assertThat(xdim).isNotNull();
+    assertThat(xdim.isShared()).isTrue();
+
+    Dimension ydim = ncfile.findDimension("y");
+    assertThat(ydim).isNotNull();
+    assertThat(ydim.isShared()).isTrue();
+
+    Dimension tdim = ncfile.findDimension("time");
+    assertThat(tdim).isNotNull();
+    assertThat(tdim.isShared()).isTrue();
+
+    Variable temperature = ncfile.findVariable("temperature");
+    assertThat(temperature != null).isTrue();
+    ImmutableList<Dimension> dims = temperature.getDimensions();
+    assertThat(dims.size()).isEqualTo(3);
+
+    for (Dimension dim : dims) {
+      switch (dim.getName()) {
+        case "x":
+          assertThat(dim).isEqualTo(xdim);
+          break;
+        case "y":
+          assertThat(dim).isEqualTo(ydim);
+          break;
+        case "time":
+          assertThat(dim).isEqualTo(tdim);
+          break;
+        default:
+          throw new IllegalArgumentException("Untested dimension " + dim);
+      }
+    }
+  }
 }

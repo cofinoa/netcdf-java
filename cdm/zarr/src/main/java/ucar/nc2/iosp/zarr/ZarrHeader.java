@@ -268,7 +268,8 @@ public class ZarrHeader {
       final Dimension.Builder dim = Dimension.builder(dname, shape[i]);
       dim.setIsVariableLength(false);
       dim.setIsUnlimited(false);
-      dim.setIsShared(false);
+      // if using named dimensions from _ARRAY_DIMENSIONS, mark the dimension as shared
+      dim.setIsShared(hasNamedDimensions);
 
       final Dimension dd = dim.build();
 
@@ -283,6 +284,9 @@ public class ZarrHeader {
           if (dd.getLength() != prevd.getLength()) {
             throw new ZarrFormatException("Named dimension " + dname + " seen with inconsistent lengths.");
           }
+          // replace newly created dimension with the previously added dimension
+          dims.remove(dd);
+          dims.add(prevd);
         } else {
           logger.trace("adding {} to group as a shared dimension", dname);
           parentGroup.addDimension(dd);
