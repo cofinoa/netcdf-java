@@ -345,7 +345,7 @@ public class TestZarrIosp {
     NetcdfFile ncfile = NetcdfFiles.open(SCALAR_GEOZARR_DATA);
     Variable scalarVar = ncfile.findVariable("spatial_ref");
     assertThat(scalarVar != null).isTrue();
-    assertThat(scalarVar.getShape()).isEqualTo(new int[]{});
+    assertThat(scalarVar.getShape()).isEqualTo(new int[] {});
     assertThat(scalarVar.getSize()).isEqualTo(1);
     Array sArray = scalarVar.read();
     assertThat(sArray).isNotNull();

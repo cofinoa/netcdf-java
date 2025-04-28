@@ -372,8 +372,7 @@ public class ZarrHeader {
 
     int nDims = zarray.getShape().length;
     // verify is data file, else return -1
-    String pattern = String.format("([0-9]+%c){%d}[0-9]+", zarray.getSeparator().charAt(0),
-        nDims == 0 ? 0 : nDims - 1);
+    String pattern = String.format("([0-9]+%c){%d}[0-9]+", zarray.getSeparator().charAt(0), nDims == 0 ? 0 : nDims - 1);
 
     if (!fileName.matches(pattern)) {
       return -1;
