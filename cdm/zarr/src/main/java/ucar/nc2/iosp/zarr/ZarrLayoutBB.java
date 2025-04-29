@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021-2025 University Corporation for Atmospheric Research/Unidata
+ * See LICENSE for license information.
+ */
+
 package ucar.nc2.iosp.zarr;
 
 import ucar.ma2.Range;
@@ -127,14 +132,20 @@ public class ZarrLayoutBB implements LayoutBB {
 
     private void incrementChunk() {
       // increment index from inner dimension outward
-      int i = this.currChunk.length - 1;
-      while (this.currChunk[i] + 1 >= nChunks[i] && i > 0) {
-        this.currChunk[i] = 0;
-        i--;
+      if (this.currChunk.length != 0) {
+        int i = this.currChunk.length - 1;
+        while (this.currChunk[i] + 1 >= nChunks[i] && i > 0) {
+          this.currChunk[i] = 0;
+          i--;
+        }
+        this.currChunk[i]++;
+        this.currOffset += initializedChunks.getOrDefault(this.chunkNum, (long) 0);
+        this.chunkNum = ZarrUtils.subscriptsToIndex(this.currChunk, nChunks);
+      } else {
+        // scalar array
+        this.currOffset = 0;
+        this.chunkNum = 0;
       }
-      this.currChunk[i]++;
-      this.currOffset += initializedChunks.getOrDefault(this.chunkNum, (long) 0);
-      this.chunkNum = ZarrUtils.subscriptsToIndex(this.currChunk, nChunks);
     }
   }
 

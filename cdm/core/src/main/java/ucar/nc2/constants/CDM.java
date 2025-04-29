@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -66,6 +66,7 @@ public class CDM {
   public static final String NCPROPERTIES = "_NCProperties";
   public static final String ISNETCDF4 = "_IsNetcdf4";
   public static final String SUPERBLOCKVERSION = "_SuperblockVersion";
+  public static final String ARRAYDIMENSIONS = "_ARRAY_DIMENSIONS";
 
   public static final String[] SPECIALS = {NCPROPERTIES, ISNETCDF4, SUPERBLOCKVERSION};
 

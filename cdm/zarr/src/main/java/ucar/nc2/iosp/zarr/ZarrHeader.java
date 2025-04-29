@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2021 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 2021-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
 package ucar.nc2.iosp.zarr;
+
+import static ucar.nc2.constants.CDM.ARRAYDIMENSIONS;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,6 +36,7 @@ public class ZarrHeader {
   private final RandomAccessDirectory rootRaf;
   private final Group.Builder rootGroup;
   private final String rootLocation;
+
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
   public ZarrHeader(RandomAccessDirectory raf, Group.Builder rootGroup) {
@@ -219,20 +222,25 @@ public class ZarrHeader {
 
       for (Attribute attr : attrs) {
         final String attrName = attr.getName();
-        if ("_ARRAY_DIMENSIONS".equals(attrName)) {
+        if (ARRAYDIMENSIONS.equals(attrName)) {
           try {
-            final ArrayObject.D1 aod1 = (ArrayObject.D1) attr.getValues();
+            if (attr.getLength() == 1 && attr.getStringValue().equals("")) {
+              // scalar array without a named dimension
+              logger.debug("  {} is a scalar array without a named dimension", vname);
+            } else {
+              final ArrayObject.D1 aod1 = (ArrayObject.D1) attr.getValues();
 
-            // getSize returns a long
-            final int aodSize = (int) aod1.getSize();
-            dimNames = new String[aodSize];
+              // getSize returns a long
+              final int aodSize = (int) aod1.getSize();
+              dimNames = new String[aodSize];
 
-            for (int i = 0; i < aodSize; ++i) {
-              dimNames[i] = (String) aod1.get(i);
+              for (int i = 0; i < aodSize; ++i) {
+                dimNames[i] = (String) aod1.get(i);
+              }
+              hasNamedDimensions = true;
             }
-            hasNamedDimensions = true;
           } catch (final Exception exc) {
-            logger.debug("  Could not extract _ARRAY_DIMENSIONS for {}, {}", vname, exc.getMessage());
+            logger.debug("  Could not extract {} for {}, {}", ARRAYDIMENSIONS, vname, exc.getMessage());
           }
         }
       }
@@ -260,7 +268,8 @@ public class ZarrHeader {
       final Dimension.Builder dim = Dimension.builder(dname, shape[i]);
       dim.setIsVariableLength(false);
       dim.setIsUnlimited(false);
-      dim.setIsShared(false);
+      // if using named dimensions from _ARRAY_DIMENSIONS, mark the dimension as shared
+      dim.setIsShared(hasNamedDimensions);
 
       final Dimension dd = dim.build();
 
@@ -275,6 +284,9 @@ public class ZarrHeader {
           if (dd.getLength() != prevd.getLength()) {
             throw new ZarrFormatException("Named dimension " + dname + " seen with inconsistent lengths.");
           }
+          // replace newly created dimension with the previously added dimension
+          dims.remove(dd);
+          dims.add(prevd);
         } else {
           logger.trace("adding {} to group as a shared dimension", dname);
           parentGroup.addDimension(dd);
@@ -327,7 +339,13 @@ public class ZarrHeader {
         Attribute.Builder attr = Attribute.builder(key);
         Object val = attrMap.get(key);
         if (val instanceof Collection<?>) {
-          attr.setValues(Arrays.asList(((Collection) val).toArray()), false);
+          Collection<?> collection = (Collection<?>) val;
+          if (collection.isEmpty() && key.equals(ARRAYDIMENSIONS)) {
+            // scalar array
+            attr.setValues(Collections.singletonList(""), false);
+          } else {
+            attr.setValues(Arrays.asList(collection.toArray()), false);
+          }
         } else if (val instanceof Number) {
           attr.setNumericValue((Number) val, false);
         } else {
@@ -354,7 +372,8 @@ public class ZarrHeader {
 
     int nDims = zarray.getShape().length;
     // verify is data file, else return -1
-    String pattern = String.format("([0-9]+%c){%d}[0-9]+", zarray.getSeparator().charAt(0), nDims - 1);
+    String pattern = String.format("([0-9]+%c){%d}[0-9]+", zarray.getSeparator().charAt(0), nDims == 0 ? 0 : nDims - 1);
+
     if (!fileName.matches(pattern)) {
       return -1;
     }
@@ -363,14 +382,20 @@ public class ZarrHeader {
     String[] dims = fileName.split(String.format("\\%c", zarray.getSeparator().charAt(0)));
     int[] subs = Arrays.stream(dims).mapToInt(dim -> Integer.parseInt(dim)).toArray();
 
-    // get number of chunks in each dimension
-    int[] nChunks = new int[nDims];
-    int[] shape = zarray.getShape();
-    int[] chunkSize = zarray.getChunks();
-    for (int i = 0; i < nDims; i++) {
-      nChunks[i] = (int) Math.ceil(shape[i] / chunkSize[i]);
+    // find chunk number as a flat index
+    if (nDims != 0) {
+      // get number of chunks in each dimension
+      int[] nChunks = new int[nDims];
+      int[] shape = zarray.getShape();
+      int[] chunkSize = zarray.getChunks();
+      for (int i = 0; i < nDims; i++) {
+        nChunks[i] = (int) Math.ceil(shape[i] / chunkSize[i]);
+      }
+      return ZarrUtils.subscriptsToIndex(subs, nChunks);
+    } else {
+      // scalar array
+      return 0;
     }
-    return ZarrUtils.subscriptsToIndex(subs, nChunks);
   }
 
   /**

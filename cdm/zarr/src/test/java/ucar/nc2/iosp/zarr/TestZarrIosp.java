@@ -1,19 +1,22 @@
 /*
- * Copyright (c) 2021 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 2021-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
 package ucar.nc2.iosp.zarr;
 
+import com.google.common.collect.ImmutableList;
 import java.nio.file.*;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
+import ucar.ma2.ArrayLong;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Section;
+import ucar.nc2.Dimension;
 import ucar.nc2.Group;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.NetcdfFiles;
@@ -39,6 +42,7 @@ public class TestZarrIosp {
   private static final String INVALID_ZARR_FILENAME = "zarr_invalid_data.zarr";
   private static final String NON_ZARR_FILENAME = "nonZarrTestData.nc.zip";
   private static final String FILL_VALUES_FILENAME = "fill_values.zarr";
+  private static final String SCALAR_GEOZARR_FILENAME = "geozarr/xyt-raster.zarr";
 
   // test store paths
   private static final String OBJECT_STORE_ZARR_URI = ZarrTestsCommon.S3_PREFIX + ZarrTestsCommon.AWS_BUCKET_NAME + "?"
@@ -56,6 +60,9 @@ public class TestZarrIosp {
 
   // fill values file
   private static final String FILL_VALUES_DATA = ZarrTestsCommon.LOCAL_TEST_DATA_PATH + FILL_VALUES_FILENAME;
+
+  // scalar geozarr data
+  private static final String SCALAR_GEOZARR_DATA = ZarrTestsCommon.LOCAL_TEST_DATA_PATH + SCALAR_GEOZARR_FILENAME;
 
   private static List<String> stores;
 
@@ -329,6 +336,57 @@ public class TestZarrIosp {
     for (String uri : stores) {
       try (NetcdfFile ncfile = NetcdfFiles.open(uri)) {
         assertThat(ncfile.getLastModified()).isNotEqualTo(0);
+      }
+    }
+  }
+
+  @Test
+  public void testScalarGeozarrArray() throws IOException {
+    NetcdfFile ncfile = NetcdfFiles.open(SCALAR_GEOZARR_DATA);
+    Variable scalarVar = ncfile.findVariable("spatial_ref");
+    assertThat(scalarVar != null).isTrue();
+    assertThat(scalarVar.getShape()).isEqualTo(new int[] {});
+    assertThat(scalarVar.getSize()).isEqualTo(1);
+    Array sArray = scalarVar.read();
+    assertThat(sArray).isNotNull();
+    assertThat(sArray).isInstanceOf(ArrayLong.D0.class);
+    assertThat(sArray.getLong(0)).isEqualTo(0L);
+  }
+
+  @Test
+  public void testGeozarrSharedDimension() throws IOException {
+    NetcdfFile ncfile = NetcdfFiles.open(SCALAR_GEOZARR_DATA);
+
+    Dimension xdim = ncfile.findDimension("x");
+    assertThat(xdim).isNotNull();
+    assertThat(xdim.isShared()).isTrue();
+
+    Dimension ydim = ncfile.findDimension("y");
+    assertThat(ydim).isNotNull();
+    assertThat(ydim.isShared()).isTrue();
+
+    Dimension tdim = ncfile.findDimension("time");
+    assertThat(tdim).isNotNull();
+    assertThat(tdim.isShared()).isTrue();
+
+    Variable temperature = ncfile.findVariable("temperature");
+    assertThat(temperature != null).isTrue();
+    ImmutableList<Dimension> dims = temperature.getDimensions();
+    assertThat(dims.size()).isEqualTo(3);
+
+    for (Dimension dim : dims) {
+      switch (dim.getName()) {
+        case "x":
+          assertThat(dim).isEqualTo(xdim);
+          break;
+        case "y":
+          assertThat(dim).isEqualTo(ydim);
+          break;
+        case "time":
+          assertThat(dim).isEqualTo(tdim);
+          break;
+        default:
+          throw new IllegalArgumentException("Untested dimension " + dim);
       }
     }
   }
