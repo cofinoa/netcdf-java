@@ -15,6 +15,7 @@ import ucar.nc2.Attribute;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dataset.NetcdfDatasets;
+import ucar.nc2.internal.ncml.NcmlReader;
 import ucar.nc2.time.Calendar;
 import ucar.nc2.time.CalendarDate;
 import ucar.nc2.time.CalendarDateFormatter;
@@ -30,7 +31,7 @@ public class TestAggScanNumericTime {
 
     try (NetcdfDataset ncStr = NetcdfDataset.openDataset(aggStringTime);
         NetcdfDataset ncNum = NetcdfDataset.openDataset(aggNumericTime)) {
-      compareTimes(ncStr, ncNum);
+      compareTimes(ncStr, ncNum, "time");
     }
   }
 
@@ -41,14 +42,34 @@ public class TestAggScanNumericTime {
 
     try (NetcdfDataset ncStr = NetcdfDatasets.openDataset(aggStringTime);
         NetcdfDataset ncNum = NetcdfDatasets.openDataset(aggNumericTime)) {
-      compareTimes(ncStr, ncNum);
+      compareTimes(ncStr, ncNum, "time");
     }
   }
 
-  void compareTimes(NetcdfDataset ncStr, NetcdfDataset ncNum) throws IOException {
-    Variable isoTimeVar = ncStr.findVariable("time");
+  @Test
+  public void testNumericTimeNcmlReader() throws IOException, InvalidRangeException, InterruptedException {
+    String aggStringTime = "file:./" + TestNcmlRead.topDir + "aggNewOne.xml";
+    String aggNumericTime = "file:./" + TestNcmlRead.topDir + "aggNewOneNumericTime.xml";
+    try (NetcdfDataset ncStr = NcMLReader.readNcML(aggStringTime, null);
+        NetcdfDataset ncNum = NcMLReader.readNcML(aggNumericTime, null)) {
+      compareTimes(ncStr, ncNum, "time2");
+    }
+  }
+
+  @Test
+  public void testNumericTimeNcmlReaderWithBuilders() throws IOException, InvalidRangeException, InterruptedException {
+    String aggStringTime = "file:./" + TestNcmlRead.topDir + "aggNewOne.xml";
+    String aggNumericTime = "file:./" + TestNcmlRead.topDir + "aggNewOneNumericTime.xml";
+    try (NetcdfDataset ncStr = NcmlReader.readNcml(aggStringTime, null, null).build();
+        NetcdfDataset ncNum = NcmlReader.readNcml(aggNumericTime, null, null).build()) {
+      compareTimes(ncStr, ncNum, "time2");
+    }
+  }
+
+  void compareTimes(NetcdfDataset ncStr, NetcdfDataset ncNum, String timeVarName) throws IOException {
+    Variable isoTimeVar = ncStr.findVariable(timeVarName);
     assertThat(isoTimeVar != null).isTrue();
-    Variable numericTimeVar = ncNum.findVariable("time");
+    Variable numericTimeVar = ncNum.findVariable(timeVarName);
     assertThat(numericTimeVar != null).isTrue();
     Array isoTime = isoTimeVar.read();
     Array numericTime = numericTimeVar.read();

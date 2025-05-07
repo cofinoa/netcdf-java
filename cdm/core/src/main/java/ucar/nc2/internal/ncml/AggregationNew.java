@@ -14,6 +14,7 @@ import ucar.nc2.Dimension;
 import ucar.nc2.Group;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
+import ucar.nc2.constants.CF;
 import ucar.nc2.constants._Coordinate;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -60,8 +61,13 @@ public class AggregationNew extends AggregationOuter {
           .setParentGroupBuilder(root).setDimensionsByName(dimName);
       root.addVariable(joinAggCoordVar);
       joinAggCoordVar.setProxyReader(this);
-      if (isDate)
+      if (isDate) {
         joinAggCoordVar.addAttribute(new Attribute(_Coordinate.AxisType, "Time"));
+        String coordUnits = ((AggDatasetOuter) typicalDataset).coordUdunit;
+        if (coordUnits != null && !coordUnits.isEmpty()) {
+          joinAggCoordVar.addAttribute(new Attribute(CF.UNITS, coordUnits));
+        }
+      }
 
       // if speced externally, this variable will get replaced
       // LOOK was CacheVar cv = new CoordValueVar(joinAggCoordVar.getFullName(), joinAggCoordVar.dataType,

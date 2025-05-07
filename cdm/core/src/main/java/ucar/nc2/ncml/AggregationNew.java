@@ -5,6 +5,7 @@
 
 package ucar.nc2.ncml;
 
+import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dataset.VariableDS;
 import ucar.nc2.dataset.DatasetConstructor;
@@ -55,8 +56,14 @@ public class AggregationNew extends AggregationOuterDimension {
       joinAggCoord = new VariableDS(ncDataset, null, null, dimName, coordType, dimName, null, null);
       ncDataset.addVariable(null, joinAggCoord);
       joinAggCoord.setProxyReader(this);
-      if (isDate)
+      if (isDate) {
         joinAggCoord.addAttribute(new ucar.nc2.Attribute(_Coordinate.AxisType, "Time"));
+        String coordUnits = ((DatasetOuterDimension) typicalDataset).coordUdunit;
+        if (coordUnits != null && !coordUnits.isEmpty()) {
+          joinAggCoord.addAttribute(new Attribute(CF.UNITS, coordUnits));
+        }
+      }
+
 
       // if speced externally, this variable will get replaced
       CacheVar cv =
