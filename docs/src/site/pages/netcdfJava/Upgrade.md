@@ -21,6 +21,7 @@ Java WebStart has been deprecated as of [Java 9](https://www.oracle.com/technetw
 As such, we no longer utilize WebStart.
 
 ## Quick Navigation
+* [Summary of changes for v5.8.x](#netcdf-java-api-changes-58x)
 * [Summary of changes for v5.7.x](#netcdf-java-api-changes-57x)
 * [Summary of changes for v5.6.x](#netcdf-java-api-changes-56x)
 * [Summary of changes for v5.5.x](#netcdf-java-api-changes-55x)
@@ -29,6 +30,18 @@ As such, we no longer utilize WebStart.
 * [Summary of changes for v5.2.x](#netcdf-java-api-changes-52x)
 * [Summary of changes for v5.1.x](#netcdf-java-api-changes-51x)
 * [Summary of changes for v5.0.x](#netcdf-java-api-changes-50x)
+
+## netCDF-Java API Changes (5.8.x)
+
+Point release notes:
+* [5.8.0](https://github.com/Unidata/netcdf-java/releases/tag/v5.8.0){:target="_blank"} (_2025-05-08_)
+
+The 5.8.x release adds basic support for decoding using libaec via native libraries in support of GRIB2 DRS 42, which uses CCSDS compression.
+The release also adds limited support for the General Unstructured Grid (template 101).
+Additionally, various GRIB and BUFR tables have been updated.
+Time coordinates on scan aggregations can now be configured to produce uduints based coordinates values.
+Improvements were also made to Zarr support, including the addition of scalar array support.
+Please see the release notes on GitHub for more details on additions, enhancements, and bug fixes.
 
 ## netCDF-Java API Changes (5.7.x)
 
