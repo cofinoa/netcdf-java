@@ -21,6 +21,7 @@ Java WebStart has been deprecated as of [Java 9](https://www.oracle.com/technetw
 As such, we no longer utilize WebStart.
 
 ## Quick Navigation
+* [Summary of changes for v5.9.x](#netcdf-java-api-changes-59x)
 * [Summary of changes for v5.8.x](#netcdf-java-api-changes-58x)
 * [Summary of changes for v5.7.x](#netcdf-java-api-changes-57x)
 * [Summary of changes for v5.6.x](#netcdf-java-api-changes-56x)
@@ -30,6 +31,8 @@ As such, we no longer utilize WebStart.
 * [Summary of changes for v5.2.x](#netcdf-java-api-changes-52x)
 * [Summary of changes for v5.1.x](#netcdf-java-api-changes-51x)
 * [Summary of changes for v5.0.x](#netcdf-java-api-changes-50x)
+
+## netCDF-Java API Changes (5.9.x)
 
 ## netCDF-Java API Changes (5.8.x)
 
