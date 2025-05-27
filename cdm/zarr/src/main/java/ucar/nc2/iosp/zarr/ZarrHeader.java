@@ -335,9 +335,8 @@ public class ZarrHeader {
 
       // create Attribute objects
       List<Attribute> attrs = new ArrayList<>();
-      attrMap.keySet().forEach(key -> {
+      attrMap.forEach((key, val) -> {
         Attribute.Builder attr = Attribute.builder(key);
-        Object val = attrMap.get(key);
         if (val instanceof Collection<?>) {
           Collection<?> collection = (Collection<?>) val;
           if (collection.isEmpty() && key.equals(ARRAYDIMENSIONS)) {
@@ -349,7 +348,7 @@ public class ZarrHeader {
         } else if (val instanceof Number) {
           attr.setNumericValue((Number) val, false);
         } else {
-          attr.setStringValue((String) val);
+          attr.setStringValue(String.valueOf(val));
         }
         attrs.add(attr.build());
       });
