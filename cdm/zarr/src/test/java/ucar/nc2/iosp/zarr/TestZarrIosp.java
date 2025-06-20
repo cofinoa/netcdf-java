@@ -16,11 +16,7 @@ import ucar.ma2.ArrayLong;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Section;
-import ucar.nc2.Dimension;
-import ucar.nc2.Group;
-import ucar.nc2.NetcdfFile;
-import ucar.nc2.NetcdfFiles;
-import ucar.nc2.Variable;
+import ucar.nc2.*;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -43,6 +39,7 @@ public class TestZarrIosp {
   private static final String NON_ZARR_FILENAME = "nonZarrTestData.nc.zip";
   private static final String FILL_VALUES_FILENAME = "fill_values.zarr";
   private static final String SCALAR_GEOZARR_FILENAME = "geozarr/xyt-raster.zarr";
+  private static final String BOOLEAN_ATTRIBUTE_FILENAME = "z0_atm.zip";
 
   // test store paths
   private static final String OBJECT_STORE_ZARR_URI = ZarrTestsCommon.S3_PREFIX + ZarrTestsCommon.AWS_BUCKET_NAME + "?"
@@ -63,6 +60,10 @@ public class TestZarrIosp {
 
   // scalar geozarr data
   private static final String SCALAR_GEOZARR_DATA = ZarrTestsCommon.LOCAL_TEST_DATA_PATH + SCALAR_GEOZARR_FILENAME;
+
+  // Boolean attribute data
+  private static final String BOOLEAN_ATTRIBUTE_DATA =
+      ZarrTestsCommon.LOCAL_TEST_DATA_PATH + BOOLEAN_ATTRIBUTE_FILENAME;
 
   private static List<String> stores;
 
@@ -275,6 +276,14 @@ public class TestZarrIosp {
       assertThat(ncfile).isNotNull();
       assertThat(ncfile.findDimension("x")).isNotNull();
     }
+  }
+
+  @Test
+  public void testReadBooleanAttribute() throws IOException {
+    NetcdfFile ncfile = NetcdfFiles.open(BOOLEAN_ATTRIBUTE_DATA);
+    Variable var = ncfile.findVariable("CONST_inst_z0_atm/orog");
+    Attribute hiopy = var.findAttribute("hiopy::enable");
+    assertThat(hiopy.getValue(0).equals("true"));
   }
 
   @Test
