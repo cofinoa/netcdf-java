@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 1998-2020 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.nc2.ft2.coverage.writer;
 
 import com.google.common.base.Preconditions;
@@ -13,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
@@ -20,6 +22,7 @@ import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Section;
 import ucar.nc2.Attribute;
 import ucar.nc2.AttributeContainer;
+import ucar.nc2.AttributeContainerMutable;
 import ucar.nc2.Dimension;
 import ucar.nc2.Group;
 import ucar.nc2.Variable;
@@ -28,6 +31,7 @@ import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.CF;
 import ucar.nc2.constants._Coordinate;
+import ucar.nc2.dataset.transform.AbstractTransformBuilder;
 import ucar.nc2.ft2.coverage.Coverage;
 import ucar.nc2.ft2.coverage.CoverageCollection;
 import ucar.nc2.ft2.coverage.CoverageCoordAxis;
@@ -308,8 +312,53 @@ public class CFGridCoverageWriter {
       // scalar coordinate transform variable - container for transform info
       Variable.Builder ctv = Variable.builder().setName(ct.getName()).setDataType(DataType.INT);
       group.addVariable(ctv);
-      ctv.addAttributes(ct.attributes());
+      AttributeContainer ctAttrs = ct.attributes();
+
+      AttributeContainerMutable newAttrs = AttributeContainerMutable.copyFrom(ctAttrs);
+      // adjust false_easting/false_northing if needed
+      // possibly needed if the subset dataset includes GeoX or GeoY axes, so first find those
+      Map<AxisType, CoverageCoordAxis> mapCoordAxes = subsetDataset.getCoordAxes().stream()
+          .filter(ca -> ca.getAxisType() == AxisType.GeoX || ca.getAxisType() == AxisType.GeoY)
+          .collect(Collectors.toMap(CoverageCoordAxis::getAxisType, mca -> mca));
+      // if we found GeoX and/or GeoY axes, start checking
+      if (!mapCoordAxes.isEmpty()) {
+        boolean eastScaled = false;
+        if (mapCoordAxes.containsKey(AxisType.GeoX)) {
+          eastScaled = scaleFalseEastingNorthing(CF.FALSE_EASTING, ctAttrs, newAttrs,
+              mapCoordAxes.get(AxisType.GeoX).attributes().findAttributeString(CF.UNITS, null));
+        }
+        boolean northScaled = false;
+        if (mapCoordAxes.containsKey(AxisType.GeoY)) {
+          northScaled = scaleFalseEastingNorthing(CF.FALSE_NORTHING, ctAttrs, newAttrs,
+              mapCoordAxes.get(AxisType.GeoY).attributes().findAttributeString(CF.UNITS, null));
+        }
+        // do not propagate the unit attribute on the projection variable if we ensured the
+        // units match, as this is state matchs CF (likely this attribute was added when creating
+        // a coverage from the NetcdfDataset.
+        if (!ctAttrs.findAttributeString(CF.UNITS, "").isEmpty()) {
+          if (eastScaled || northScaled) {
+            newAttrs.removeAttribute(CF.UNITS);
+          }
+        }
+      }
+      ctv.addAttributes(newAttrs.toImmutable());
     }
+  }
+
+  private boolean scaleFalseEastingNorthing(String falseValueType, AttributeContainer cta,
+      AttributeContainerMutable newCta, String caUnits) {
+    double falseValue = cta.findAttributeDouble(falseValueType, Double.MIN_VALUE);
+    boolean scaled = false;
+    if (falseValue != Double.MIN_VALUE) {
+      double scalef = AbstractTransformBuilder.getFalseEastingScaleFactor(caUnits);
+      if (scalef != 1.0) {
+        scaled = true;
+        newCta.removeAttribute(falseValueType);
+        // here we divide by scalef, to undo the scalef applied when creating the Coverage
+        newCta.addAttribute(Attribute.builder(falseValueType).setNumericValue(falseValue / scalef, false).build());
+      }
+    }
+    return scaled;
   }
 
   private void addLatLon2D(CoverageCollection subsetDataset, Group.Builder group) {

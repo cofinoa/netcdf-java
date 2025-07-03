@@ -1,9 +1,13 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
 package ucar.nc2.dt.grid;
+
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -12,10 +16,12 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.NetcdfFiles;
 import ucar.nc2.Variable;
+import ucar.nc2.constants.CF;
 import ucar.nc2.grib.collection.Grib;
 import ucar.nc2.time.CalendarDate;
 import ucar.nc2.time.CalendarDateRange;
@@ -23,7 +29,6 @@ import ucar.nc2.util.DebugFlagsImpl;
 import ucar.unidata.geoloc.LatLonPoint;
 import ucar.unidata.geoloc.LatLonRect;
 import ucar.unidata.geoloc.ProjectionPoint;
-import ucar.unidata.geoloc.ProjectionPointImpl;
 import ucar.unidata.geoloc.ProjectionRect;
 import ucar.unidata.util.test.category.NeedsCdmUnitTest;
 import ucar.unidata.util.test.TestDir;
@@ -31,7 +36,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test CFGridWriter2
@@ -256,6 +260,51 @@ public class TestCFWriter2 {
     }
   }
 
+  @Test
+  @Category(NeedsCdmUnitTest.class)
+  public void testAxisProjUnitMismatch() throws Exception {
+    String fileOut = tempFolder.newFile().getAbsolutePath();
+    String varName = "HNW";
 
+    final double falseEastingMeters = 400000.0;
+    final double falseEastingKm = falseEastingMeters / 1000;
 
+    try (GridDataset gds = GridDataset.open(TestDir.cdmUnitTestDir + "ncss/test/falseEastingNorthingScaleReset.nc4")) {
+      Variable x = gds.getNetcdfFile().findVariable("x");
+      assertNotNull(x);
+      Attribute xUnits = x.findAttribute(CF.UNITS);
+      assertNotNull(xUnits);
+      assertThat(xUnits.getStringValue()).isEqualTo("m");
+
+      Variable proj = gds.getNetcdfFile().findVariable("lambert_conformal_conic");
+      assertNotNull(proj);
+      Attribute feAttr = proj.findAttribute(CF.FALSE_EASTING);
+      assertNotNull(feAttr);
+      // false_easting in meters
+      assertThat(feAttr.getNumericValue()).isEqualTo(falseEastingMeters);
+
+      // setup subset
+      List<String> gridList = new ArrayList<>();
+      gridList.add(varName);
+
+      NetcdfFileWriter writer = NetcdfFileWriter.createNew(NetcdfFileWriter.Version.netcdf3, fileOut);
+
+      // write subset
+      CFGridWriter2.writeFile(gds, gridList, null, null, 1, null, null, 1, true, writer);
+    }
+
+    try (NetcdfFile ncf = NetcdfFiles.open(fileOut)) {
+      Variable proj = ncf.findVariable("lambert_conformal_conic");
+      assertNotNull(proj);
+      Attribute feAttr = proj.findAttribute(CF.FALSE_EASTING);
+      assertNotNull(feAttr);
+      // GeoX in km
+      Variable x = ncf.findVariable("x");
+      Attribute xUnits = x.findAttribute(CF.UNITS);
+      assertNotNull(xUnits);
+      assertThat(xUnits.getStringValue()).isEqualTo("km");
+      // false_easting in km
+      assertThat(feAttr.getNumericValue()).isEqualTo(falseEastingKm);
+    }
+  }
 }
