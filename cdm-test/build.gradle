@@ -24,6 +24,7 @@ dependencies {
   testImplementation 'org.apache.commons:commons-compress'
   testImplementation 'edu.ucar:jj2000'
   testImplementation 'org.jdom:jdom2'
+  testImplementation 'com.google.code.findbugs:jsr305'
   testImplementation 'com.google.guava:guava'
   testImplementation 'com.google.re2j:re2j'
   testImplementation 'software.amazon.awssdk:s3'
