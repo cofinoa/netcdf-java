@@ -49,7 +49,6 @@ import java.util.*;
 @Deprecated
 public class Nc4Iosp extends AbstractIOServiceProvider implements IOServiceProviderWriter {
   private static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Nc4Iosp.class);
-  private static org.slf4j.Logger startupLog = org.slf4j.LoggerFactory.getLogger("serverStartup");
 
   public static final boolean DEBUG = false;
 

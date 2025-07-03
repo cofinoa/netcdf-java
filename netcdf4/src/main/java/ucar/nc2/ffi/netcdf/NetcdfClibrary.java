@@ -14,7 +14,6 @@ import ucar.nc2.jni.netcdf.Nc4wrapper;
 /** Static methods to load the netcdf C library. */
 public class NetcdfClibrary {
   private static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(NetcdfClibrary.class);
-  private static org.slf4j.Logger startupLog = org.slf4j.LoggerFactory.getLogger("serverStartup");
 
   private static final String JNA_PATH = "jna.library.path";
   private static final String JNA_PATH_ENV = "JNA_PATH"; // environment var
@@ -107,7 +106,7 @@ public class NetcdfClibrary {
     if (nc4 != null) {
       try {
         oldlevel = nc4.nc_set_log_level(log_level);
-        startupLog.info(String.format("NetcdfLoader: set log level: old=%d new=%d", oldlevel, log_level));
+        log.info(String.format("NetcdfLoader: set log level: old=%d new=%d", oldlevel, log_level));
       } catch (UnsatisfiedLinkError e) {
         // ignore
       }
@@ -127,13 +126,14 @@ public class NetcdfClibrary {
         // Make the library synchronized
         // nc4 = (Nc4prototypes) Native.synchronizedLibrary(nc4);
         nc4 = new Nc4wrapper(nc4);
-        startupLog.info("Nc4Iosp: NetCDF-4 C library loaded (jna_path='{}', libname='{}' version='{}').", jnaPath,
-            libName, getVersion());
-        startupLog.debug("Netcdf nc_inq_libvers='{}' isProtected={}", nc4.nc_inq_libvers(), Native.isProtected());
+        log.info("Nc4Iosp: NetCDF-4 C library loaded (jna_path='{}', libname='{}' version='{}').", jnaPath, libName,
+            getVersion());
+        log.debug("Netcdf nc_inq_libvers='{}' isProtected={}", nc4.nc_inq_libvers(), Native.isProtected());
       } catch (Throwable t) {
         String message =
             String.format("Nc4Iosp: NetCDF-4 C library not present (jna_path='%s', libname='%s').", jnaPath, libName);
-        startupLog.warn(message, t);
+        log.warn(message);
+        log.debug("details: ", t);
       }
       String slevel = Strings.emptyToNull(System.getProperty(JNA_LOG_LEVEL));
       if (slevel != null) {
@@ -144,13 +144,11 @@ public class NetcdfClibrary {
         }
       }
       try {
-        int oldlevel = setLogLevel(log_level);
-        startupLog.info(String.format("Nc4Iosp: set log level: old=%d new=%d", oldlevel, log_level));
+        setLogLevel(log_level);
       } catch (Throwable t) {
         String message = String.format("Nc4Iosp: could not set log level (level=%d jna_path='%s', libname='%s').",
             log_level, jnaPath, libName);
-        startupLog.warn("Nc4Iosp: " + t.getMessage());
-        startupLog.warn(message);
+        log.debug("Nc4Iosp: " + t.getMessage());
       }
     }
     return nc4;
