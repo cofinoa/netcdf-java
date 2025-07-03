@@ -27,9 +27,17 @@ apply plugin: 'com.gradleup.shadow'
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 configurations {
-  ncIdv
-  netcdfAll
-  toolsUI
+  // set target attribute to ensure right guava variant is selected
+  // https://stackoverflow.com/a/77399208/2345036
+  ncIdv {
+    attributes.attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.class, TargetJvmEnvironment.STANDARD_JVM))
+  }
+  netcdfAll {
+    attributes.attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.class, TargetJvmEnvironment.STANDARD_JVM))
+  }
+  toolsUI {
+    attributes.attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.class, TargetJvmEnvironment.STANDARD_JVM))
+  }
 }
 
 dependencies {
