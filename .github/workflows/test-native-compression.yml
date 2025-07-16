@@ -16,8 +16,9 @@ jobs:
           ubuntu-24.04-arm,
           windows-2022,
           windows-11-arm,
+          macos-13,
           macos-14,
-          macos-13
+          macos-15
         ]
     name: netCDF-Java Native Compression Tests
     runs-on: ${{ matrix.os }}
