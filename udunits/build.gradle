@@ -1,3 +1,7 @@
+plugins {
+  id "org.javacc.javacc" version "4.0.1"
+}
+
 description = 'The ucar.units Java package is for decoding and encoding formatted unit specifications ' +
     '(e.g. "m/s"), converting numeric values between compatible units (e.g. between "m/s" ' +
     'and "knot"), and for performing arithmetic operations on units (e.g. dividing one unit ' +
