@@ -13,7 +13,8 @@ protobuf {
 // considering deprecating their plugin and upstreaming it to JetBrains. Might not be a good bet to start relying on
 // the idea plugin at this point.
 // https://github.com/gradle/gradle/issues/1366#issuecomment-546928184
-sourceSets.main.java.srcDirs += ['build/generated/source/proto/main/java']
+sourceSets.main.java.srcDirs += ['build/generated/sources/proto/main/java',
+                                 'build/generated/sources/proto/main/grpc']
 
 jacocoTestReport {
   afterEvaluate {
@@ -27,4 +28,5 @@ jacocoTestReport {
   }
 }
 
+compileJava.dependsOn 'generateProto'
 sourceJar.dependsOn 'generateProto'
