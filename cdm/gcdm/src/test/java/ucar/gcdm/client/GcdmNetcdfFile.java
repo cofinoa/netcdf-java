@@ -191,7 +191,6 @@ public class GcdmNetcdfFile extends NetcdfFile {
       this.channel = ManagedChannelBuilder.forTarget(target)
           // Channels are secure by default (via SSL/TLS). For now, we disable TLS to avoid needing certificates.
           .usePlaintext() //
-          .enableFullStreamDecompression() //
           .maxInboundMessageSize(MAX_MESSAGE) //
           .build();
 
