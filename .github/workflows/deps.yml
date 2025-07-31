@@ -13,3 +13,5 @@ jobs:
           java-version: '11'
       - name: Build with Gradle (refresh dependencies)
         run: ./gradlew clean classes testClasses assemble --refresh-dependencies
+      - name: Build sourceJars
+        run: ./gradlew sourceJar
