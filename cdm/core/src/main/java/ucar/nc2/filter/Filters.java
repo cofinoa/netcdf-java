@@ -1,14 +1,26 @@
 /*
- * Copyright (c) 2021 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 2021-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
 package ucar.nc2.filter;
 
+import com.google.common.collect.ImmutableList;
 import java.util.Map;
 import java.util.ServiceLoader;
 
 public class Filters {
+
+  private static final ImmutableList<FilterProvider> spFilters;
+
+  // load filter service providers
+  static {
+    ImmutableList.Builder<FilterProvider> spFiltersBuilder = ImmutableList.builder();
+    for (FilterProvider fp : ServiceLoader.load(FilterProvider.class)) {
+      spFiltersBuilder.add(fp);
+    }
+    spFilters = spFiltersBuilder.build();
+  }
 
   /**
    * Set of common properties used by Filters
@@ -54,14 +66,14 @@ public class Filters {
     String name = (String) properties.get(Keys.NAME);
     Object oid = properties.get(Keys.ID);
     // if no id or name, return null filter
-    if ((name == null || name.isEmpty()) && !(oid instanceof Number)) {
+    final boolean missingName = name == null || name.isEmpty();
+    if (missingName && !(oid instanceof Number)) {
       return nullFilter;
     }
 
     // try by name first
-    if (name != null && !name.isEmpty()) {
-      // look for dynamically loaded filters by name
-      for (FilterProvider fp : ServiceLoader.load(FilterProvider.class)) {
+    if (!missingName) {
+      for (FilterProvider fp : spFilters) {
         if (fp.canProvide(name)) {
           return fp.create(properties);
         }
@@ -70,8 +82,7 @@ public class Filters {
 
     // try by id next
     int id = ((Short) oid).intValue();
-    // look for dynamically loaded filters by id
-    for (FilterProvider fp : ServiceLoader.load(FilterProvider.class)) {
+    for (FilterProvider fp : spFilters) {
       if (fp.canProvide(id)) {
         return fp.create(properties);
       }
