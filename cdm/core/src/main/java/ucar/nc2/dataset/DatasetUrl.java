@@ -1,27 +1,34 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.nc2.dataset;
 
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static java.net.HttpURLConnection.HTTP_NOT_ACCEPTABLE;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
+
 import com.google.common.annotations.VisibleForTesting;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Multimap;
 import thredds.client.catalog.ServiceType;
-import thredds.inventory.MFile;
-import thredds.inventory.MFiles;
 import ucar.httpservices.HTTPFactory;
 import ucar.httpservices.HTTPMethod;
 import ucar.nc2.util.EscapeStrings;
 import ucar.unidata.util.StringUtil2;
 import ucar.unidata.util.Urlencoded;
-import java.io.*;
-import java.util.*;
 
 /**
  * Detection of the protocol from a location string.
@@ -31,6 +38,7 @@ import java.util.*;
  * @since 10/20/2015.
  */
 public class DatasetUrl {
+  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DatasetUrl.class);
   private static final String alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   private static final String slashalpha = "\\/" + alpha;
 
@@ -398,15 +406,23 @@ public class DatasetUrl {
     return null;
   }
 
+  private static void handleCheckIfResponse(HTTPMethod method, int statusCode, ServiceType serviceChecked)
+      throws IOException {
+    if (statusCode == HTTP_UNAUTHORIZED) {
+      throw new IOException("Unauthorized to open dataset " + method.getURI());
+    } else if (statusCode == HTTP_FORBIDDEN) {
+      logger.warn(String.format(
+          "Forbidden Request to %s - assuming remote server is not a %s server, but could also indicate incorrect credentials.",
+          method.getURI(), serviceChecked));
+    }
+  }
+
   // cdmremote
   private static ServiceType checkIfCdmr(String location) throws IOException {
     try (HTTPMethod method = HTTPFactory.Head(location + "?req=header")) {
       int statusCode = method.execute();
       if (statusCode >= 300) {
-        if (statusCode == HTTP_UNAUTHORIZED || statusCode == HTTP_FORBIDDEN)
-          throw new IOException("Unauthorized to open dataset " + location);
-        else
-          throw new IOException(location + " is not a valid URL, return status=" + statusCode);
+        handleCheckIfResponse(method, statusCode, ServiceType.CdmRemote);
       }
 
       Optional<String> value = method.getResponseHeaderValue("Content-Description");
@@ -442,8 +458,7 @@ public class DatasetUrl {
             throw new IOException("OPeNDAP Server Error= " + method.getResponseAsString());
         }
       }
-      if (status == HTTP_UNAUTHORIZED || status == HTTP_FORBIDDEN)
-        throw new IOException("Unauthorized to open dataset " + location);
+      handleCheckIfResponse(method, status, ServiceType.OPENDAP);
 
       // not dods
       return null;
@@ -471,6 +486,7 @@ public class DatasetUrl {
             return ServiceType.DAP4;
         }
       }
+      handleCheckIfResponse(method, status, ServiceType.DAP4);
       // not dap4
       return null;
     }
@@ -497,14 +513,15 @@ public class DatasetUrl {
         method.setRequestHeader("accept-encoding", "identity");
         int statusCode = method.execute();
         if (statusCode >= 300) {
-          if (statusCode == HTTP_UNAUTHORIZED) {
-            throw new IOException("Unauthorized to open dataset " + location);
-          } else if (statusCode == HTTP_NOT_ACCEPTABLE) {
+          handleCheckIfResponse(method, statusCode, ServiceType.NCML);
+          // additional checks
+          if (statusCode == HTTP_NOT_ACCEPTABLE) {
             String msg = location + " - this server does not support returning content without any encoding.";
             msg = msg + " Please download the file locally. Return status=" + statusCode;
             throw new IOException(msg);
           } else {
-            throw new IOException(location + " is not a valid URL, return status=" + statusCode);
+            throw new IOException(String.format("Error opening %s: %s, (HTTP Status Code %d)", location,
+                method.getResponseAsString(), statusCode));
           }
         }
 
