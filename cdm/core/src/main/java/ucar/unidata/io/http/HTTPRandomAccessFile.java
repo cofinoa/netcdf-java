@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 1998-2019 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.unidata.io.http;
 
 import java.io.FileNotFoundException;
@@ -39,6 +40,9 @@ public final class HTTPRandomAccessFile extends RemoteRandomAccessFile {
 
   private static final long httpMaxCacheSize = Long
       .parseLong(System.getProperty("ucar.unidata.io.http.maxReadCacheSize", String.valueOf(defaultMaxReadCacheSize)));
+
+  private static final String HTTPS = "https";
+  private static final String HTTP = "http";
 
   private static final boolean debug = false, debugDetails = false;
 
@@ -234,7 +238,7 @@ public final class HTTPRandomAccessFile extends RemoteRandomAccessFile {
    */
   public static class Provider implements RandomAccessFileProvider {
 
-    private static final List<String> possibleSchemes = Arrays.asList("http", "https", "nodods", "httpserver");
+    private static final List<String> possibleSchemes = Arrays.asList(HTTP, HTTPS, "nodods", "httpserver");
 
     @Override
     public boolean isOwnerOf(String location) {
@@ -250,10 +254,26 @@ public final class HTTPRandomAccessFile extends RemoteRandomAccessFile {
     @Override
     public RandomAccessFile open(String location, int bufferSize) throws IOException {
       String scheme = location.split(":")[0];
-      if (!scheme.equalsIgnoreCase("https") && !scheme.equalsIgnoreCase("http")) {
-        location = location.replace(scheme, "http");
+      boolean fallback = false;
+      if (!scheme.equalsIgnoreCase(HTTPS) && !scheme.equalsIgnoreCase(HTTP)) {
+        location = location.replaceFirst(scheme, HTTPS);
+        fallback = true;
       }
-      return new HTTPRandomAccessFile(location, bufferSize, httpMaxCacheSize);
+      HTTPRandomAccessFile raf;
+      try {
+        // try with https first
+        raf = new HTTPRandomAccessFile(location, bufferSize, httpMaxCacheSize);
+      } catch (IOException e) {
+        if (fallback) {
+          // if we had to guess the scheme, fallback to http, and if it does not work, let the IOError be thrown
+          raf = new HTTPRandomAccessFile(location.replaceFirst(HTTPS, HTTP), bufferSize, httpMaxCacheSize);
+        } else {
+          // didn't try to fallback to http, just throw the original error
+          throw e;
+        }
+      }
+
+      return raf;
     }
   }
 }
