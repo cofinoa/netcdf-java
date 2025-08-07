@@ -74,8 +74,14 @@ public class Nc4Iosp extends AbstractIOServiceProvider implements IOServiceProvi
   private static final boolean transcodeStrings = Charset.defaultCharset() != StandardCharsets.UTF_8;
 
   /**
-   * set the path and name of the netcdf c library.
-   * must be called before load() is called.
+   * Set the path and name of the netcdf c library.
+   * <p>
+   * This method will only work if the netCDF-C library was not found on the
+   * system path. If you need to use a specific version of the C library, and
+   * you have a different version on a system path, do not use this method.
+   * Instead, call {@link NetcdfClibrary#setLibraryNameAndPath(String, String)
+   * NetcdfClibrary.setLibraryNameAndPath} prior to any uses of
+   * the Nc4Iosp class.
    *
    * @param jnaPath path to shared libraries
    * @param libName library name
@@ -83,7 +89,11 @@ public class Nc4Iosp extends AbstractIOServiceProvider implements IOServiceProvi
    */
   @Deprecated
   public static void setLibraryAndPath(String jnaPath, String libName) {
-    NetcdfClibrary.setLibraryNameAndPath(jnaPath, libName);
+    if (nc4 != null) {
+      log.warn("Library already set, ignoring.");
+    } else {
+      NetcdfClibrary.setLibraryNameAndPath(jnaPath, libName);
+    }
   }
 
   /**
