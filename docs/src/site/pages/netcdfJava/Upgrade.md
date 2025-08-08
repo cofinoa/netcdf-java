@@ -1,6 +1,6 @@
 ---
 title: Upgrading to netCDF-Java version 5.x
-last_updated: 2021-06-02
+last_updated: 2025-08-08
 sidebar: netcdfJavaTutorial_sidebar
 toc: false
 permalink: upgrade.html
@@ -33,6 +33,17 @@ As such, we no longer utilize WebStart.
 * [Summary of changes for v5.0.x](#netcdf-java-api-changes-50x)
 
 ## netCDF-Java API Changes (5.9.x)
+
+Point release notes:
+* [5.9.0](https://github.com/Unidata/netcdf-java/releases/tag/v5.9.0){:target="_blank"} (_2025-08-08_)
+
+The 5.9.x includes bug fixes around zarr support, scaling of projection parameters, and setting of the library path for the netCDF-C library.
+Additionally, udunits grammar code is now generated at build time, HTTP errors when disambiguating http/https locations has been improved, and scanning for filter providers is done once during initialization.
+Finally, several third party libraries have been upgraded.
+Please see the release notes on GitHub for more details on additions, enhancements, and bug fixes.
+
+Note: we are looking to update the minimum version of the JVM we support for the project (currently Java 8).
+Please consider taking a moment to participate in the [poll on GitHub](https://github.com/Unidata/netcdf-java/discussions/1468){:target="_blank"}.
 
 ## netCDF-Java API Changes (5.8.x)
 
