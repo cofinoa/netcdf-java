@@ -1,6 +1,6 @@
 ---
 title: Using netCDF-Java Maven Artifacts
-last_updated: 2019-07-23
+last_updated: 2025-08-08
 sidebar: netcdfJavaTutorial_sidebar
 permalink: using_netcdf_java_artifacts.html
 toc: false
@@ -30,6 +30,8 @@ repositories {
     }
 }
 ~~~
+
+For maximum compatibility, please include the Unidata repository after any other repositories, including maven central.
 
 Next, select modules based on the functionality you need.
 In the minimal case, you’ll just want `cdm-core` and a logger.
@@ -144,6 +146,7 @@ Otherwise, libaec will need to be installed and reachable in your system library
 This is the appropriate option if you’re not using a dependency management tool like Maven or Gradle and you don’t care about jar size or compatibility with other libraries. Simply include netcdfAll-${netcdfJavaVersion}.jar on the classpath when you run your program.
 You’ll also need a logger.
 Currently, the netcdfAll jar does not include `cdm-s3` due to the size of the AWS S3 SDK dependency, and does not include the `libaec-native` (native library binaries for libaec).
+The netcdfAll jar can be found at https://downloads.unidata.ucar.edu, or (starting with `5.9.0`) on the [GitHub release page](https://github.com/Unidata/netcdf-java/releases).
 
 ## Logging
 
