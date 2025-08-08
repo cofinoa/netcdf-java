@@ -32,7 +32,10 @@ public class NetcdfClibrary {
 
   /**
    * Set the path and name of the netcdf c library.
-   * Must be called before load() is called.
+   * <p>
+   * Must be called prior to calling {@link #isLibraryPresent() isLibraryPresent}
+   * or {@link #getForeignFunctionInterface() getForeignFunctionInterface}, as
+   * the C library can only be successfully loaded once.
    *
    * @param jna_path path to shared libraries, may be null. If null, will look for system property
    *        "jna.library.path", then environment variable "JNA_PATH". If set, will set
@@ -40,6 +43,12 @@ public class NetcdfClibrary {
    * @param lib_name library name, may be null. If null, will use "netcdf".
    */
   public static void setLibraryNameAndPath(@Nullable String jna_path, @Nullable String lib_name) {
+
+    if (nc4 != null) {
+      log.warn("netCDF-C library already set, ignoring.");
+      return;
+    }
+
     lib_name = Strings.emptyToNull(lib_name);
 
     if (lib_name == null) {
@@ -61,6 +70,11 @@ public class NetcdfClibrary {
 
     libName = lib_name;
     jnaPath = jna_path;
+
+    if ((isClibraryPresent == null || !isClibraryPresent) && jnaPath != null) {
+      // call load to retry loading, but this time with jnaPath set
+      load();
+    }
   }
 
   /**
