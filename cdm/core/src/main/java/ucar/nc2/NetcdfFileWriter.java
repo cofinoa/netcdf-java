@@ -194,7 +194,6 @@ public class NetcdfFileWriter implements Closeable {
     if (version.useJniIosp()) {
       IOServiceProviderWriter spi;
       try {
-        // Nc4Iosp.setLibraryAndPath(path, name);
         Class iospClass = this.getClass().getClassLoader().loadClass("ucar.nc2.jni.netcdf.Nc4Iosp");
         Constructor<IOServiceProviderWriter> ctor = iospClass.getConstructor(Version.class);
         spi = ctor.newInstance(version);
