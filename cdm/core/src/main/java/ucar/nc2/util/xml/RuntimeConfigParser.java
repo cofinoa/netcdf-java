@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -269,7 +269,7 @@ public class RuntimeConfigParser {
           // so we cannot refer to the Nc4Iosp.class and NetcdfClibrary.class object.
           String nc4IospClassName = "ucar.nc2.jni.netcdf.Nc4Iosp";
           // The setLibraryAndPath method from Nc4Iosp has been deprecated
-          // and splited into separated class: NetcdfClibrary
+          // and split into separated class: NetcdfClibrary
           String netcdfClibraryClassName = "ucar.nc2.ffi.netcdf.NetcdfClibrary";
           /*
            * <Netcdf4Clibrary>
@@ -285,8 +285,9 @@ public class RuntimeConfigParser {
           if (path != null && name != null) {
             // reflection is used to decouple optional jars
             try {
-              Class netcdfClibraryClass = RuntimeConfigParser.class.getClassLoader().loadClass(netcdfClibraryClassName);
-              Method method = netcdfClibraryClass.getMethod("setLibraryAndPath", String.class, String.class);
+              Class<?> netcdfClibraryClass =
+                  RuntimeConfigParser.class.getClassLoader().loadClass(netcdfClibraryClassName);
+              Method method = netcdfClibraryClass.getMethod("setLibraryNameAndPath", String.class, String.class);
               method.invoke(null, path, name); // static method has null for object
             } catch (Throwable e) {
               errlog.append(netcdfClibraryClassName + " is not on classpath\n");

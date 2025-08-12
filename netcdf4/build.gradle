@@ -19,6 +19,7 @@ dependencies {
   testImplementation project(':cdm-test-utils')
 
   testImplementation 'com.google.truth:truth'
+  testImplementation 'org.jdom:jdom2'
 
   testRuntimeOnly 'ch.qos.logback:logback-classic'
 }
