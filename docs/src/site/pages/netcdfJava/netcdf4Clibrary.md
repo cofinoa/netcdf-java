@@ -101,7 +101,8 @@ For standalone CDM library use, you can:
 * create a system environment variable: `JNA_PATH=/path/to/library`
 * set a Java property on the command line: `-Djna.library.path=/path/to/library`
 * set the library path and name in the runtime configuration file
-* directly call `Nc4Iosp.setLibraryAndPath()` from your Java program
+* directly call `ucar.nc2.ffi.netcdf.NetcdfClibrary.setLibraryNameAndPath` from your Java program
+  (Note: this must be called prior to calling `isLibraryPresent()` or `getForeignFunctionInterface()` as the C library can only be successfully loaded once)
 
 In all cases, we recommended that you use an absolute path to specify the library location.
 
