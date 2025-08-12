@@ -1,0 +1,7 @@
+<nj22Config>
+  <Netcdf4Clibrary>
+    <libraryPath>/not/a/real/path</libraryPath>
+    <libraryName>netcdf</libraryName>
+    <useForReading>false</useForReading>
+  </Netcdf4Clibrary>
+</nj22Config>
