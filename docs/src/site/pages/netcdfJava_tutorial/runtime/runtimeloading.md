@@ -1,6 +1,6 @@
 ---
 title: Runtime loading
-last_updated: 2025-08-12
+last_updated: 2025-08-15
 sidebar: netcdfJavaTutorial_sidebar
 permalink: runtime_loading.html
 toc: false
@@ -107,34 +107,35 @@ Instead of calling the above routines in your code, you can pass the CDM library
 Note that your application must call `ucar.nc2.util.xml.RuntimeConfigParser.read()`.
 
 The configuration file looks like this:
-~~~xml
- <?xml version='1.0' encoding='UTF-8'?>
- <runtimeConfig>
-1) <ioServiceProvider  class='edu.univ.ny.stuff.FooFiles'/>
-2) <coordSystemBuilderFactory convention='foo' class='test.Foo'/>
-3) <coordTransformFactory name='atmos_ln_sigma_coordinates' type='vertical' class='my.stuff.atmosSigmaLog'/>
-4) <featureDatasetFactory featureType='Point' class='gov.noaa.obscure.file.Flabulate'/>
-5) <gribParameterTable edition='1' center='58' subcenter='-1' version='128'>C:/grib/tables/ons288.xml</gribParameterTable>
-6) <gribParameterTableLookup edition='1'>C:/grib/tables/ncepLookup.txt</gribParameterTableLookup>
-7) <bufrtable filename='C:/my/files/lookup.txt' />
-8) <grib1Table strict='false'/>
-9) <Netcdf4Clibrary>
-     <libraryPath>/usr/local/lib</libraryPath>
-     <libraryName>netcdf</libraryName>
-     <useForReading>false</useForReading>
-   </Netcdf4Clibrary>
-</runtimeConfig>
-~~~
 
-1. Loads an `IOServiceProvider` with the given class name
-2. Loads a `CoordSysBuilderIF` with the given class name, which looks for the given `Convention` attribute value.
-3. Loads a `CoordTransformFactory` with the given class name, which looks for the given `transformName` in the dataset. The type must be vertical or projection.
-4. Loads a `FeatureDatasetFactory` with the given class name which open `FeatureDatasets` of the given `featureType`.
-5. Load a [GRIB-1 parameter table](grib_tables.html) (as of version 4.3)
-6. Load a [GRIB-1 parameter table lookup](grib_tables.html#standard-table-mapping) (as of version 4.3)
-7. Load a [BUFR table lookup](bufr_tables.html) file.
-8. Turn [strict GRIB1 table handling](grib_tables.html#strict) off.
-9. Configure how the [NetCDF-4 C library](netcdf4_c_library.html) is discovered and used.
+{% highlight_with_annotations xml %}
+<?xml version='1.0' encoding='UTF-8'?>
+<runtimeConfig>
+  <ioServiceProvider  class='edu.univ.ny.stuff.FooFiles'/>{% raw %}{% annotation 1 %}{% endraw %}
+  <coordSystemBuilderFactory convention='foo' class='test.Foo'/>{% raw %}{% annotation 2 %}{% endraw %}
+  <coordTransformFactory name='atmos_ln_sigma_coordinates' type='vertical' class='my.stuff.atmosSigmaLog'/>{% raw %}{% annotation 3 %}{% endraw %}
+  <featureDatasetFactory featureType='Point' class='gov.noaa.obscure.file.Flabulate'/>{% raw %}{% annotation 4 %}{% endraw %}
+  <gribParameterTable edition='1' center='58' subcenter='-1' version='128'>C:/grib/tables/ons288.xml</gribParameterTable>{% raw %}{% annotation 5 %}{% endraw %}
+  <gribParameterTableLookup edition='1'>C:/grib/tables/ncepLookup.txt</gribParameterTableLookup>{% raw %}{% annotation 6 %}{% endraw %}
+  <bufrtable filename='C:/my/files/lookup.txt' />{% raw %}{% annotation 7 %}{% endraw %}
+  <grib1Table strict='false'/>{% raw %}{% annotation 8 %}{% endraw %}
+  <Netcdf4Clibrary>{% raw %}{% annotation 9 %}{% endraw %}
+    <libraryPath>/usr/local/lib</libraryPath>
+    <libraryName>netcdf</libraryName>
+    <useForReading>false</useForReading>
+  </Netcdf4Clibrary>
+</runtimeConfig>
+{% endhighlight_with_annotations %}
+
+* {% annotation 1 %} Loads an `IOServiceProvider` with the given class name
+* {% annotation 2 %} Loads a `CoordSysBuilderIF` with the given class name, which looks for the given `Convention` attribute value.
+* {% annotation 3 %} Loads a `CoordTransformFactory` with the given class name, which looks for the given `transformName` in the dataset. The type must be vertical or projection.
+* {% annotation 4 %} Loads a `FeatureDatasetFactory` with the given class name which open `FeatureDatasets` of the given `featureType`.
+* {% annotation 5 %} Load a [GRIB-1 parameter table](grib_tables.html) (as of version 4.3)
+* {% annotation 6 %} Load a [GRIB-1 parameter table lookup](grib_tables.html#standard-table-mapping) (as of version 4.3)
+* {% annotation 7 %} Load a [BUFR table lookup](bufr_tables.html) file.
+* {% annotation 8 %} Turn [strict GRIB1 table handling](grib_tables.html#strict) off.
+* {% annotation 9 %} Configure how the [NetCDF-4 C library](netcdf4_c_library.html) is discovered and used.
     * `libraryPath`: The directory in which the native library is installed.
     * `libraryName`: The name of the native library. This will be used to locate the proper `.DLL`, `.SO`, or `.DYLIB` file within the `libraryPath` directory.
     * `useForReading`: By default, the native library is only used for writing NetCDF-4 files; a pure-Java layer is responsible for reading them. 
