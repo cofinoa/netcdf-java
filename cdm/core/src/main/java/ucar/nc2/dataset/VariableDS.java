@@ -34,7 +34,14 @@ import java.util.*;
  */
 public class VariableDS extends Variable implements VariableEnhanced, EnhanceScaleMissingUnsigned {
 
-  static final ServiceLoader<EnhancementProvider> ENHANCEMENT_PROVIDERS = ServiceLoader.load(EnhancementProvider.class);
+  static final List<EnhancementProvider> ENHANCEMENT_PROVIDERS;
+
+  static {
+    ENHANCEMENT_PROVIDERS = new ArrayList<>();
+    for (EnhancementProvider enhancementProvider : ServiceLoader.load(EnhancementProvider.class)) {
+      ENHANCEMENT_PROVIDERS.add(enhancementProvider);
+    }
+  }
 
   /**
    * Constructor when there's no underlying variable.
