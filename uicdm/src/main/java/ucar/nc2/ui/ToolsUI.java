@@ -1524,11 +1524,14 @@ public class ToolsUI extends JPanel {
     }
 
     if (!configRead) {
+      // if System.getProperty("user.home") is set, look under user_home/.unidata for nj22Config.xml,
+      // otherwise look under the relative directory .unidata
       String filename = XMLStore.makeStandardFilename(".unidata", "nj22Config.xml");
       File f = new File(filename);
       if (f.exists()) {
         try (FileInputStream fis = new FileInputStream(filename)) {
           StringBuilder errlog = new StringBuilder();
+          RuntimeConfigParser.read(fis, errlog);
           System.out.println(errlog);
         } catch (IOException ioe) {
           log.warn("Error reading {} = {}", filename, ioe.getMessage());
