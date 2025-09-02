@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 1998-2019 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
 package ucar.nc2.ui;
 
-import java.nio.charset.StandardCharsets;
 import ucar.ui.util.Resource;
 import ucar.ui.widget.BAMutil;
 import java.awt.BorderLayout;
@@ -19,10 +18,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -42,7 +37,8 @@ public class ToolsAboutWindow extends JWindow {
     super(parent);
 
     JLabel lab1 = new JLabel("<html> <body bgcolor=\"#FFECEC\"> <center>"
-        + "<h1>Netcdf Tools User Interface (ToolsUI)</h1>" + "<b>" + getVersion() + "</b>"
+        + "<h1>Netcdf Tools User Interface (ToolsUI)</h1>" + "<b>" + BuildInfo.getToolsUIBuildInfo().getVersion()
+        + "</b>" + "<br>Build Date: " + "<b>" + BuildInfo.getToolsUIBuildInfo().getTimestamp() + "</b>"
         + "<br><i>https://www.unidata.ucar.edu/software/netcdf-java/</i>"
         + "<br><b><i>Developers:</b> John Caron, Sean Arms, Dennis Heimbinger, Ryan May, Christian Ward-Garrison</i></b>"
         + "</center>" + "<br><br>With thanks to these <b>Open Source</b> contributors:" + "<ul>"
@@ -120,23 +116,6 @@ public class ToolsAboutWindow extends JWindow {
    *
    */
   private String getVersion() {
-    String version;
-    try (InputStream is = Resource.getFileResource("/README")) {
-      if (is == null) {
-        return "5.0";
-      }
-      BufferedReader dataIS = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-      StringBuilder sbuff = new StringBuilder();
-      for (int i = 0; i < 3; i++) {
-        sbuff.append(dataIS.readLine());
-        sbuff.append("<br>");
-      }
-      version = sbuff.toString();
-    } catch (IOException ioe) {
-      ioe.printStackTrace();
-      version = "version unknown";
-    }
-
-    return version;
+    return BuildInfo.getToolsUIBuildInfo().getVersion();
   }
 }
