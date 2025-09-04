@@ -1295,6 +1295,9 @@ public class NcmlReader {
           if (v.getRank() > 0) {
             v.setDimensionsByName(v.makeDimensionsString());
           }
+          // data will get cached when build is called, but set
+          // caching to true on the variable now
+          v.setCaching(true);
         } else {
           Array data = Array.makeArray(dtype, npts, start, incr);
           v.setCachedData(data, true);
