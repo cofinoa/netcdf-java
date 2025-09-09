@@ -62,7 +62,7 @@ Please see the release notes on GitHub for more details on additions, enhancemen
 Point release notes:
 * [5.7.0](https://github.com/Unidata/netcdf-java/releases/tag/v5.7.0){:target="_blank"} (_2025-01-06_)
 
-5.7.x adds support for a service provider interface for applying enhancements by NSF Unidata summer intern Leo Matak (see https://www.unidata.ucar.edu/blogs/developer/en/entry/extensible-ncml-for-ai-ml for more information!).
+5.7.x adds support for a service provider interface for applying enhancements by NSF Unidata summer intern Leo Matak (see https://www.unidata.ucar.edu/blogs/developer/entry/extensible-ncml-for-ai-ml for more information!).
 BUFR support has been enhanced to include multi-category messages thanks to an external contribution from github user @Yaqiang!
 Please see the release notes on GitHub for more details on additions, enhancements, and bug fixes.
 
@@ -97,7 +97,7 @@ Point release notes:
 
 Much of the work in 5.4.x is focused on establishing a public API.
 We now publish two sets of javadocs - [with](../javadoc-with-deprecations/){:target="_blank"} and [without deprecations](../javadoc/){:target="_blank"}.
-For more information about these efforts and why this work is being done, please visit ([link](https://www.unidata.ucar.edu/blogs/developer/en/entry/netcdf-java-looking-ahead){:target="_blank"}).
+For more information about these efforts and why this work is being done, please visit ([link](https://www.unidata.ucar.edu/blogs/developer/entry/netcdf-java-looking-ahead){:target="_blank"}).
 Only those classes and methods outlined in the javadocs [without deprecations](../javadoc/) will exist in the next major release of netCDF-Java (`v6.0`).
 
 For more information about the changes in this release, please visit the [netCDF-Java github wiki](https://github.com/Unidata/netcdf-java/wiki#public-api-details){:target="_blank"}.

@@ -151,7 +151,7 @@ You must generate the GRIB Collection index file in a [separate step](#creating-
 A GRIB file is an unordered collection of GRIB records.
 A GRIB record consists of a single 2D (x, y) slice of data.
 The CDM library reads a GRIB file and creates a 2, 3,4, or 5 dimension Variable (time, ensemble, z, y, x), by finding the records with the same parameter, with different time / level / ensemble coordinates.
-This amounts to [guessing the dataset schema](https://www.unidata.ucar.edu/blogs/developer/en/entry/dataset_schemas_are_lost_in){:target="_blank"} and the intent of the data provider, and is unfortunately a bit arbitrary. 
+This amounts to [guessing the dataset schema](https://www.unidata.ucar.edu/blogs/developer/entry/dataset_schemas_are_lost_in){:target="_blank"} and the intent of the data provider, and is unfortunately a bit arbitrary. 
 Most of our testing is against the NCEP operational models from the [IDD](https://www.unidata.ucar.edu/projects/index.html#idd){:target="_blank"}, and so are influenced by those.
 Deciding how to group the GRIB records into CDM Variables is one of the main source of problems.
 It uses the following GRIB fields to construct a unique variable.

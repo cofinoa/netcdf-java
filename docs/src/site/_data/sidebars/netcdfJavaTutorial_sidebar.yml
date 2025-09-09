@@ -150,135 +150,146 @@ entries:
   - title: netCDF-Java Reference Docs
     output: web, pdf
     folderitems:
+    - output: web, pdf
+      subfolders:
+        - title: More API
+          output: web, pdf
+          subfolderitems:
+            - title: ArrayStructures
+              url: /arraystructures_ref.html
+              output: web, pdf
 
-    - title: ArrayStructures
-      url: /arraystructures_ref.html
-      output: web, pdf
+            - title: CDM Calendar Date Handling
+              url: /cdm_calendar_date_time_ref.html
+              output: web, pdf
 
-    - title: BUFR Files
-      url: /bufr_processing.html
-      output: web, pdf
+            - title: CDM Disk Caching
+              url: /disk_caching.html
+              output: web, pdf
+            - title: Dataset URLs
+              url: /dataset_urls.html
+              output: web, pdf
 
-    - title: BUFR Tables
-      url: /bufr_tables.html
-      output: web, pdf
+            - title:  Forecast Model Run Collection
+              url: /fmrc_ref.html
+              output: web, pdf
 
-    - title: CDM File Types
-      url: /file_types.html
-      output: web, pdf
+            - title: netCDF C Library
+              url: /netcdf4_c_library.html
+              output: web, pdf
 
-    - title: CDM Calendar Date Handling
-      url: /cdm_calendar_date_time_ref.html
-      output: web, pdf
+            - title: PointFeature Reference
+              url: /pointfeature_ref.html
+              output: web, pdf
 
-    - title: CDM Disk Caching
-      url: /disk_caching.html
-      output: web, pdf
+            - title: Standard Horizontal Coordinate Transforms
+              url: /std_horizonal_coord_transforms.html
+              output: web, pdf
 
-    - title: CDMRemote
-      url: /cdmremote.html
-      output: web, pdf
+            - title: Unidata Defined System Properties
+              url: /systemproperties.html
+              output: web, pdf
+        - title: Common Data Model Mappings
+          output: web, pdf
+          subfolderitems:
+          - title: CDM to NetCDF Mapping
+            url: /cdm_netcdf_mapping.html
+            output: web, pdf
 
-    - title: CDMRemote Feature Datasets
-      url: /cdmremote_feature_datasets.html
-      output: web, pdf
+          - title: CDM - OPeNDAP Interface
+            url: /cdm_opendap_interface.html
+            output: web, pdf
+        - title: Conventions
+          output: web, pdf
+          subfolderitems:
+          - title: CF DSG Encoding Table
+            url: /cf_dsg_encoding_ref.html
+            output: web, pdf
 
-    - title: CDM to NetCDF Mapping
-      url: /cdm_netcdf_mapping.html
-      output: web, pdf
+          - title: Coordinate Attribute Convention
+            url: /coord_attr_conv.html
+            output: web, pdf
 
-    - title: CDM - OPeNDAP Interface
-      url: /cdm_opendap_interface.html
-      output: web, pdf
+        - title: Data Formats
+          output: web, pdf
+          subfolderitems:
+          - title: CDM File Types
+            url: /file_types.html
+            output: web, pdf
 
-    - title: NetCDF4 Compound Attributes
-      url: /cdm_netcdf_mapping.html
-      output: web, pdf
+          - title: BUFR Files
+            url: /bufr_processing.html
+            output: web, pdf
+
+          - title: BUFR Tables
+            url: /bufr_tables.html
+            output: web, pdf
+          - title: GRIB Files in CDM
+            url: /grib_files_cdm.html
+            output: web, pdf
+
+          - title: GRIB Tables in CDM
+            url: /grib_tables.html
+            output: web, pdf
+
+          - title: GRIB Collection Specification
+            url: /grib_feature_collections_ref.html
+            output: web, pdf
+
+          - title: Reading Zarr
+            url: /reading_zarr.html
+            output: web, pdf
+
+        - title: Remote Access
+          output: web, pdf
+          subfolderitems:
+          - title: Read CDM files over HTTP
+            url: /read_over_http.html
+            output: web, pdf
+
+          - title: CDMRemote
+            url: /cdmremote.html
+            output: web, pdf
+
+          - title: CDMRemote Feature Datasets
+            url: /cdmremote_feature_datasets.html
+            output: web, pdf
+
+          - title: NC Stream
+            url: /ncstream.html
+            output: web, pdf
+
+          - title: NC Stream Grammar
+            url: /ncstream_grammar.html
+            output: web, pdf
+
+          - title: NetCDF Subset Service
+            external_url: https://docs.unidata.ucar.edu/tds/current/userguide/netcdf_subset_service_ref.html
+            output: web, pdf
+
+        - title: NcML
+          output: web, pdf
+          subfolderitems:
+          - title: NcML Overview
+            url: /ncml_overview.html
+            output: web, pdf
+
+          - title: NcML Cookbook
+            url: /ncml_cookbook.html
+            output: web, pdf
+
+          - title: Annotated Schema for NcML
+            url: /annotated_ncml_schema.html
+            output: web, pdf
 
     - title: CDM Utility Programs
       url: /cdm_utility_programs.html
-      output: web, pdf
-
-    - title: CF DSG Encoding Table
-      url: /cf_dsg_encoding_ref.html
-      output: web, pdf
-
-    - title: Coordinate Attribute Convention
-      url: /coord_attr_conv.html
-      output: web, pdf
-
-    - title: Dataset URLs
-      url: /dataset_urls.html
-      output: web, pdf
-
-    - title:  Forecast Model Run Collection
-      url: /fmrc_ref.html
-      output: web, pdf
-
-    - title: GRIB Files in CDM
-      url: /grib_files_cdm.html
-      output: web, pdf
-
-    - title: GRIB Tables in CDM
-      url: /grib_tables.html
-      output: web, pdf
-
-    - title: GRIB Collection Specification
-      url: /grib_feature_collections_ref.html
-      output: web, pdf
-
-    - title: NcML Overview
-      url: /ncml_overview.html
-      output: web, pdf
-
-    - title: NcML Cookbook
-      url: /ncml_cookbook.html
-      output: web, pdf
-
-    - title: Annotated Schema for NcML
-      url: /annotated_ncml_schema.html
-      output: web, pdf
-
-    - title: NC Stream
-      url: /ncstream.html
-      output: web, pdf
-
-    - title: NC Stream Grammar
-      url: /ncstream_grammar.html
-      output: web, pdf
-
-    - title: netCDF-Java and TDS Doc Guide
-      url: /doc_guide.html
-      output: web, pdf
-
-    - title: NetCDF Subset Service
-      external_url: https://docs.unidata.ucar.edu/tds/current/userguide/netcdf_subset_service_ref.html
-      output: web, pdf
-
-    - title: netCDF C Library
-      url: /netcdf4_c_library.html
-      output: web, pdf
-
-    - title: PointFeature Reference
-      url: /pointfeature_ref.html
-      output: web, pdf
-
-    - title: Read CDM files over HTTP
-      url: /read_over_http.html
-      output: web, pdf
-
-    - title: Reading Zarr
-      url: /reading_zarr.html
-      output: web, pdf
-
-    - title: Standard Horizontal Coordinate Transforms
-      url: /std_horizonal_coord_transforms.html
       output: web, pdf
 
     - title: ToolsUI Reference
       url: /toolsui_ref.html
       output: web, pdf
 
-    - title: Unidata Defined System Properties
-      url: /systemproperties.html
+    - title: netCDF-Java and TDS Doc Guide
+      url: /doc_guide.html
       output: web, pdf
