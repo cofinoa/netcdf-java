@@ -117,7 +117,7 @@ The following examples demonstrate several ways to write data to an opened file.
 #### Writing to a netCDF-4 file with compression (version 4.5)
 
 The main use of netCDF-4 is to get the performance benefits from compression, and possibly from chunking 
-([why it matters](https://www.unidata.ucar.edu/blogs/developer/en/entry/chunking_data_why_it_matters)). 
+([why it matters](https://www.unidata.ucar.edu/blogs/developer/entry/chunking_data_why_it_matters)). 
 By default, the Java library will use the default chunking algorithm to write chunked and compressed netcdf-4 files. 
 To control chunking and compression settings, you must create a `Nc4Chunking` object and pass it into `NetcdfFormatWriter.createNewNetcdf4`:
 
