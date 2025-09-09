@@ -36,9 +36,12 @@ As such, we no longer utilize WebStart.
 
 Point release notes:
 * [5.9.0](https://github.com/Unidata/netcdf-java/releases/tag/v5.9.0){:target="_blank"} (_2025-08-08_)
+* [5.9.1](https://github.com/Unidata/netcdf-java/releases/tag/v5.9.1){:target="_blank"} (_2025-09-09_)
 
 The 5.9.x includes bug fixes around zarr support, scaling of projection parameters, and setting of the library path for the netCDF-C library.
 Additionally, udunits grammar code is now generated at build time, HTTP errors when disambiguating http/https locations has been improved, and scanning for filter providers is done once during initialization.
+EnhancementProviders are now loaded upon VariableDS instantiation, fixing a critical multithreaded environment related bug.
+Several ToolsUI improvements have been made as well.
 Finally, several third party libraries have been upgraded.
 Please see the release notes on GitHub for more details on additions, enhancements, and bug fixes.
 
