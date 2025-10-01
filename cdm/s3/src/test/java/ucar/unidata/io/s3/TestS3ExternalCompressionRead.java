@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2020 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 2019-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -19,7 +19,7 @@ import ucar.unidata.util.test.category.NeedsExternalResource;
 
 @Category(NeedsExternalResource.class)
 public class TestS3ExternalCompressionRead {
-  private static final String compressedObject = "cdms3:noaa-nexrad-level2?1991/07/20/KTLX/KTLX19910720_160529.gz";
+  private static final String compressedObject = "cdms3:unidata-nexrad-level2?1991/07/20/KTLX/KTLX19910720_160529.gz";
   private static final String fragment = "#delimiter=/";
 
   @Test

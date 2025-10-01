@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2019 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -27,6 +27,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.annotation.Nullable;
+import ucar.nc2.dataset.DatasetUrl;
 import ucar.nc2.internal.iosp.netcdf3.N3headerNew;
 import ucar.nc2.internal.iosp.netcdf3.N3iospNew;
 import ucar.nc2.iosp.AbstractIOServiceProvider;
@@ -476,7 +477,9 @@ public class NetcdfFiles {
   }
 
   private static String removeFragment(String uriString) {
-    return uriString.split("#")[0];
+    List<String> protocols = DatasetUrl.getProtocols(uriString);
+    // only remove fragment from non-local files
+    return (protocols.isEmpty() || protocols.contains("file")) ? uriString : uriString.split("#")[0];
   }
 
   private static boolean looksCompressed(String filename) {
