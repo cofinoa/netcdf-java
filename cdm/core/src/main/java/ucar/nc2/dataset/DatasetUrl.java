@@ -232,6 +232,8 @@ public class DatasetUrl {
         return ServiceType.THREDDS;
       if (protocol.equalsIgnoreCase("ncml"))
         return ServiceType.NCML;
+      if (protocol.equalsIgnoreCase("gcdm"))
+        return ServiceType.GCDM;
     }
     return null;
   }
@@ -338,6 +340,8 @@ public class DatasetUrl {
         return ServiceType.CdmRemote;
       case "thredds":
         return ServiceType.THREDDS;
+      case "gcdm":
+        return ServiceType.GCDM;
     }
 
     return null;

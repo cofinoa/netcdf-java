@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.nc2.dataset;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -123,6 +124,10 @@ public class TestDatasetUrl {
     testFind("cdms3:thredds-test-data?ncml/testStandalone.ncml#delimiter=/", ServiceType.NCML);
     testFind("cdms3:thredds-test-data?ncml/testStandalone.ncml", ServiceType.NCML);
     testFind("cdms3://profile_name@my.endpoint.edu/bucket-name?super/long/key.ncml#delimiter=/", ServiceType.NCML);
+
+    testFind("gcdm://localhost:8080/some/path/dataset.nc", ServiceType.GCDM);
+    testFind("gcdm:http://localhost:8080/some/path/dataset.nc", ServiceType.GCDM);
+    testFind("gcdm:https://some.host.org/some/path/dataset.nc", ServiceType.GCDM);
   }
 
   @Test
