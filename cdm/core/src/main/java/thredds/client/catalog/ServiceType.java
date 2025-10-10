@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package thredds.client.catalog;
 
 /**
@@ -42,7 +43,7 @@ public enum ServiceType {
       AccessType.DataAccess, null), //
   WMS("Supports access to georegistered map images from geoscience datasets.", AccessType.DataAccess, null), //
   WSDL, //
-  ;
+  GCDM("gRPC services for the Common Data Model", AccessType.DataAccess, "gcdm");
 
   private final String desc;
   private final String protocol;
