@@ -467,7 +467,6 @@ public abstract class Grib2Drs {
       this.compressionOptionsMask = raf.read();
       this.blockSize = raf.read();
       this.referenceSampleInterval = GribNumbers.uint2(raf);
-      System.out.println("hello");
     }
 
     @Override
