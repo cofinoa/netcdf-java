@@ -42,6 +42,7 @@ dependencies {
 
   runtimeOnly project(':cdm:cdm-s3')
   runtimeOnly project(':cdm:cdm-zarr')
+  runtimeOnly project(':native-compression:libaec-native')
 
   // constrained by netcdf-java-platform
   runtimeOnly 'ch.qos.logback:logback-classic'
