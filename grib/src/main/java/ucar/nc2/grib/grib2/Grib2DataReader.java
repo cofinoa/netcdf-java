@@ -1092,54 +1092,62 @@ public class Grib2DataReader {
     byte[] inputData = new byte[encodedLength];
     raf.readFully(inputData);
 
-    int nbytesPerSample = (gdrs.numberOfBits + 7) / 8;
+    float[] data;
+    if (encodedLength > 0) {
+      int nbytesPerSample = (gdrs.numberOfBits + 7) / 8;
 
-    try (Memory inputMemory = new Memory(encodedLength);
-        Memory outputMemory = new Memory((long) nbytesPerSample * totalNPoints)) {
+      try (Memory inputMemory = new Memory(encodedLength);
+          Memory outputMemory = new Memory((long) nbytesPerSample * totalNPoints)) {
 
-      // set encoding parameters
-      AecStream aecStreamDecode = AecStream.create(gdrs.numberOfBits, gdrs.blockSize, gdrs.referenceSampleInterval,
-          gdrs.compressionOptionsMask);
+        // set encoding parameters
+        AecStream aecStreamDecode = AecStream.create(gdrs.numberOfBits, gdrs.blockSize, gdrs.referenceSampleInterval,
+            gdrs.compressionOptionsMask);
 
-      // load data from grib message into memory
-      inputMemory.write(0, inputData, 0, inputData.length);
+        // load data from grib message into memory
+        inputMemory.write(0, inputData, 0, inputData.length);
 
-      aecStreamDecode.setInputMemory(inputMemory);
-      aecStreamDecode.setOutputMemory(outputMemory);
+        aecStreamDecode.setInputMemory(inputMemory);
+        aecStreamDecode.setOutputMemory(outputMemory);
 
-      // decode
-      int ok = LibAec.aec_buffer_decode(aecStreamDecode);
-      if (ok != AEC_OK) {
-        System.out.printf("AEC Error: %s%n", ok);
+        // decode
+        int ok = LibAec.aec_buffer_decode(aecStreamDecode);
+        if (ok != AEC_OK) {
+          System.out.printf("AEC Error: %s%n", ok);
+        }
+
+        // read decoded data from native memory
+        decodedData = new byte[nbytesPerSample * totalNPoints];
+        outputMemory.read(0, decodedData, 0, decodedData.length);
       }
 
-      // read decoded data from native memory
-      decodedData = new byte[nbytesPerSample * totalNPoints];
-      outputMemory.read(0, decodedData, 0, decodedData.length);
-    }
+      // will use this to read out a long value using nbytesPerSample bytes
+      // see long getNextLong(ByteBuffer bb, int numberOfBytes)
+      ByteBuffer bb = ByteBuffer.wrap(decodedData);
 
-    // will use this to read out a long value using nbytesPerSample bytes
-    // see long getNextLong(ByteBuffer bb, int numberOfBytes)
-    ByteBuffer bb = ByteBuffer.wrap(decodedData);
-
-    // decode following regulation 92.9.4, Note 4
-    int D = gdrs.decimalScaleFactor;
-    float DD = (float) Math.pow((double) 10, (double) D);
-    float R = gdrs.referenceValue;
-    int E = gdrs.binaryScaleFactor;
-    float EE = (float) Math.pow(2.0, (double) E);
-    float[] data = new float[decodedData.length];
-    if (bitmap == null) {
-      for (int i = 0; i < totalNPoints; i++) {
-        data[i] = (R + getNextLong(bb, nbytesPerSample) * EE) / DD;
+      // decode following regulation 92.9.4, Note 4
+      int D = gdrs.decimalScaleFactor;
+      float DD = (float) Math.pow((double) 10, (double) D);
+      float R = gdrs.referenceValue;
+      int E = gdrs.binaryScaleFactor;
+      float EE = (float) Math.pow(2.0, (double) E);
+      data = new float[decodedData.length];
+      if (bitmap == null) {
+        for (int i = 0; i < totalNPoints; i++) {
+          data[i] = (R + getNextLong(bb, nbytesPerSample) * EE) / DD;
+        }
+      } else {
+        for (int i = 0; i < totalNPoints; i++) {
+          if (GribNumbers.testBitIsSet(bitmap[i / 8], i % 8)) {
+            data[i] = (R + getNextLong(bb, nbytesPerSample) * EE) / DD;
+          } else {
+            data[i] = staticMissingValue;
+          }
+        }
       }
     } else {
-      for (int i = 0; i < totalNPoints; i++) {
-        if (GribNumbers.testBitIsSet(bitmap[i / 8], i % 8)) {
-          data[i] = (R + getNextLong(bb, nbytesPerSample) * EE) / DD;
-        } else {
-          data[i] = staticMissingValue;
-        }
+      data = new float[totalNPoints];
+      if (gdrs.referenceValue != 0) {
+        Arrays.fill(data, gdrs.referenceValue);
       }
     }
     return data;
