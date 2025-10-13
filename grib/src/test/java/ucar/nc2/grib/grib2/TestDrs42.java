@@ -8,10 +8,13 @@ package ucar.nc2.grib.grib2;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Formatter;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import ucar.ma2.Array;
+import ucar.ma2.DataType;
+import ucar.ma2.InvalidRangeException;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 import ucar.nc2.NetcdfFile;
@@ -90,6 +93,55 @@ public class TestDrs42 {
       assertThat(extremes.max).isWithin(tol).of(expectedMax);
       assertThat(extremes.min).isWithin(tol).of(expectedMin);
       assertThat(MAMath.sumDouble(data) / data.getSize()).isWithin(tol).of(expectedAverage);
+    }
+  }
+
+  @Test
+  public void constantValueDrs42() throws IOException, InvalidRangeException {
+    // See https://github.com/Unidata/netcdf-java/issues/1498
+    // GRIB2 CCSDS reader fails to read messages with constant values
+    //
+    // Message 1: constant 0.0
+    // Message 2: constant 5.5
+    // Message 3: 80 in the south, 160 in the north
+    // Message 4: typical precipitation field
+
+    // uncompressed messages
+    String origFile = TestDir.localTestDataDir + "GRIB2_section7_testfile_bavaria.grib2";
+    // compressed messages
+    String drs42File = TestDir.localTestDataDir + "GRIB2_section7_testfile_ccsds_bavaria.grib2";
+    final String variableName = "Total_precipitation_rate_surface_Mixed_intervals_Accumulation";
+
+    final int expectedLength = 28712;
+    final int[] singleMessageShape = new int[] {1, 74, 97};
+    final int singleMessageLength = singleMessageShape[0] * singleMessageShape[1] * singleMessageShape[2];
+
+    float[] expected = new float[singleMessageLength];
+    try (NetcdfFile nc42 = NetcdfFiles.open(drs42File)) {
+      Variable v = nc42.findVariable(variableName);
+      assertThat(v != null).isTrue();
+      Array data = v.read();
+
+      assertThat(data).isNotNull();
+      assertThat(data.getSize()).isEqualTo(expectedLength);
+
+      // test known constant values
+      Arrays.fill(expected, 0);
+      assertThat(data.section(new int[] {0, 0, 0}, singleMessageShape).get1DJavaArray(DataType.FLOAT))
+          .isEqualTo(expected);
+
+      Arrays.fill(expected, 5.5f);
+      assertThat(data.section(new int[] {1, 0, 0}, singleMessageShape).get1DJavaArray(DataType.FLOAT))
+          .isEqualTo(expected);
+
+      // compare compressed and uncompressed messages
+      try (NetcdfFile ncOrig = NetcdfFiles.open(origFile)) {
+        Formatter f = new Formatter();
+        CompareNetcdf2 compare = new CompareNetcdf2(f, false, false, true);
+        boolean ok = compare.compare(ncOrig, nc42, null);
+        System.out.printf("%s %s%n", ok ? "OK" : "NOT OK", f);
+        assertThat(ok).isTrue();
+      }
     }
   }
 }
