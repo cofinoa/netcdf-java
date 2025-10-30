@@ -1,6 +1,6 @@
 ---
 title: Upgrading to netCDF-Java version 5.x
-last_updated: 2025-08-08
+last_updated: 2025-10-30
 sidebar: netcdfJavaTutorial_sidebar
 toc: false
 permalink: upgrade.html
@@ -8,19 +8,11 @@ permalink: upgrade.html
 
 ## Requirements
 
-* Java 8 or later is required
-
-## Overview
-
-A number of API enhancements have been made to take advantage of evolution in the Java language, for example _try-with-resource_ and _foreach_ constructs.
-The use of these make code simpler and more reliable.
-
-Deprecated classes and methods have been removed, and the module structure and third-party jar use has been improved.
-
-Java WebStart has been deprecated as of [Java 9](https://www.oracle.com/technetwork/java/javase/9-deprecated-features-3745636.html#JDK-8184998){:target="_blank"}.
-As such, we no longer utilize WebStart.
+* Java 8 or later is required to use the library.
+* Starting with version 5.10.0, Java 17 is required to build the library.
 
 ## Quick Navigation
+* [Summary of changes for v5.10.x](#netcdf-java-api-changes-510x)
 * [Summary of changes for v5.9.x](#netcdf-java-api-changes-59x)
 * [Summary of changes for v5.8.x](#netcdf-java-api-changes-58x)
 * [Summary of changes for v5.7.x](#netcdf-java-api-changes-57x)
@@ -32,13 +24,22 @@ As such, we no longer utilize WebStart.
 * [Summary of changes for v5.1.x](#netcdf-java-api-changes-51x)
 * [Summary of changes for v5.0.x](#netcdf-java-api-changes-50x)
 
+## netCDF-Java API Changes (5.10.x)
+
+Point release notes:
+* [5.10.0](https://github.com/Unidata/netcdf-java/releases/tag/v5.10.0){:target="_blank"} (_yyyy-mm-dd, unreleased_)
+
+Starting with 5.10.x, the netCDF-Java library requires Java 17 to build (although the build will produce Java 8 bytecode, so the minimum supported version is still Java 8).
+Note: we are looking to update the minimum version of the JVM we support for the project.
+Please consider taking a moment to participate in the [poll on GitHub](https://github.com/Unidata/netcdf-java/discussions/1468){:target="_blank"}.
+
 ## netCDF-Java API Changes (5.9.x)
 
 Point release notes:
 * [5.9.0](https://github.com/Unidata/netcdf-java/releases/tag/v5.9.0){:target="_blank"} (_2025-08-08_)
 * [5.9.1](https://github.com/Unidata/netcdf-java/releases/tag/v5.9.1){:target="_blank"} (_2025-09-09_)
 
-The 5.9.x includes bug fixes around zarr support, scaling of projection parameters, and setting of the library path for the netCDF-C library.
+The 5.9.x release includes bug fixes around zarr support, scaling of projection parameters, and setting of the library path for the netCDF-C library.
 Additionally, udunits grammar code is now generated at build time, HTTP errors when disambiguating http/https locations has been improved, and scanning for filter providers is done once during initialization.
 EnhancementProviders are now loaded upon VariableDS instantiation, fixing a critical multithreaded environment related bug.
 Several ToolsUI improvements have been made as well.
@@ -183,6 +184,16 @@ For example, the `buildFrom*` methods from `thredds.client.catalog.builder.Catal
 Remove usages of `org.joda.time` outside of `ucar.nc2.time`.
 
 ## netCDF-Java API Changes (5.0.x)
+
+### Overview
+
+A number of API enhancements have been made to take advantage of evolution in the Java language, for example _try-with-resource_ and _foreach_ constructs.
+The use of these make code simpler and more reliable.
+
+Deprecated classes and methods have been removed, and the module structure and third-party jar use has been improved.
+
+Java WebStart has been deprecated as of [Java 9](https://www.oracle.com/technetwork/java/javase/9-deprecated-features-3745636.html#JDK-8184998){:target="_blank"}.
+As such, we no longer utilize WebStart.
 
 Point release notes:
 * [5.0.0](https://github.com/Unidata/netcdf-java/releases/tag/v5.0.0){:target="_blank"} (_2019-07-29_)

@@ -1,5 +1,5 @@
 [versions]
-netcdf-java = "5.9.2-SNAPSHOT"
+netcdf-java = "5.10.0-SNAPSHOT"
 
 unidata-doc-theme = "0.0.6"
 
