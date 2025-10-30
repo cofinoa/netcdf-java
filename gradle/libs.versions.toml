@@ -1,0 +1,120 @@
+[versions]
+netcdf-java = "5.9.2-SNAPSHOT"
+
+unidata-doc-theme = "0.0.6"
+
+# 3rd party dependencies
+awssdk = "2.31.76"
+awssdkv1 = "1.12.649"
+commons-math3 = "3.6.1"
+bounce = "0.18"
+grpc = "1.73.0"
+guava = "33.4.8-jre"
+httpcomponents = "4.5.13"
+jackson = "2.19.1"
+jcommander = "1.78"
+jdom2 = "2.0.6.1"
+jfree-jcommon = "1.0.23"
+jfree-jfreechart = "1.0.19"
+jgoodies-forms = "1.6.0"
+jj2000 = "5.4"
+joda-time = "2.12.7"
+jsr305 = "3.0.2"
+jna = "5.17.0"
+lgooddatepicker = "10.3.1"
+mcidas = "20231121"
+protobuf = "4.31.1"
+re2j = "1.3"
+sensorweb-waterml = "2.7.0"
+slf4j = "2.0.17"
+tomcat-annotations = "6.0.53"
+visad = "2.0-20130124"
+xmlbeans = "3.1.0"
+
+#testing only
+commons-compress = "1.12"
+commons-io = "2.5"
+jsoup = "1.11.2"
+junit4 = "4.13.1"
+junit5 = "5.14.0"
+junitparams = "1.0.5"
+mockito-core = "2.28.2"
+testcontainers = "1.19.7"
+truth = "1.0"
+
+# runtime only
+logback-classic = "1.3.15"
+
+[libraries]
+
+amazonaws-s3v1 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "awssdkv1" }
+awssdk-apacheClient = { module = "software.amazon.awssdk:apache-client", version.ref = "awssdk" }
+awssdk-bom = { module = "software.amazon.awssdk:bom", version.ref = "awssdk" }
+awssdk-s3 = { module = "software.amazon.awssdk:s3" }
+awssdk-sts = { module = "software.amazon.awssdk:sts" }
+beust-jcommander = { module = "com.beust:jcommander", version.ref = "jcommander" }
+# Used by NcmlEditor. Abandoned, no updates since 2013. https://sourceforge.net/projects/bounce/
+# https://sourceforge.net/p/bounce/svn/HEAD/tree/src/main/java/org/bounce/
+bounce = {module = "org.bounce:bounce", version.ref = "bounce" }
+commons-math3 = { module = "org.apache.commons:commons-math3", version.ref = "commons-math3" }
+findbugs-jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "jsr305" }
+grpc-nettyShaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc"}
+grpc-protocGenGrpcJava = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "grpc" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
+grpc-testing = { module = "io.grpc:grpc-testing", version.ref = "grpc" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+httpcomponents-api = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpcomponents" }
+httpcomponents-httpmime = { module = "org.apache.httpcomponents:httpmime", version.ref = "httpcomponents" }
+jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
+jackson-core = { module = "com.fasterxml.jackson.core:jackson-core" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind" }
+jdom2 = { module = "org.jdom:jdom2", version.ref = "jdom2" }
+# http://www.jfree.org/
+jfree-jcommon = { module = "org.jfree:jcommon", version.ref = "jfree-jcommon" }
+jfree-jfreechart = { module = "org.jfree:jfreechart", version.ref = "jfree-jfreechart" }
+# http://www.jgoodies.com/. Latest version is 1.9.0, but there is breakage when we try to upgrade.
+jgoodies-forms = { module = "com.jgoodies:jgoodies-forms", version.ref = "jgoodies-forms" }
+jj2000 = { module = "edu.ucar:jj2000", version.ref = "jj2000" }
+jodaTime = { module = "joda-time:joda-time", version.ref = "joda-time" }
+jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+# LGoodDatePicker - swing calendar widget used in TdsMonitor
+lgooddatepicker = { module = "com.github.lgooddatepicker:LGoodDatePicker", version.ref = "lgooddatepicker" }
+protobuf = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
+protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
+re2j = { module = "com.google.re2j:re2j", version.ref = "re2j" }
+sensorweb-xmlGmlV321 = { module = "org.n52.sensorweb:52n-xml-gml-v321", version.ref = "sensorweb-waterml" }
+sensorweb-xmlOmV20 = { module = "org.n52.sensorweb:52n-xml-om-v20", version.ref = "sensorweb-waterml" }
+sensorweb-xmlSamplingV20 = { module = "org.n52.sensorweb:52n-xml-sampling-v20", version.ref = "sensorweb-waterml" }
+sensorweb-xmlSweCommonV20 = { module = "org.n52.sensorweb:52n-xml-sweCommon-v20", version.ref = "sensorweb-waterml" }
+sensorweb-xmlWaterMLV20 = { module = "org.n52.sensorweb:52n-xml-waterML-v20", version.ref = "sensorweb-waterml" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+ssec-visad = { module = "edu.wisc.ssec:visad", version.ref = "visad" }
+ssec-visadMcidasSlimUcarNs = { module = "edu.wisc.ssec:visad-mcidas-slim-ucar-ns", version.ref = "mcidas" }
+tomcat-annotationsApi = { module="org.apache.tomcat:annotations-api", version.ref = "tomcat-annotations" }
+xmlbeans = { module = "org.apache.xmlbeans:xmlbeans", version.ref = "xmlbeans"}
+
+# test only
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
+google-truth = { module = "com.google.truth:truth", version.ref = "truth" }
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+junit5-bom = { module = "org.junit:junit-bom", version.ref = "junit5" }
+junit5-vintageEngine = { module = "org.junit.vintage:junit-vintage-engine" }
+junit5-platformLauncher = { module = "org.junit.platform:junit-platform-launcher" } # version controlled by gradle?
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
+testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+pragmatists-junitparams = { module = "pl.pragmatists:JUnitParams", version.ref = "junitparams" }
+
+# runtime only
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback-classic" }
+
+[plugins]
+# versions = { id = "com.github.ben-manes.versions", version = "0.45.0" }
+cyclonedx-bom = { id = "org.cyclonedx.bom", version = "3.0.1" }
+execfork = { id = "com.github.psxpaul.execfork", version = "0.2.2"}
+javacc = { id = "org.javacc.javacc", version = "4.0.1" }
+protobuf = { id = "com.google.protobuf", version = "0.9.5" }
+shadow = { id = "com.gradleup.shadow", version = "9.2.2" }
+spotless = { id = "com.diffplug.spotless", version = "8.0.0" }
