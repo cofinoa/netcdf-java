@@ -32,8 +32,13 @@ bin/
 
 # Ignore the Gradle cache directory.
 .gradle/
+
+# Ignore .kotlin directories
+.kotlin/
+
 # Ignore the output that Gradle generates in the "build/" directories...
 build/
+
 # ...but not the source code in the "edu.ucar.build" package inside buildSrc
 !**/src/**/edu/ucar/build/
 

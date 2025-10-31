@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.nc2.ncml;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +20,10 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 @Category(NeedsCdmUnitTest.class)
-public class TestOffAggFmrcNetcdf extends TestCase {
+public class TestOffAggFmrcNetcdf {
   private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  public TestOffAggFmrcNetcdf(String name) {
-    super(name);
-  }
-
+  @Test
   public void testNUWGdatasets() throws IOException, InvalidRangeException {
     String filename = "file:" + TestDir.cdmUnitTestDir + "ncml/nc/ncmodels/aggFmrcNetcdf.xml";
 

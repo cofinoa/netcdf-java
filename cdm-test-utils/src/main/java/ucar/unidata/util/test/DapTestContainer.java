@@ -27,7 +27,7 @@ public abstract class DapTestContainer {
   static {
     CONTAINER = new GenericContainer<>(
         new ImageFromDockerfile().withFileFromClasspath("Dockerfile", "/ucar/unidata/util/test/Dockerfile"))
-            .withExposedPorts(8080);
+        .withExposedPorts(8080);
     CONTAINER.start();
 
     HOST = CONTAINER.getHost();

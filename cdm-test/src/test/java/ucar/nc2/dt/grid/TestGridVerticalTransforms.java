@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
 package ucar.nc2.dt.grid;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +22,11 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 @Category(NeedsCdmUnitTest.class)
-public class TestGridVerticalTransforms extends TestCase {
+public class TestGridVerticalTransforms {
+
   private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  public TestGridVerticalTransforms(String name) {
-    super(name);
-  }
-
+  @Test
   public void testWRF() throws Exception {
     testDataset(TestDir.cdmUnitTestDir + "conventions/wrf/wrfout_v2_Lambert.nc");
     testDataset(TestDir.cdmUnitTestDir + "conventions/wrf/wrfout_d01_2006-03-08_21-00-00");
@@ -77,13 +75,14 @@ public class TestGridVerticalTransforms extends TestCase {
 
   /*
    * The 3D coordinate array does not return correct shape and values. Just running this simple code to get z values..
-   * 
+   *
    * url=http://coast-enviro.er.usgs.gov/models/share/erie_test.ncml;
    * var='temp';
-   * 
+   *
    * z is of shape 20x2x87, it should be 20x87x193.
    */
 
+  @Test
   public void testErie() throws IOException, InvalidRangeException {
     String uri = TestDir.cdmUnitTestDir + "transforms/erie_test.ncml";
     String var = "temp";
