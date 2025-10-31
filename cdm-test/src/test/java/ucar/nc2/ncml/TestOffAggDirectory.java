@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.nc2.ncml;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,10 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @Category(NeedsCdmUnitTest.class)
-public class TestOffAggDirectory extends TestCase {
+public class TestOffAggDirectory {
   private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+  @Test
   public void testNcmlDirect() throws IOException {
     String filename = "file:" + TestDir.cdmUnitTestDir + "ncml/nc/seawifs/aggDirectory.ncml";
 
@@ -44,6 +46,7 @@ public class TestOffAggDirectory extends TestCase {
     ncfile.close();
   }
 
+  @Test
   public void testNcmlDataset() throws IOException {
     String filename = "file:" + TestDir.cdmUnitTestDir + "ncml/nc/seawifs/aggDirectory.ncml";
 
@@ -58,6 +61,7 @@ public class TestOffAggDirectory extends TestCase {
     ncfile.close();
   }
 
+  @Test
   public void testNcmlGrid() throws IOException {
     String filename = "file:" + TestDir.cdmUnitTestDir + "ncml/nc/seawifs/aggDirectory.ncml";
 
@@ -205,6 +209,7 @@ public class TestOffAggDirectory extends TestCase {
     }
   }
 
+  @Test
   public void testBlanksInDirectory() throws IOException {
     String dir = TestDir.cdmUnitTestDir + "encoding/";
     String ncml = "<?xml version='1.0' encoding='UTF-8'?>\n"

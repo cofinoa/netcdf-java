@@ -1,11 +1,13 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 2006-2018 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
-// $Id: TestDmspIosp.java 51 2006-07-12 17:13:13Z caron $
+
 package ucar.nc2.iosp.dmsp;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class TestDmspIosp extends TestCase {
+public class TestDmspIosp {
   private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private String testFilePath = TestDir.cdmUnitTestDir + "formats/dmsp";
@@ -62,10 +64,7 @@ public class TestDmspIosp extends TestCase {
   private ucar.unidata.io.RandomAccessFile meRaf = null;
   private NetcdfFile meNcf = null;
 
-  public TestDmspIosp(String name) {
-    super(name);
-  }
-
+  @Test
   public void testDateFormatHandler() {
     String isoDateFormatString = "yyyy-MM-dd";
     String isoTimeFormatString = "HH:mm:ss.SSSz";
@@ -119,6 +118,7 @@ public class TestDmspIosp extends TestCase {
   /**
    * Test ...
    */
+  @Test
   @Category(NeedsCdmUnitTest.class)
   public void testDimAndAtt() throws IOException {
     setupReadDmspAsNetcdf(this.testFilePath, this.testDataFileName);
@@ -204,6 +204,7 @@ public class TestDmspIosp extends TestCase {
 
   }
 
+  @Test
   @Category(NeedsCdmUnitTest.class)
   public void testReadEpoch() throws IOException {
     setupReadDmspAsNetcdf(this.testFilePath, this.testDataFileName);
@@ -270,6 +271,7 @@ public class TestDmspIosp extends TestCase {
     meNcf.close();
   }
 
+  @Test
   @Category(NeedsCdmUnitTest.class)
   public void testLatLonCalcAndCache() throws IOException {
     setupReadDmspAsNetcdf(this.testFilePath, this.testDataFileName);
@@ -342,6 +344,7 @@ public class TestDmspIosp extends TestCase {
   //
   // I.e., if a user requests one point in a particular dimension, that
   // dimension will be removed.
+  @Test
   @Category(NeedsCdmUnitTest.class)
   public void testSectionVsSectionNoReduce() throws IOException {
     setupReadDmspAsNetcdf(this.testFilePath, this.testDataFileName);

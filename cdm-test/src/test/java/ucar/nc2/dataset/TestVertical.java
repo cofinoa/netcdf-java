@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.nc2.dataset;
 
-import junit.framework.*;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +22,11 @@ import java.lang.invoke.MethodHandles;
  * Test basic projection methods
  */
 @Category(NeedsCdmUnitTest.class)
-public class TestVertical extends TestCase {
+public class TestVertical {
+
   private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  public TestVertical(String name) {
-    super(name);
-  }
-
+  @Test
   public void testOceanS() throws java.io.IOException, InvalidRangeException {
     GridDataset gds =
         ucar.nc2.dt.grid.GridDataset.open(TestDir.cdmUnitTestDir + "transforms/roms_ocean_s_coordinate.nc");
@@ -50,12 +49,14 @@ public class TestVertical extends TestCase {
     assert ca.getRank() == 3 : ca.getRank();
 
     int[] shape = ca.getShape();
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       System.out.println(" shape " + i + " = " + shape[i]);
+    }
 
     gds.close();
   }
 
+  @Test
   public void testOceanSigma() throws java.io.IOException, InvalidRangeException {
     GridDataset gds = ucar.nc2.dt.grid.GridDataset.open(TestDir.cdmUnitTestDir + "conventions/cf/gomoos_cf.nc");
 
@@ -80,12 +81,14 @@ public class TestVertical extends TestCase {
       assert ca.getRank() == 3 : ca.getRank();
 
       int[] shape = ca.getShape();
-      for (int i = 0; i < 3; i++)
+      for (int i = 0; i < 3; i++) {
         System.out.println(" shape " + i + " = " + shape[i]);
+      }
     }
     gds.close();
   }
 
+  @Test
   public void testAtmSigma() throws java.io.IOException, InvalidRangeException {
     GridDataset gds = ucar.nc2.dt.grid.GridDataset.open(TestDir.cdmUnitTestDir + "transforms/temperature.nc");
 
@@ -107,12 +110,14 @@ public class TestVertical extends TestCase {
     assert ca.getRank() == 3 : ca.getRank();
 
     int[] shape = ca.getShape();
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       System.out.println(" shape " + i + " = " + shape[i]);
+    }
 
     gds.close();
   }
 
+  @Test
   public void testAtmHybrid() throws java.io.IOException, InvalidRangeException {
     GridDataset gds = ucar.nc2.dt.grid.GridDataset.open(TestDir.cdmUnitTestDir + "conventions/cf/ccsm2.nc");
 
@@ -134,12 +139,14 @@ public class TestVertical extends TestCase {
     assert ca.getRank() == 3 : ca.getRank();
 
     int[] shape = ca.getShape();
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       System.out.println(" shape " + i + " = " + shape[i]);
+    }
 
     gds.close();
   }
 
+  @Test
   public void testWrfEta() throws java.io.IOException, InvalidRangeException {
     GridDataset gds =
         ucar.nc2.dt.grid.GridDataset.open(TestDir.cdmUnitTestDir + "conventions/wrf/wrfout_v2_Lambert.nc");
@@ -162,14 +169,16 @@ public class TestVertical extends TestCase {
     assert ca.getRank() == 3 : ca.getRank();
 
     int[] shape = ca.getShape();
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       System.out.println(" shape " + i + " = " + shape[i]);
+    }
 
     gds.close();
   }
 
   // TestAll.upcShareDir + /testdata2/grid/netcdf/wrf/wrfout_v2_Lambert.nc
 
+  @Test
   public void testStride() throws java.io.IOException, InvalidRangeException {
     String filename = TestDir.cdmUnitTestDir + "/conventions/wrf/wrfout_d01_2006-03-08_21-00-00";
     GridDataset gds = ucar.nc2.dt.grid.GridDataset.open(filename);
@@ -190,8 +199,9 @@ public class TestVertical extends TestCase {
     assert ca.getRank() == 3 : ca.getRank();
 
     int[] shape = ca.getShape();
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       System.out.println(" shape " + i + " = " + shape[i]);
+    }
 
     assert shape[0] == 44;
     assert shape[1] == 399 / 2 + 1;

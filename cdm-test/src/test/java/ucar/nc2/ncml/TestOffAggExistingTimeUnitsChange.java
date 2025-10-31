@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -9,7 +9,7 @@ import static com.google.common.truth.Truth.assertThat;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +30,13 @@ import ucar.unidata.util.test.category.NeedsCdmUnitTest;
  * @author caron
  */
 @Category(NeedsCdmUnitTest.class)
-public class TestOffAggExistingTimeUnitsChange extends TestCase {
+public class TestOffAggExistingTimeUnitsChange {
 
   private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  public TestOffAggExistingTimeUnitsChange(String name) {
-    super(name);
-  }
   // String location = "file:R:/testdata2/ncml/nc/narr/narr.ncml";
 
+  @Test
   public void testNamExtract() throws IOException {
     String location = TestDir.cdmUnitTestDir + "ncml/nc/namExtract/test_agg.ncml";
     logger.debug(" TestOffAggExistingTimeUnitsChange.open {}", location);
@@ -67,6 +65,7 @@ public class TestOffAggExistingTimeUnitsChange extends TestCase {
     ncfile.close();
   }
 
+  @Test
   public void testNarrGrib() throws IOException {
     String ncml = "<?xml version='1.0' encoding='UTF-8'?>\n"
         + "<netcdf xmlns='http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2'>\n"
