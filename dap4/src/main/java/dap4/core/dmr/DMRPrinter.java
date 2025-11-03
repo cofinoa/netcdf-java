@@ -1,6 +1,6 @@
 /*
- * Copyright 2012, UCAR/Unidata.
- * See the LICENSE file for more information.
+ * Copyright (c) 2012-2025 University Corporation for Atmospheric Research/Unidata
+ * See LICENSE for license information.
  */
 
 package dap4.core.dmr;
@@ -531,10 +531,14 @@ public class DMRPrinter {
         printer.marginPrintln(cs);
       }
     } else {
-      for (int i = 0; i < svec.length; i++) {
-        String s = Escape.entityEscape(svec[i], null);
-        String cs = String.format("<Value value=\"%s\"/>", s);
-        printer.marginPrintln(cs);
+      if (svec.length == 0) {
+        printer.marginPrintln("<Value/>");
+      } else {
+        for (String string : svec) {
+          String s = Escape.entityEscape(string, null);
+          String cs = String.format("<Value value=\"%s\"/>", s);
+          printer.marginPrintln(cs);
+        }
       }
     }
     printer.outdent();
