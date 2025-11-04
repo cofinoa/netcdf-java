@@ -3,7 +3,10 @@
  * See LICENSE for license information.
  */
 
-plugins { alias(libs.plugins.spotless) }
+plugins {
+  id("java-base-conventions")
+  alias(libs.plugins.spotless)
+}
 
 description = "The Unidata netCDF-Java library (aka CDM)."
 
@@ -22,4 +25,20 @@ spotless {
     targetExclude("build-logic/**/*")
     ktfmt().googleStyle()
   }
+}
+
+// Aggregate task for building all public artifacts
+// Used to assemble the jars that should be scanned by OWASP Dependency Check
+// job on Jenkins
+tasks.register("buildPublicArtifacts") {
+  group = "build"
+  val publicArtifacts = project.extra.get("public.artifacts")
+  if (publicArtifacts is List<*>) {
+    dependsOn(publicArtifacts.map { ":$it:jar" })
+  } else {
+    logger.error(
+      "Cannot access the list of public artifacts. The project-wide code coverage report will be incomplete!"
+    )
+  }
+  dependsOn(":uber-jars:buildNetcdfAll", ":uber-jars:buildToolsUI", ":uber-jars:buildNcIdv")
 }
