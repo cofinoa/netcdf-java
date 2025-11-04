@@ -3,7 +3,10 @@
  * See LICENSE for license information.
  */
 
-plugins { alias(libs.plugins.spotless) }
+plugins {
+  id("java-base-conventions")
+  alias(libs.plugins.spotless)
+}
 
 description = "The Unidata netCDF-Java library (aka CDM)."
 
