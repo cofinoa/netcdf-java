@@ -22,6 +22,8 @@ dependencies {
 
   testImplementation(project(":cdm-test-utils"))
 
+  testImplementation(libs.google.truth)
+
   testCompileOnly(libs.junit4)
 
   testRuntimeOnly(libs.junit5.platformLauncher)
