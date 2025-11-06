@@ -18,6 +18,8 @@ dependencies {
   api(platform(libs.junit5.bom))
 
   constraints {
+    api((project(":cdm-test-utils")))
+
     api(libs.commons.compress)
     api(libs.commons.io)
     api(libs.google.truth)
