@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-  id("java-base-conventions")
+  id("java-library-conventions")
   application
 }
 
