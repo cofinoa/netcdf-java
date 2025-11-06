@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-base-conventions") }
+plugins { id("java-library-conventions") }
 
 description = "UI elements that are independent of the CDM."
 
