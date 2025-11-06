@@ -5,10 +5,10 @@
 
 package ucar.nc2.ncml;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayInt;
@@ -31,8 +31,8 @@ public class TestNcMLStrides {
   NetcdfFile ncfile = null;
   String location = "file:" + TestDir.cdmUnitTestDir + "agg/strides/strides.ncml";
 
-  @BeforeEach
-  public void setUp() {
+  @Before
+  public void set_up() {
     try {
       ncfile = NcMLReader.readNcML(location, null);
       // System.out.println("ncfile opened = "+location);
@@ -44,8 +44,8 @@ public class TestNcMLStrides {
     }
   }
 
-  @AfterEach
-  protected void tearDown() throws IOException {
+  @After
+  public void tearDown() throws IOException {
     ncfile.close();
   }
 
