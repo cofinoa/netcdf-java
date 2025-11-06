@@ -35,7 +35,6 @@ dependencies {
   testImplementation(libs.jj2000)
   testImplementation(libs.re2j)
   testImplementation(libs.slf4j.api)
-  testImplementation("org.junit.jupiter:junit-jupiter")
   testCompileOnly(libs.junit4)
 
   testRuntimeOnly(libs.junit5.platformLauncher)
