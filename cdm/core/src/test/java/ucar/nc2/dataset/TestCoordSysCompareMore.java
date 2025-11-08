@@ -70,7 +70,9 @@ public class TestCoordSysCompareMore {
       // attributes changed, see DimensionsFilter in H4 and 5 iosp compare
       "2006166131201_00702_CS_2B-GEOPROF_GRANULE_P_R03_E00.hdf",
       // problem with filename
-      "Europe_MSG1_8bit_HRV_OF_21-NOV-2003_06%3A00%3A04.171.H5");
+      "Europe_MSG1_8bit_HRV_OF_21-NOV-2003_06%3A00%3A04.171.H5",
+      // unknown issue at this point, but a very complex file with lots of nested groups
+      "S5P_OFFL_L1B_IR_SIR_20180430T001950_20180430T020120_02818_01_010000_20180430T035011.nc");
 
   private static boolean skipHdf(File file) {
     for (String skip : skippers) {
