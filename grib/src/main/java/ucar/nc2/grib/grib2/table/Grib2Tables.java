@@ -607,6 +607,10 @@ public class Grib2Tables implements ucar.nc2.grib.GribTables, TimeUnitConverter 
         range += ti.timeIncrement;
       }
     }
+    if (timeUnitIntv < 0) {
+      range = 0;
+      timeUnitIntv = 1; /* hours */
+    }
     return new TimeIntervalAndUnits(timeUnitIntv, range);
   }
 
