@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 1998-2020 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.unidata.geoloc;
 
 import java.util.Formatter;
@@ -77,7 +78,7 @@ public class LatLonPoints {
   /**
    * Normalize the longitude to lie between +/-180
    *
-   * @param lon east latitude in degrees
+   * @param lon east longitude in degrees
    * @return normalized lon
    */
   public static double lonNormal(double lon) {
