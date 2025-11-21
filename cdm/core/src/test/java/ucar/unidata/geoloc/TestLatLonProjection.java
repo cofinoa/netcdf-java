@@ -1,29 +1,28 @@
 /*
- * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
+
 package ucar.unidata.geoloc;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ucar.unidata.geoloc.projection.*;
-import junit.framework.*;
 import java.lang.invoke.MethodHandles;
 
 /**
  *
  * @author John Caron
  */
-public class TestLatLonProjection extends TestCase {
+public class TestLatLonProjection {
   private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private LatLonProjection p;
 
-  public TestLatLonProjection(String name) {
-    super(name);
-  }
-
+  @Before
   public void setUp() {
     p = new LatLonProjection();
   }
@@ -66,6 +65,7 @@ public class TestLatLonProjection extends TestCase {
     }
   }
 
+  @Test
   public void testLatLonToProjBB() {
     runCenter();
     runCenter(110.45454545454547);
@@ -82,6 +82,7 @@ public class TestLatLonProjection extends TestCase {
     return result;
   }
 
+  @Test
   public void testIntersection() {
     LatLonRect bbox = new LatLonRect(LatLonPoint.create(40.0, -100.0), 10.0, 20.0);
     LatLonRect bbox2 = new LatLonRect(LatLonPoint.create(-40.0, -180.0), 120.0, 300.0);
@@ -108,6 +109,7 @@ public class TestLatLonProjection extends TestCase {
     return bbox;
   }
 
+  @Test
   public void testExtend() {
     LatLonRect bbox;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * Copyright (c) 1998-2025 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
 
@@ -518,6 +518,8 @@ public abstract class Grib2Gds {
 
     public GdsHorizCoordSys makeHorizCoordSys() {
       LatLonProjection proj = new LatLonProjection(getEarth());
+      double centerLon = ((int) ((lo2 - lo1 + deltaLon) / 2 / getScale())) * getScale();
+      proj.setCenterLon(centerLon);
       // ProjectionPoint startP = proj.latLonToProj(LatLonPoint.create(la1, lo1));
       double startx = lo1; // startP.getX();
       double starty = la1; // startP.getY();
