@@ -1,0 +1,85 @@
+name: C-Blosc2 build using CMake on multiple platforms
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+
+      matrix:
+        build_env: [
+          {os: ubuntu-24.04, c_compiler: gcc, lib: 'blosc/libblosc2.so', jna_id: 'linux-x86-64'},
+          {os: ubuntu-24.04-arm, c_compiler: gcc, lib: 'blosc/libblosc2.so', jna_id: 'linux-aarch64'},
+          {os: windows-2022, c_compiler: cl, lib: 'blosc\\Release\\libblosc2.dll', jna_id: 'win32-x86-64'},
+          {os: windows-11-arm, c_compiler: cl, lib: 'blosc\\Release\\libblosc2.dll', jna_id: 'win32-aarch64'},
+          {os: macos-14, c_compiler: clang, lib: 'blosc/libblosc2.dylib', jna_id: 'darwin-aarch64'},
+          {os: macos-15-intel, c_compiler: clang, lib: 'blosc/libblosc2.dylib', jna_id: 'darwin-x86-64'},
+        ]
+        build_type: [Release]
+
+    runs-on: ${{ matrix.build_env.os }}
+
+    steps:
+      - name: Set shared values
+        id: strings
+        shell: bash
+        run: |
+          echo "build-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'Blosc/c-blosc2'
+          ref: "v2.22.0"
+
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-dir }}
+          -DCMAKE_C_COMPILER=${{ matrix.build_env.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -S ${{ github.workspace }}
+
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-dir }} --config ${{ matrix.build_type }}
+
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-dir }}
+        run: ctest --build-config ${{ matrix.build_type }}
+
+      - name: Prepare ${{ matrix.build_env.jna_id }} library for archive
+        shell: bash
+        working-directory: ${{ steps.strings.outputs.build-dir }}
+        run: |
+          mkdir resources
+          mkdir resources/${{ matrix.build_env.jna_id }}
+          cp ../LICENSE.txt resources/${{ matrix.build_env.jna_id }}/libblosc2-LICENSE.txt
+          cp -r ../LICENSES resources/${{ matrix.build_env.jna_id }}/
+          cp -L ${{ matrix.build_env.lib }} resources/${{ matrix.build_env.jna_id }}
+
+      - name: Upload ${{ matrix.build_env.jna_id }} artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libblosc2-${{ matrix.build_env.jna_id }}
+          path: ${{ steps.strings.outputs.build-dir }}/resources
+
+  merge:
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: libblosc2-*
+          path: native/resources/
+          merge-multiple: true
+
+      - name: Display contents of the combined native artifact
+        run: find native/ -type f -exec ls -lh {} \;
+
+      - name: Upload merged artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libblosc2-native-2.22.0-${{ github.sha }}
+          path: native/
