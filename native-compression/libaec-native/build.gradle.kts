@@ -7,14 +7,24 @@ import java.net.URL
 import java.security.DigestInputStream
 import java.security.MessageDigest
 
-plugins { id("java-library-conventions") }
+plugins {
+  id("java-base-conventions")
+  id("artifact-publishing-conventions")
+}
+
+group = "edu.ucar.unidata"
+
+var aecVersion = "1.1.3"
+var build = "0"
+
+version = "${aecVersion}.${build}"
 
 description = "Jar distribution of native libraries for libaec compression."
 
 project.extra["project.title"] = "Native libraries for libaec."
 
 // zip file produced by GitHub workflow
-val libaecNative = "libaec-native-1.1.3-fec016ecd4b8ff1918877e582898d4257c405168.zip"
+val libaecNative = "libaec-native-${aecVersion}-fec016ecd4b8ff1918877e582898d4257c405168.zip"
 
 // sha256 checksum from GitHub workflow output
 val expectedChecksum = "3db1ba7bc95b48eff74501382b90b0c7d0770a98f369d8c376c8ca4b6003487e"
@@ -58,3 +68,21 @@ val processNativeResources =
   }
 
 tasks.processResources { dependsOn(processNativeResources) }
+
+var publishTaskName = "nativeLibs"
+
+publishing {
+  publications {
+    create<MavenPublication>(publishTaskName) {
+      from(components["java"])
+      versionMapping {
+        usage("java-api") { fromResolutionOf("runtimeClasspath") }
+        usage("java-runtime") { fromResolutionResult() }
+      }
+    }
+  }
+}
+
+tasks
+  .matching { it.group == "publishing" }
+  .forEach { it.enabled = System.getProperty("unidata.native.publish")?.toBoolean() ?: false }
