@@ -20,6 +20,8 @@ dependencies {
   implementation(libs.jackson.databind)
   implementation(libs.slf4j.api)
 
+  runtimeOnly(project(":libblosc2-jna"))
+
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-s3"))
@@ -37,6 +39,8 @@ dependencies {
   testImplementation(libs.google.truth)
 
   testCompileOnly(libs.junit4)
+
+  testRuntimeOnly(project(":libblosc2-native"))
 
   testRuntimeOnly(libs.junit5.platformLauncher)
   testRuntimeOnly(libs.junit5.vintageEngine)
