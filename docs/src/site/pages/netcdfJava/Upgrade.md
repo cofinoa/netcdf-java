@@ -8,8 +8,8 @@ permalink: upgrade.html
 
 ## Requirements
 
-* Java 8 or later is required to use the library.
-* Starting with version 5.10.0, Java 17 is required to build the library.
+* Java {{ site.java_version_runtime }} or later is required to use the library.
+* Java {{ site.java_version_build }} is required to build the library.
 
 ## Quick Navigation
 * [Summary of changes for v5.10.x](#netcdf-java-api-changes-510x)
@@ -29,9 +29,22 @@ permalink: upgrade.html
 Point release notes:
 * [5.10.0](https://github.com/Unidata/netcdf-java/releases/tag/v5.10.0){:target="_blank"} (_yyyy-mm-dd, unreleased_)
 
-Starting with 5.10.x, the netCDF-Java library requires Java 17 to build (although the build will produce Java 8 bytecode, so the minimum supported version is still Java 8).
+Starting with 5.10.0, the netCDF-Java library requires Java 17 to build (although the build will produce Java 8 bytecode, so the minimum supported version is still Java 8).
 Note: we are looking to update the minimum version of the JVM we support for the project.
 Please consider taking a moment to participate in the [poll on GitHub](https://github.com/Unidata/netcdf-java/discussions/1468){:target="_blank"}.
+
+The 5.10.0 release adds support for reading blosc compressed data using the C-Blosc2 native library.
+The new artifact for JNA support is `edu.ucar.unidata:libblosc2-jna` (the current version is `2.22.0.0`).
+
+### Native jar group name changes
+
+Going forard, all native jars will be published under the `edu.ucar.unidata` group.
+Their version will match the version of the native library that they contain, plus a build number.
+This is to help make clear which version of the native library is being used by the jar.
+Starting with this release, `libaec-native` will be published under the `edu.ucar.unidata` group as well.
+Consider using the netcdf-java-bom artifact to manage your netCDF-Java dependencies, as it will always contain the latest versions of the native jars.
+The new `edu.ucar.unidata:libaec-native:1.1.3.0` is equivalent to the previous `edu.ucar:libaec-native:5.9.1`.
+Please use the new group name for any `*-native` artifacts going forward.
 
 ## netCDF-Java API Changes (5.9.x)
 

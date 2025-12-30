@@ -64,7 +64,7 @@ sidebars:
 - netcdfJavaTutorial_sidebar
 
 # project logo (32x32), name, main landing page  (currently used in the footer)
-project_logo: https://www.unidata.ucar.edu/images/logos/thredds_netcdf-32x32.png
+project_logo: https://assets.unidata.ucar.edu/images/logos/thredds_netcdf-32x32.png
 project_name: netCDF-Java
 project_landing_page: https://unidata.ucar.edu/software/netcdf-java/
 
@@ -74,3 +74,9 @@ description: "This is a documentation site for the netCDF-Java, which is part of
 # needed for sitemap.xml file only
 # must include trailing slash, leave off the version :-)
 base_docs_url: https://docs.unidata.ucar.edu/netcdf-java/
+
+# these will appear in various doc pages
+java_version_build: 17
+java_version_runtime: 8
+libaec_version: 1.1.3.0
+cblosc2_version: 2.22.0.0
