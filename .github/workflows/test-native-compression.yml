@@ -15,16 +15,16 @@ jobs:
           ubuntu-24.04,
           ubuntu-24.04-arm,
           windows-2022,
-          macos-13,
           macos-14,
-          macos-15
+          macos-15,
+          macos-15-intel
         ]
     name: netCDF-Java Native Compression Tests
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup JDK 8, 17
-        if: ${{ matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-13' }}
+        if: ${{ matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15-intel' }}
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
@@ -32,7 +32,7 @@ jobs:
             8
             17
       - name: Setup JDK 21
-        if: ${{ matrix.os != 'ubuntu-24.04' && matrix.os != 'macos-13' }}
+        if: ${{ matrix.os != 'ubuntu-24.04' && matrix.os != 'macos-15-intel' }}
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
@@ -47,12 +47,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Run libaec JNA tests
-        if: ${{ matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-13'  }}
+        if: ${{ matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-15-intel'  }}
         run: ./gradlew -Dorg.gradle.java.installations.auto-detect=true clean :libaec-jna:test
         env:
           JDK8: /usr/thredds-test-environment/temurin8
       - name: Run libaec JNA tests (JDK 21 tests)
-        if: ${{ matrix.os != 'ubuntu-24.04' && matrix.os != 'macos-13' }}
+        if: ${{ matrix.os != 'ubuntu-24.04' && matrix.os != 'macos-15-intel' }}
         run: ./gradlew clean :libaec-jna:test21
       - uses: actions/upload-artifact@v4
         if: failure()

@@ -14,31 +14,32 @@ plugins {
 
 group = "edu.ucar.unidata"
 
-var aecVersion = "1.1.3"
+var bloscVersion = "2.22.0"
 var build = "0"
 
-version = "${aecVersion}.${build}"
+version = "${bloscVersion}.${build}"
 
-description = "Jar distribution of native libraries for libaec compression."
+description = "Jar distribution of native libraries for libblosc2 compression."
 
-project.extra["project.title"] = "Native libraries for libaec."
+project.extra["project.title"] = "Native libraries for libblosc2."
 
 // zip file produced by GitHub workflow
-val libaecNative = "libaec-native-${aecVersion}-fec016ecd4b8ff1918877e582898d4257c405168.zip"
+val libblosc2Native =
+  "libblosc2-native-${bloscVersion}-b4a818caa60bbf90bc92ec51ffd01ce3f293c8a4.zip"
 
 // sha256 checksum from GitHub workflow output
-val expectedChecksum = "3db1ba7bc95b48eff74501382b90b0c7d0770a98f369d8c376c8ca4b6003487e"
+val expectedChecksum = "895226b29a314c0beae92de66a181b66833873e8c3a8a501d0b12193bde30610"
 
-val resourceZip = file("$rootDir/project-files/native/libaec/$libaecNative")
+val resourceZip = file("$rootDir/project-files/native/libblosc2/$libblosc2Native")
 val fetchNativeResources =
   tasks.register("fetchNativeResources") {
     outputs.file(resourceZip)
     doLast {
       if (!resourceZip.exists()) {
-        logger.info("Fetching native libaec libraries.")
+        logger.info("Fetching native libblosc2 libraries.")
         var actualChecksum = ""
         val resourceUrl =
-          "https://downloads.unidata.ucar.edu/netcdf-java/native/libaec/$libaecNative"
+          "https://downloads.unidata.ucar.edu/netcdf-java/native/libblosc2/$libblosc2Native"
         URL(resourceUrl).openStream().use { ips ->
           val dips = DigestInputStream(ips, MessageDigest.getInstance("SHA-256"))
           resourceZip.outputStream().use { ops -> dips.copyTo(ops) }
@@ -47,7 +48,7 @@ val fetchNativeResources =
         if (actualChecksum != expectedChecksum) {
           throw RuntimeException(
             String.format(
-              "Error: checksum on libaec.zip does not match expected value.\n" +
+              "Error: checksum on libblosc2.zip does not match expected value.\n" +
                 "  Expected: %s\n  Actual: %s\n",
               expectedChecksum,
               actualChecksum,

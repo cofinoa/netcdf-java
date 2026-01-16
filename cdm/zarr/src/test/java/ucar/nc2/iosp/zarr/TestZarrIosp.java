@@ -15,6 +15,8 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayLong;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
+import ucar.ma2.MAMath;
+import ucar.ma2.MAMath.MinMax;
 import ucar.ma2.Section;
 import ucar.nc2.*;
 
@@ -399,4 +401,24 @@ public class TestZarrIosp {
       }
     }
   }
+
+  @Test
+  public void testBloscCompressedData() throws IOException {
+    NetcdfFile ncfile = NetcdfFiles.open(SCALAR_GEOZARR_DATA);
+    Variable bloscVariable = ncfile.findVariable("temperature");
+    assertThat(bloscVariable != null).isTrue();
+    Attribute compressor = bloscVariable.findAttribute("_Compressor");
+    assertThat(compressor).isNotNull();
+    assertThat(compressor.getStringValue()).isEqualTo("blosc");
+    Array data = bloscVariable.read();
+    assertThat(data).isNotNull();
+    MinMax mm = MAMath.getMinMax(data);
+    assertThat(mm).isNotNull();
+    // values from python zarr implementation
+    double expectedMin = 1.9752643660053693e-05;
+    double expectedMax = 0.9999808929333684;
+    assertThat(mm.min).isWithin(1e-9).of(expectedMin);
+    assertThat(mm.max).isWithin(1e-7).of(expectedMax);
+  }
+
 }

@@ -10,7 +10,7 @@ toc: false
 
 The netCDF-Java source code is hosted on GitHub, and — as of v4.6.1 — we use Gradle to build it.
 Ant and Maven builds are no longer supported.
-To build, you need Git and, as of v5.9.2, Java 17 or higher (required for Gradle 9.0.0 or higher).
+To build, you need Git and, as of v5.10.0, Java 17 or higher (required for Gradle 9.0.0 or higher).
 Note that the bytecode produced by the Gradle build will be compatible with Java 8, and the test task will run using JDK 8 (thanks to the Gradle Toolchain feature).
 If the build cannot find a suitable JDK for testing, you will need to specify one in your `gradle.properties` file (see the [Gradle toolchain documentation](https://docs.gradle.org/current/userguide/toolchains.html#sec:custom_loc){:target="_blank"} for more details).
 The tests can be run using other JDK versions using `testX`, where `X` is the version number of one of the LTS releases of Java (currently `11`, `17`, `21`, or `25`).

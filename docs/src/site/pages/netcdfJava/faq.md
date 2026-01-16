@@ -212,11 +212,11 @@ In the following example, the <b>_type_</b> may be byte, short, int or long:
 ### Reading
 #### Q: What files can the library read?
 
-See [File Types])/common_data_model_overview.html).
+See [File Types](common_data_model_overview.html).
 
 #### Q: How do I read a file of type X?
 
-In general, you [open any CDM file](common_data_model_overview.html) in the same way, and access it through the [extended netCDF data model(/common_data_model_overview.html#data-access-layer-object-model). The whole point of the CDM is to hide the details of the file format. However, some file type may require special handling:
+In general, you [open any CDM file](common_data_model_overview.html) in the same way, and access it through the [extended netCDF data model](common_data_model_overview.html#data-access-layer-object-model). The whole point of the CDM is to hide the details of the file format. However, some file type may require special handling:
 
 GRIB and BUFR files may require special tables that the CDM doesn't have. Open the file as above and see 1) if you get any error messages, 2) if any of the variables have "Unknown" in their name, and 3) if the data looks wrong. If any of those happen, prepare to enter [GRIB table hell realm](grib_tables.html). (BUFR is arguably worse, but there's nothing yet that you can do about it).
 

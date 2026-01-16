@@ -45,6 +45,10 @@ include(":libaec-native")
 
 project(":libaec-native").projectDir = file("native-compression/libaec-native")
 
+include(":libblosc2-native")
+
+project(":libblosc2-native").projectDir = file("native-compression/libblosc2-native")
+
 //
 // critical subprojects
 // tricky main/test interdependencies...not circular, however
@@ -74,6 +78,10 @@ include("dap4")
 include(":libaec-jna")
 
 project(":libaec-jna").projectDir = file("native-compression/libaec-jna")
+
+include(":libblosc2-jna")
+
+project(":libblosc2-jna").projectDir = file("native-compression/libblosc2-jna")
 
 include("netcdf4")
 

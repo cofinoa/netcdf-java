@@ -35,7 +35,7 @@ For maximum compatibility, please include the Unidata repository after any other
 
 Next, select modules based on the functionality you need.
 In the minimal case, you’ll just want `cdm-core` and a logger.
-`cdm` implements the CDM data model and allows you to read NetCD-3 files (and a number of other file types).
+`cdm-core` implements the [Common Data Model (CDM)](common_data_model_overview.html) and allows you to read NetCD-3 files (and a number of other file types).
 An example using JDK14 logging:
 
 ~~~xml
@@ -128,8 +128,10 @@ dependencies {
 
 ## Native compression code
 
+### libaec
+
 netCDF-Java `>=v5.8.0` supports libaec compression for GRIB2 messages using JNA to call the libaec C library.
-To ease the use of this feature, we now distribute a jar file containing the native libraries for the following platforms/architectures:
+To ease the use of this feature, we distribute a jar file containing the native libraries for the following platforms/architectures:
 
 |---
 | platform | x86-64 | aarch64
@@ -138,14 +140,29 @@ To ease the use of this feature, we now distribute a jar file containing the nat
 | MacOS | <span class="glyphicon glyphicon-ok" style="color: green;"> | <span class="glyphicon glyphicon-ok" style="color: green;">
 | Windows | <span class="glyphicon glyphicon-ok" style="color: green;"> | <span class="glyphicon glyphicon-ok" style="color: green;">
 
-If you are using on the of the supported platform/architecture combinations above, you may include the `edu.ucar:libaec-native:${netcdfJavaVersion}` artifact in your project to bypass the need to install libaec on your system.
+If you are using on the of the supported platform/architecture combinations above, you may include the `edu.ucar.unidata:libaec-native:{{ site.libaec_version }}` artifact in your project to bypass the need to install libaec on your system.
 Otherwise, libaec will need to be installed and reachable in your system library path in order to read data compressed using libaec.
+
+### C-Blosc2
+
+netCDF-Java `>=v5.10.0` supports blosc compression using JNA to call the C-Blosc2 library.
+To ease the use of this feature, we distribute a jar file containing the native libraries for the following platforms/architectures:
+
+|---
+| platform | x86-64 | aarch64
+|:-|:-:|:-:
+| Linux | <span class="glyphicon glyphicon-ok" style="color: green;"></span> | <span class="glyphicon glyphicon-ok" style="color: green;">
+| MacOS | <span class="glyphicon glyphicon-ok" style="color: green;"> | <span class="glyphicon glyphicon-ok" style="color: green;">
+| Windows | <span class="glyphicon glyphicon-ok" style="color: green;"> | <span class="glyphicon glyphicon-ok" style="color: green;">
+
+If you are using on the of the supported platform/architecture combinations above, you may include the `edu.ucar.unidata:libblosc2-native:{{ site.cblosc2_version }}` artifact in your project to bypass the need to install C-Blosc2 on your system.
+Otherwise, C-Blosc2 will need to be installed and reachable in your system library path in order to read data compressed using blosc.
 
 ## Building with netcdfAll
 
 This is the appropriate option if you’re not using a dependency management tool like Maven or Gradle and you don’t care about jar size or compatibility with other libraries. Simply include netcdfAll-${netcdfJavaVersion}.jar on the classpath when you run your program.
 You’ll also need a logger.
-Currently, the netcdfAll jar does not include `cdm-s3` due to the size of the AWS S3 SDK dependency, and does not include the `libaec-native` (native library binaries for libaec).
+Currently, the netcdfAll jar does not include `cdm-s3` due to the size of the AWS S3 SDK dependency, and does not include any `edu.ucar.unidata:*-native` jars (native library binaries for compression).
 The netcdfAll jar can be found at https://downloads.unidata.ucar.edu, or (starting with `5.9.0`) on the [GitHub release page](https://github.com/Unidata/netcdf-java/releases).
 
 ## Logging
