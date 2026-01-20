@@ -16,8 +16,8 @@ publishing {
         url = uri("https://artifacts.unidata.ucar.edu/repository/unidata-snapshots/")
       }
       credentials {
-        username = extra.properties["nexus.username"] as? String
-        password = extra.properties["nexus.password"] as? String
+        username = extra.properties["artifacts.username"] as? String
+        password = extra.properties["artifacts.password"] as? String
       }
     }
   }

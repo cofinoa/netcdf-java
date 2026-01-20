@@ -9,8 +9,8 @@ permalink: doc_guide.html
 ## Working with the Docs
 
 The THREDDS project utilizes Jekyll for building and organizing documentation.
-We use JRuby to run Jekyll, and have included into our gradle build system.
-Jekyll can build an html based documentation set for publication on the web, which we run in an automated fashon and publish to our nexus server with each github commit.
+We use Docker to run Jekyll, and have included into our gradle build system.
+Jekyll can build an html based documentation set for publication on the web.
 Jekyll also has the capability to stand up a local webserver to allow for live editing of the documentation.
 Simply execute the following from the command line at the top level of the github repo:
 
