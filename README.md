@@ -82,7 +82,7 @@ Please see `third-party-licenses/`.
 
 ## How to use
 
-The latest released and snapshot software artifacts (e.g. `.jar` files) are available from Unidata's Nexus repository:
+The latest released and snapshot software artifacts (e.g. `.jar` files) are available from Unidata's artifacts repository:
 
 * https://artifacts.unidata.ucar.edu/#browse/browse:unidata-all
 

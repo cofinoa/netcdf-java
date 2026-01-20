@@ -56,9 +56,9 @@ The uber jars, such as `toolsUI.jar` and `netcdfAll.jar`, will be found in `buil
 ## Publishing
 
 NetCDF-Java comprises several modules, many of which you can use within your own projects, as described [here](using_netcdf_java_artifacts.html).
-At Unidata, we publish the artifacts that those modules generate to our Nexus repository.
+At Unidata, we publish the artifacts that those modules generate to our artifacts repository.
 
-However, it may happen that you need artifacts for the in-development version of netCDF-Java in your local branch, which we usually don’t upload to Nexus.
+However, it may happen that you need artifacts for the in-development version of netCDF-Java in your local branch, which we usually don’t upload to the artifacts' server.
 We do publish nightly SNAPSHOTS, but those may not have the development changes you are currently working on. 
 Never fear: you can build them yourself and publish them to your local Maven repository!
 

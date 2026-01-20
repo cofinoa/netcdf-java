@@ -73,6 +73,18 @@ tasks.processResources { dependsOn(processNativeResources) }
 var publishTaskName = "nativeLibs"
 
 publishing {
+  // we only publish releases of the native jars
+  repositories.clear()
+  repositories {
+    maven {
+      name = "releases"
+      url = uri("https://artifacts.unidata.ucar.edu/repository/unidata-releases/")
+      credentials {
+        username = extra.properties["artifacts.username"] as? String
+        password = extra.properties["artifacts.password"] as? String
+      }
+    }
+  }
   publications {
     create<MavenPublication>(publishTaskName) {
       from(components["java"])

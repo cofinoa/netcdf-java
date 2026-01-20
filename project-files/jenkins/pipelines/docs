@@ -28,8 +28,8 @@ pipeline {
                     select-java temurin 11
                     set +x
                     ./gradlew \
-                      -Pnexus.username=`get_pw NEXUS_USER` \
-                      -Pnexus.password=`get_pw NEXUS_PW` \
+                      -Partifacts.username=`get_pw ARTIFACTS_USER` \
+                      -Partifacts.password=`get_pw ARTIFACTS_PW` \
                       -x :docs:buildJekyllSite \
                       :docs:publishAsVersionedUserGuide
                     '''
