@@ -64,7 +64,7 @@ grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
 grpc-testing = { module = "io.grpc:grpc-testing", version.ref = "grpc" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
-httpcomponents-api = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpcomponents" }
+httpcomponents-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpcomponents" }
 httpcomponents-httpmime = { module = "org.apache.httpcomponents:httpmime", version.ref = "httpcomponents" }
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
 jackson-core = { module = "com.fasterxml.jackson.core:jackson-core" }
@@ -112,9 +112,9 @@ logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "lo
 
 [plugins]
 # versions = { id = "com.github.ben-manes.versions", version = "0.45.0" }
-cyclonedx-bom = { id = "org.cyclonedx.bom", version = "3.0.1" }
+cyclonedx-bom = { id = "org.cyclonedx.bom", version = "3.1.0" }
 execfork = { id = "com.github.psxpaul.execfork", version = "0.2.2"}
 javacc = { id = "org.javacc.javacc", version = "4.0.1" }
 protobuf = { id = "com.google.protobuf", version = "0.9.5" }
-shadow = { id = "com.gradleup.shadow", version = "9.2.2" }
+shadow = { id = "com.gradleup.shadow", version = "9.3.1" }
 spotless = { id = "com.diffplug.spotless", version = "8.0.0" }

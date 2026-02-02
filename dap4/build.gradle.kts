@@ -15,7 +15,7 @@ dependencies {
   implementation(project(":cdm-core"))
   implementation(project(":httpservices"))
 
-  implementation(libs.httpcomponents.api)
+  implementation(libs.httpcomponents.httpclient)
   implementation(libs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))

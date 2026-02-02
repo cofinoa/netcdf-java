@@ -13,7 +13,7 @@ dependencies {
   implementation(platform(project(":netcdf-java-platform")))
 
   api(libs.guava)
-  api(libs.httpcomponents.api)
+  api(libs.httpcomponents.httpclient)
 
   implementation(libs.findbugs.jsr305)
   implementation(libs.httpcomponents.httpmime)

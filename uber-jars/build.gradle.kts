@@ -128,26 +128,29 @@ uberJarTasks.forEach {
 
 val netcdfAllSbom =
   tasks.register<CyclonedxDirectTask>("netcdfAllSbom") {
+    componentName = "netcdfAll"
     group = "build"
     includeConfigs = listOf("netcdfAll")
-    xmlOutput = artifactOutputLocation.get().file("netcdfAll-sbom.xml")
-    jsonOutput = artifactOutputLocation.get().file("netcdfAll-sbom.json")
+    xmlOutput = artifactOutputLocation.get().file("netcdfAll-${project.version}-sbom.xml")
+    jsonOutput = artifactOutputLocation.get().file("netcdfAll-${project.version}-sbom.json")
   }
 
 val ncIdvSbom =
   tasks.register<CyclonedxDirectTask>("ncIdvSbom") {
+    componentName = "ncIdv"
     group = "build"
     includeConfigs = listOf("ncIdv")
-    xmlOutput = artifactOutputLocation.get().file("ncIdv-sbom.xml")
-    jsonOutput = artifactOutputLocation.get().file("ncIdv-sbom.json")
+    xmlOutput = artifactOutputLocation.get().file("ncIdv-${project.version}-sbom.xml")
+    jsonOutput = artifactOutputLocation.get().file("ncIdv-${project.version}-sbom.json")
   }
 
 val toolsUISbom =
   tasks.register<CyclonedxDirectTask>("toolsUISbom") {
+    componentName = "toolsUI"
     group = "build"
     includeConfigs = listOf("toolsUI")
-    xmlOutput = artifactOutputLocation.get().file("toolsUI-sbom.xml")
-    jsonOutput = artifactOutputLocation.get().file("toolsUI-sbom.json")
+    xmlOutput = artifactOutputLocation.get().file("toolsUI-${project.version}-sbom.xml")
+    jsonOutput = artifactOutputLocation.get().file("toolsUI-${project.version}-sbom.json")
   }
 
 val buildSboms = tasks.register("buildSboms") { dependsOn(netcdfAllSbom, ncIdvSbom, toolsUISbom) }
