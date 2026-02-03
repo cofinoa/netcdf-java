@@ -16,6 +16,7 @@ import ucar.nc2.dataset.*;
 import ucar.nc2.dods.DODSNetcdfFile;
 import ucar.nc2.dt.GridDataset;
 import ucar.nc2.dt.RadialDatasetSweep;
+import ucar.nc2.ffi.netcdf.NetcdfClibrary;
 import ucar.nc2.ft.point.PointDatasetImpl;
 import ucar.nc2.ft2.coverage.*;
 import ucar.nc2.grib.GribIndexCache;
@@ -1312,6 +1313,10 @@ public class ToolsUI extends JPanel {
 
   public static void exit() {
     doSavePrefsAndUI();
+    // close netCDF-C library, if loaded
+    if (NetcdfClibrary.isLibraryPresent()) {
+      NetcdfClibrary.shutdown();
+    }
     System.exit(0);
   }
 
