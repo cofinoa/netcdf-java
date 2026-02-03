@@ -6,7 +6,9 @@
 package ucar.nc2.ffi.netcdf;
 
 import com.google.common.base.Strings;
+import com.sun.jna.Library;
 import com.sun.jna.Native;
+import java.lang.reflect.Proxy;
 import javax.annotation.Nullable;
 import ucar.nc2.jni.netcdf.Nc4prototypes;
 import ucar.nc2.jni.netcdf.Nc4wrapper;
@@ -126,6 +128,21 @@ public class NetcdfClibrary {
       }
     }
     return oldlevel;
+  }
+
+  /**
+   * Closes the netCDF-C native library.
+   *
+   * <p>
+   * Call this method to ensure JNA can shut down its cleaner thread; otherwise JVM shutdown may be blocked.
+   * </p>
+   */
+  public static synchronized void shutdown() {
+    if (nc4 != null) {
+      Library.Handler lh = (Library.Handler) Proxy.getInvocationHandler(nc4);
+      lh.getNativeLibrary().close();
+      nc4 = null;
+    }
   }
 
   private static Nc4prototypes load() {
