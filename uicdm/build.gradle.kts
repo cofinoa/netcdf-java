@@ -47,6 +47,7 @@ dependencies {
   runtimeOnly(project(":cdm-zarr"))
   runtimeOnly(project(":dap4"))
   runtimeOnly(project(":libaec-native"))
+  runtimeOnly(project(":libblosc2-native"))
 
   runtimeOnly(libs.logback.classic)
 

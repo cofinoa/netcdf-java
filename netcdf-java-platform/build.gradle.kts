@@ -28,7 +28,7 @@ dependencies {
     api(libs.grpc.protobuf)
     api(libs.grpc.stub)
     api(libs.guava)
-    api(libs.httpcomponents.api)
+    api(libs.httpcomponents.httpclient)
     api(libs.httpcomponents.httpmime)
     api(libs.jdom2)
     api(libs.jj2000)
