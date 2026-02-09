@@ -25,9 +25,10 @@ dependencyResolutionManagement {
       }
     }
   }
+  versionCatalogs { create("ncjLibs") { from(files("gradle/ncj.libs.versions.toml")) } }
 }
 
-includeBuild("build-logic")
+includeBuild("build-logic-ncj")
 
 rootProject.name = "netcdf-java"
 

@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-library-conventions") }
+plugins { id("ncj-java-library-conventions") }
 
 description = "Data Access Protocol (DAP) version 4.0 client."
 
@@ -15,17 +15,17 @@ dependencies {
   implementation(project(":cdm-core"))
   implementation(project(":httpservices"))
 
-  implementation(libs.httpcomponents.httpclient)
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.httpcomponents.httpclient)
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testImplementation(libs.google.truth)
+  testImplementation(ncjLibs.google.truth)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
 }

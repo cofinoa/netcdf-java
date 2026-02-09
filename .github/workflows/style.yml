@@ -20,7 +20,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: build-logic Code Style Check with Gradle and Spotless
-        run: ./gradlew :build-logic:clean :build-logic:spotlessCheck
+      - name: build-logic-ncj Code Style Check with Gradle and Spotless
+        run: ./gradlew :build-logic-ncj:clean :build-logic-ncj:spotlessCheck
       - name: netCDF-Java Code Style Check with Gradle and Spotless
         run: ./gradlew clean spotlessCheck

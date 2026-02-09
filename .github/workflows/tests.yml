@@ -22,7 +22,7 @@ jobs:
           JDK8: /usr/thredds-test-environment/${{ matrix.java-vendor }}8
       - name: Prep for artifact upload
         if: failure()
-        run: rm -rf build-logic/build/tmp
+        run: rm -rf build-logic-ncj/build/tmp
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

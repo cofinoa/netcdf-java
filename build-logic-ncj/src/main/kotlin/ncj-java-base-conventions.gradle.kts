@@ -4,8 +4,8 @@
  */
 
 plugins {
-  id("base-conventions")
-  id("testing-conventions")
+  id("ncj-base-conventions")
+  id("ncj-testing-conventions")
 }
 
 tasks {

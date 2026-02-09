@@ -4,8 +4,8 @@
  */
 
 plugins {
-  id("java-library-conventions")
-  alias(libs.plugins.javacc)
+  id("ncj-java-library-conventions")
+  alias(ncjLibs.plugins.javacc)
 }
 
 description =
@@ -21,15 +21,15 @@ extra["project.url"] = "https://www.unidata.ucar.edu/software/udunits/"
 dependencies {
   implementation(platform(project(":netcdf-java-platform")))
 
-  implementation(libs.findbugs.jsr305)
+  implementation(ncjLibs.findbugs.jsr305)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
-  testImplementation(libs.slf4j.api)
+  testImplementation(ncjLibs.slf4j.api)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }

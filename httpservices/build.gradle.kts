@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-library-conventions") }
+plugins { id("ncj-java-library-conventions") }
 
 description = "HTTP Client Wrappers for the NetCDF-Java library."
 
@@ -12,23 +12,23 @@ extra["project.title"] = "HttpClient Wrappers"
 dependencies {
   implementation(platform(project(":netcdf-java-platform")))
 
-  api(libs.guava)
-  api(libs.httpcomponents.httpclient)
+  api(ncjLibs.guava)
+  api(ncjLibs.httpcomponents.httpclient)
 
-  implementation(libs.findbugs.jsr305)
-  implementation(libs.httpcomponents.httpmime)
-  implementation(libs.re2j)
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.findbugs.jsr305)
+  implementation(ncjLibs.httpcomponents.httpmime)
+  implementation(ncjLibs.re2j)
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testImplementation(libs.google.truth)
+  testImplementation(ncjLibs.google.truth)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }

@@ -9,7 +9,7 @@ val catalogs = extensions.getByType<VersionCatalogsExtension>()
 
 group = "edu.ucar"
 
-version = catalogs.named("libs").findVersion("netcdf-java").get().requiredVersion
+version = catalogs.named("ncjLibs").findVersion("netcdf-java").get().requiredVersion
 
 description = "A component to the Unidata netCDF-Java library (aka CDM)."
 
@@ -62,5 +62,5 @@ project.extra["public.artifacts"] = publicArtifacts
 // will be the bytecode produced by the project for all java compilation
 // will be used to run the tests (test, not testWithJdkX), generate code coverage reports, etc.
 // other versions of java can be used to run the tests, but this is configured in
-// testing-conventions.gradle.kts
+// ncj-testing-conventions.gradle.kts
 project.extra["project.minimumJdkVersion"] = "8"

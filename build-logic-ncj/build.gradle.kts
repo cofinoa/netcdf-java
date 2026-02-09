@@ -5,13 +5,13 @@
 
 plugins {
   `kotlin-dsl`
-  alias(libs.plugins.protobuf)
-  alias(libs.plugins.spotless)
+  alias(ncjLibs.plugins.protobuf)
+  alias(ncjLibs.plugins.spotless)
 }
 
 dependencies {
-  implementation(plugin(libs.plugins.protobuf))
-  implementation(plugin(libs.plugins.spotless))
+  implementation(plugin(ncjLibs.plugins.protobuf))
+  implementation(plugin(ncjLibs.plugins.spotless))
 }
 
 spotless {

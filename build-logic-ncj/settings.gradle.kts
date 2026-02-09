@@ -9,7 +9,7 @@ dependencyResolutionManagement {
     mavenCentral()
     gradlePluginPortal()
   }
-  versionCatalogs { create("libs") { from(files("../gradle/libs.versions.toml")) } }
+  versionCatalogs { create("ncjLibs") { from(files("../gradle/ncj.libs.versions.toml")) } }
 }
 
-rootProject.name = "build-logic"
+rootProject.name = "build-logic-ncj"

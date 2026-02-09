@@ -7,10 +7,10 @@ import com.github.psxpaul.task.JavaExecFork
 import com.google.protobuf.gradle.id
 
 plugins {
-  id("java-library-conventions")
+  id("ncj-java-library-conventions")
   application
-  id("protobuf-conventions")
-  alias(libs.plugins.execfork)
+  id("ncj-protobuf-conventions")
+  alias(ncjLibs.plugins.execfork)
 }
 
 description = "gRPC client and server implementation of CDM Remote Procedure Calls (gCDM)."
@@ -22,35 +22,35 @@ dependencies {
 
   api(project(":cdm-core"))
 
-  implementation(libs.grpc.protobuf)
-  implementation(libs.grpc.stub)
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.grpc.protobuf)
+  implementation(ncjLibs.grpc.stub)
+  implementation(ncjLibs.slf4j.api)
 
-  compileOnly(libs.tomcat.annotationsApi)
+  compileOnly(ncjLibs.tomcat.annotationsApi)
 
   runtimeOnly(project(":bufr"))
   runtimeOnly(project(":grib"))
 
-  runtimeOnly(libs.grpc.nettyShaded)
-  runtimeOnly(libs.logback.classic)
+  runtimeOnly(ncjLibs.grpc.nettyShaded)
+  runtimeOnly(ncjLibs.logback.classic)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
   testImplementation(project(":netcdf4"))
 
-  testImplementation(libs.commons.io)
-  testImplementation(libs.google.truth)
-  testImplementation(libs.grpc.testing)
-  testImplementation(libs.mockito.core)
+  testImplementation(ncjLibs.commons.io)
+  testImplementation(ncjLibs.google.truth)
+  testImplementation(ncjLibs.grpc.testing)
+  testImplementation(ncjLibs.mockito.core)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
 }
 
-val libCatalog = extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
+val libCatalog = extensions.getByType(VersionCatalogsExtension::class.java).named("ncjLibs")
 
 protobuf {
   protoc { artifact = libCatalog.findLibrary("protobuf-protoc").get().get().toString() }
@@ -80,7 +80,6 @@ val startDaemon =
     jvmArgs = listOf("-Xmx512m", "-Djava.awt.headless=true")
     standardOutput = project.layout.buildDirectory.file("gcdm_logs/gcdm.log")
     errorOutput = project.layout.buildDirectory.file("gcdm_logs/gcdm-error.log")
-    // stopAfter = tasks.named("test")
     waitForPort = 16111
     waitForOutput = "Server started, listening on 16111"
     dependsOn(tasks.testClasses)

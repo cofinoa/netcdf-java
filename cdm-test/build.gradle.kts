@@ -5,7 +5,7 @@ import kotlin.collections.set
  * See LICENSE for license information.
  */
 
-plugins { id("java-base-conventions") }
+plugins { id("ncj-java-base-conventions") }
 
 description =
   "Classes for CDM unit and integration testing. Relies on having access to " +
@@ -25,21 +25,21 @@ dependencies {
   testImplementation(project(":netcdf4"))
   testImplementation(project(":udunits"))
 
-  testImplementation(libs.awssdk.s3)
-  testImplementation(libs.commons.compress)
-  testImplementation(libs.commons.io)
-  testImplementation(libs.findbugs.jsr305)
-  testImplementation(libs.google.truth)
-  testImplementation(libs.guava)
-  testImplementation(libs.jdom2)
-  testImplementation(libs.jj2000)
-  testImplementation(libs.re2j)
-  testImplementation(libs.slf4j.api)
-  testCompileOnly(libs.junit4)
+  testImplementation(ncjLibs.awssdk.s3)
+  testImplementation(ncjLibs.commons.compress)
+  testImplementation(ncjLibs.commons.io)
+  testImplementation(ncjLibs.findbugs.jsr305)
+  testImplementation(ncjLibs.google.truth)
+  testImplementation(ncjLibs.guava)
+  testImplementation(ncjLibs.jdom2)
+  testImplementation(ncjLibs.jj2000)
+  testImplementation(ncjLibs.re2j)
+  testImplementation(ncjLibs.slf4j.api)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }
 
 val testVersions = project.extra["project.testLtsVersions"]

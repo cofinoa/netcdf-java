@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-  id("java-library-conventions")
+  id("ncj-java-library-conventions")
   application
 }
 
@@ -30,16 +30,16 @@ dependencies {
   implementation(project(":uibase"))
   implementation(project(":waterml"))
 
-  implementation(libs.bounce)
-  implementation(libs.jdom2)
-  implementation(libs.jgoodies.forms)
-  implementation(libs.jfree.jfreechart)
-  implementation(libs.findbugs.jsr305)
-  implementation(libs.lgooddatepicker)
-  implementation(libs.protobuf)
-  implementation(libs.re2j)
-  implementation(libs.slf4j.api)
-  implementation(libs.xmlbeans)
+  implementation(ncjLibs.bounce)
+  implementation(ncjLibs.jdom2)
+  implementation(ncjLibs.jgoodies.forms)
+  implementation(ncjLibs.jfree.jfreechart)
+  implementation(ncjLibs.findbugs.jsr305)
+  implementation(ncjLibs.lgooddatepicker)
+  implementation(ncjLibs.protobuf)
+  implementation(ncjLibs.re2j)
+  implementation(ncjLibs.slf4j.api)
+  implementation(ncjLibs.xmlbeans)
 
   runtimeOnly(project(":cdm-mcidas"))
   runtimeOnly(project(":cdm-radial"))
@@ -49,16 +49,16 @@ dependencies {
   runtimeOnly(project(":libaec-native"))
   runtimeOnly(project(":libblosc2-native"))
 
-  runtimeOnly(libs.logback.classic)
+  runtimeOnly(ncjLibs.logback.classic)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
 }
 
 application { mainClass = "ucar.nc2.ui.ToolsUI" }

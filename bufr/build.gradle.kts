@@ -4,8 +4,8 @@
  */
 
 plugins {
-  id("java-library-conventions")
-  id("protobuf-conventions")
+  id("ncj-java-library-conventions")
+  id("ncj-protobuf-conventions")
 }
 
 description = "Reading BUFR files with the NetCDF-java library."
@@ -17,22 +17,22 @@ dependencies {
 
   api(project(":cdm-core"))
 
-  implementation(libs.beust.jcommander)
-  implementation(libs.findbugs.jsr305)
-  implementation(libs.guava)
-  implementation(libs.jdom2)
-  implementation(libs.protobuf)
-  implementation(libs.re2j)
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.beust.jcommander)
+  implementation(ncjLibs.findbugs.jsr305)
+  implementation(ncjLibs.guava)
+  implementation(ncjLibs.jdom2)
+  implementation(ncjLibs.protobuf)
+  implementation(ncjLibs.re2j)
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testImplementation(libs.google.truth)
+  testImplementation(ncjLibs.google.truth)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
 }

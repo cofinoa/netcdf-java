@@ -4,9 +4,9 @@
  */
 
 plugins {
-  id("java-base-conventions")
+  id("ncj-java-base-conventions")
   `java-library`
-  id("artifact-publishing-conventions")
+  id("ncj-artifact-publishing-conventions")
   id("com.diffplug.spotless")
 }
 
