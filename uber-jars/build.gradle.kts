@@ -8,9 +8,9 @@ import java.security.MessageDigest
 import org.cyclonedx.gradle.CyclonedxDirectTask
 
 plugins {
-  id("java-base-conventions")
-  alias(libs.plugins.shadow).apply(false)
-  alias(libs.plugins.cyclonedx.bom).apply(false)
+  id("ncj-java-base-conventions")
+  alias(ncjLibs.plugins.shadow).apply(false)
+  alias(ncjLibs.plugins.cyclonedx.bom).apply(false)
 }
 
 description =

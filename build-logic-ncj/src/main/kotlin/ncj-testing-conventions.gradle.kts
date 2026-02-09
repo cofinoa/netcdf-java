@@ -4,7 +4,7 @@
  */
 
 plugins {
-  id("base-conventions")
+  id("ncj-base-conventions")
   java
   jacoco
 }

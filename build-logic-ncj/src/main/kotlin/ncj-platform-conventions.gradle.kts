@@ -7,9 +7,9 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.create
 
 plugins {
-  id("base-conventions")
+  id("ncj-base-conventions")
   `java-platform`
-  id("artifact-publishing-conventions")
+  id("ncj-artifact-publishing-conventions")
 }
 
 publishing {

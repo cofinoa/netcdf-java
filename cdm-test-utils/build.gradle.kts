@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-library-conventions") }
+plugins { id("ncj-java-library-conventions") }
 
 description =
   "A collection of reusable classes to be used internally for testing across the various THREDDS projects."
@@ -17,11 +17,11 @@ dependencies {
 
   implementation(project(":httpservices"))
 
-  implementation(libs.jdom2)
-  implementation(libs.junit4)
-  implementation(libs.re2j)
-  implementation(libs.slf4j.api)
-  implementation(libs.testcontainers)
+  implementation(ncjLibs.jdom2)
+  implementation(ncjLibs.junit4)
+  implementation(ncjLibs.re2j)
+  implementation(ncjLibs.slf4j.api)
+  implementation(ncjLibs.testcontainers)
 }
 
 tasks.withType<Jar>().configureEach {

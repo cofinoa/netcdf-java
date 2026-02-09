@@ -8,8 +8,8 @@ import java.security.DigestInputStream
 import java.security.MessageDigest
 
 plugins {
-  id("java-base-conventions")
-  id("artifact-publishing-conventions")
+  id("ncj-java-base-conventions")
+  id("ncj-artifact-publishing-conventions")
 }
 
 group = "edu.ucar.unidata"

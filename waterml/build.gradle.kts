@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-library-conventions") }
+plugins { id("ncj-java-library-conventions") }
 
 description = "Converts CDM DSGs to WaterML 2.0 timeseries and vice-versa."
 
@@ -14,23 +14,23 @@ dependencies {
 
   api(project(":cdm-core"))
 
-  implementation(libs.guava)
-  implementation(libs.sensorweb.xmlGmlV321) { exclude(group = "stax", module = "stax-api") }
-  implementation(libs.sensorweb.xmlOmV20) { exclude(group = "stax", module = "stax-api") }
-  implementation(libs.sensorweb.xmlSamplingV20) { exclude(group = "stax", module = "stax-api") }
-  implementation(libs.sensorweb.xmlSweCommonV20) { exclude(group = "stax", module = "stax-api") }
-  implementation(libs.sensorweb.xmlWaterMLV20) { exclude(group = "stax", module = "stax-api") }
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.guava)
+  implementation(ncjLibs.sensorweb.xmlGmlV321) { exclude(group = "stax", module = "stax-api") }
+  implementation(ncjLibs.sensorweb.xmlOmV20) { exclude(group = "stax", module = "stax-api") }
+  implementation(ncjLibs.sensorweb.xmlSamplingV20) { exclude(group = "stax", module = "stax-api") }
+  implementation(ncjLibs.sensorweb.xmlSweCommonV20) { exclude(group = "stax", module = "stax-api") }
+  implementation(ncjLibs.sensorweb.xmlWaterMLV20) { exclude(group = "stax", module = "stax-api") }
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }
 
 spotless {

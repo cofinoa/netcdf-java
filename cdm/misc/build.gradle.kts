@@ -4,8 +4,8 @@
  */
 
 plugins {
-  id("java-library-conventions")
-  id("protobuf-conventions")
+  id("ncj-java-library-conventions")
+  id("ncj-protobuf-conventions")
 }
 
 description = "The Common Data Model (CDM) misc IOSPs."
@@ -19,23 +19,23 @@ dependencies {
 
   implementation(project(":udunits"))
 
-  implementation(libs.findbugs.jsr305)
-  implementation(libs.guava)
-  implementation(libs.protobuf)
-  implementation(libs.re2j)
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.findbugs.jsr305)
+  implementation(ncjLibs.guava)
+  implementation(ncjLibs.protobuf)
+  implementation(ncjLibs.re2j)
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
   testImplementation(project(":grib"))
 
-  testImplementation(libs.commons.io)
-  testImplementation(libs.google.truth)
-  testImplementation(libs.mockito.core)
+  testImplementation(ncjLibs.commons.io)
+  testImplementation(ncjLibs.google.truth)
+  testImplementation(ncjLibs.mockito.core)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
 }

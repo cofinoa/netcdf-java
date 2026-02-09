@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-library-conventions") }
+plugins { id("ncj-java-library-conventions") }
 
 description = "Package that generates a jar file of legacy classes for backwards compatibility"
 
@@ -18,19 +18,19 @@ dependencies {
   implementation(project(":opendap"))
   implementation(project(":udunits"))
 
-  implementation(libs.amazonaws.s3v1) // For CrawlableDatasetAmazonS3.
-  implementation(libs.guava)
-  implementation(libs.jdom2)
-  implementation(libs.findbugs.jsr305)
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.amazonaws.s3v1) // For CrawlableDatasetAmazonS3.
+  implementation(ncjLibs.guava)
+  implementation(ncjLibs.jdom2)
+  implementation(ncjLibs.findbugs.jsr305)
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }

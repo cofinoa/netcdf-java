@@ -4,8 +4,8 @@
  */
 
 plugins {
-  id("java-library-conventions")
-  id("protobuf-conventions")
+  id("ncj-java-library-conventions")
+  id("ncj-protobuf-conventions")
 }
 
 description = "Decoder for the GRIB 1 and 2 formats."
@@ -19,29 +19,29 @@ dependencies {
 
   implementation(project(":libaec-jna"))
 
-  implementation(libs.beust.jcommander)
-  implementation(libs.findbugs.jsr305)
-  implementation(libs.guava)
-  implementation(libs.jdom2)
-  implementation(libs.jj2000)
-  implementation(libs.jna)
-  implementation(libs.protobuf)
-  implementation(libs.re2j)
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.beust.jcommander)
+  implementation(ncjLibs.findbugs.jsr305)
+  implementation(ncjLibs.guava)
+  implementation(ncjLibs.jdom2)
+  implementation(ncjLibs.jj2000)
+  implementation(ncjLibs.jna)
+  implementation(ncjLibs.protobuf)
+  implementation(ncjLibs.re2j)
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
   testImplementation(project(":udunits"))
 
-  testImplementation(libs.google.truth)
-  testImplementation(libs.jsoup)
+  testImplementation(ncjLibs.google.truth)
+  testImplementation(ncjLibs.jsoup)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
   testRuntimeOnly(project(":libaec-native"))
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }

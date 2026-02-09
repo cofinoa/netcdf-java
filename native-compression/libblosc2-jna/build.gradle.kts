@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-library-conventions") }
+plugins { id("ncj-java-library-conventions") }
 
 description = "Java bindings for decoding C-Blosc2 compression using JNA."
 
@@ -12,23 +12,23 @@ extra["project.title"] = "C-Blosc2 compression decoder using JNA"
 dependencies {
   implementation(platform(project(":netcdf-java-platform")))
 
-  api(libs.jna)
+  api(ncjLibs.jna)
 
   implementation(project(":cdm-core"))
 
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testImplementation(libs.google.truth)
+  testImplementation(ncjLibs.google.truth)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
   testRuntimeOnly(project(":libblosc2-native"))
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }

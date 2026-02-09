@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("platform-conventions") }
+plugins { id("ncj-platform-conventions") }
 
 description =
   "BOM containing the public artifacts, and their third-party dependencies, that comprise the netCDF-Java Library."
@@ -16,33 +16,33 @@ javaPlatform.allowDependencies()
 dependencies {
   api(platform(project(":netcdf-java-bom")))
   // covers libs.awssdk.apacheClient, libs.awssdk.s3, and libs.awssdk.sts
-  api(platform(libs.awssdk.bom))
+  api(platform(ncjLibs.awssdk.bom))
   // covers libs.jackson.core, libs.jackson.databind
-  api(platform(libs.jackson.bom))
+  api(platform(ncjLibs.jackson.bom))
 
   constraints {
-    api(libs.amazonaws.s3v1) // legacy subproject
-    api(libs.beust.jcommander)
-    api(libs.commons.math3)
-    api(libs.findbugs.jsr305)
-    api(libs.grpc.protobuf)
-    api(libs.grpc.stub)
-    api(libs.guava)
-    api(libs.httpcomponents.httpclient)
-    api(libs.httpcomponents.httpmime)
-    api(libs.jdom2)
-    api(libs.jj2000)
-    api(libs.jna)
-    api(libs.jodaTime)
-    api(libs.protobuf)
-    api(libs.re2j)
-    api(libs.slf4j.api)
-    api(libs.sensorweb.xmlGmlV321)
-    api(libs.sensorweb.xmlOmV20)
-    api(libs.sensorweb.xmlSamplingV20)
-    api(libs.sensorweb.xmlSweCommonV20)
-    api(libs.sensorweb.xmlWaterMLV20)
-    api(libs.ssec.visad)
-    api(libs.ssec.visadMcidasSlimUcarNs)
+    api(ncjLibs.amazonaws.s3v1) // legacy subproject
+    api(ncjLibs.beust.jcommander)
+    api(ncjLibs.commons.math3)
+    api(ncjLibs.findbugs.jsr305)
+    api(ncjLibs.grpc.protobuf)
+    api(ncjLibs.grpc.stub)
+    api(ncjLibs.guava)
+    api(ncjLibs.httpcomponents.httpclient)
+    api(ncjLibs.httpcomponents.httpmime)
+    api(ncjLibs.jdom2)
+    api(ncjLibs.jj2000)
+    api(ncjLibs.jna)
+    api(ncjLibs.jodaTime)
+    api(ncjLibs.protobuf)
+    api(ncjLibs.re2j)
+    api(ncjLibs.slf4j.api)
+    api(ncjLibs.sensorweb.xmlGmlV321)
+    api(ncjLibs.sensorweb.xmlOmV20)
+    api(ncjLibs.sensorweb.xmlSamplingV20)
+    api(ncjLibs.sensorweb.xmlSweCommonV20)
+    api(ncjLibs.sensorweb.xmlWaterMLV20)
+    api(ncjLibs.ssec.visad)
+    api(ncjLibs.ssec.visadMcidasSlimUcarNs)
   }
 }

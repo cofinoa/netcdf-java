@@ -4,8 +4,8 @@
  */
 
 plugins {
-  id("java-base-conventions")
-  alias(libs.plugins.spotless)
+  id("ncj-java-base-conventions")
+  alias(ncjLibs.plugins.spotless)
 }
 
 description = "The Unidata netCDF-Java library (aka CDM)."

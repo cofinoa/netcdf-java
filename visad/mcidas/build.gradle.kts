@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-library-conventions") }
+plugins { id("ncj-java-library-conventions") }
 
 description = "Mcidas and Gempak IOSPs."
 
@@ -17,19 +17,19 @@ dependencies {
   implementation(project(":grib"))
   implementation(project(":udunits"))
 
-  implementation(libs.guava)
-  implementation(libs.re2j)
-  implementation(libs.slf4j.api)
-  implementation(libs.ssec.visadMcidasSlimUcarNs)
+  implementation(ncjLibs.guava)
+  implementation(ncjLibs.re2j)
+  implementation(ncjLibs.slf4j.api)
+  implementation(ncjLibs.ssec.visadMcidasSlimUcarNs)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testImplementation(libs.google.truth)
+  testImplementation(ncjLibs.google.truth)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
 }

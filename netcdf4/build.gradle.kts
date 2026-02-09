@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-plugins { id("java-library-conventions") }
+plugins { id("ncj-java-library-conventions") }
 
 description = "An IOSP for NetCDF-4 that loads the C library to read and write files."
 
@@ -39,23 +39,23 @@ dependencies {
 
   implementation(project(":cdm-core"))
 
-  implementation(libs.findbugs.jsr305)
-  implementation(libs.guava)
-  implementation(libs.jna)
-  implementation(libs.slf4j.api)
+  implementation(ncjLibs.findbugs.jsr305)
+  implementation(ncjLibs.guava)
+  implementation(ncjLibs.jna)
+  implementation(ncjLibs.slf4j.api)
 
   testImplementation(platform(project(":netcdf-java-testing-platform")))
 
   testImplementation(project(":cdm-test-utils"))
 
-  testImplementation(libs.google.truth)
-  testImplementation(libs.jdom2)
+  testImplementation(ncjLibs.google.truth)
+  testImplementation(ncjLibs.jdom2)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }
 
 val testVersions = project.extra["project.testLtsVersions"]

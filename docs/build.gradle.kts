@@ -6,8 +6,8 @@
 import java.io.OutputStream
 
 plugins {
-  id("java-base-conventions")
-  alias(libs.plugins.spotless)
+  id("ncj-java-base-conventions")
+  alias(ncjLibs.plugins.spotless)
 }
 
 description = "Generate the project documentation, including the various flavors of javadocs."
@@ -26,15 +26,15 @@ dependencies {
   testImplementation(project(":opendap"))
   testImplementation(project(":udunits"))
 
-  testImplementation(libs.google.truth)
-  testImplementation(libs.jdom2)
-  testImplementation(libs.slf4j.api)
+  testImplementation(ncjLibs.google.truth)
+  testImplementation(ncjLibs.jdom2)
+  testImplementation(ncjLibs.slf4j.api)
 
-  testCompileOnly(libs.junit4)
+  testCompileOnly(ncjLibs.junit4)
 
-  testRuntimeOnly(libs.junit5.platformLauncher)
-  testRuntimeOnly(libs.junit5.vintageEngine)
-  testRuntimeOnly(libs.logback.classic)
+  testRuntimeOnly(ncjLibs.junit5.platformLauncher)
+  testRuntimeOnly(ncjLibs.junit5.vintageEngine)
+  testRuntimeOnly(ncjLibs.logback.classic)
 }
 
 // This is the public interface. Future changes to the API will attempt to remain backwards
@@ -99,7 +99,7 @@ val buildJavadocAll =
 
     title = "NetCDF-Java All API v${version}"
     destinationDir = layout.buildDirectory.dir("javadocAll").get().asFile
-    // list of public artifacts managed by build-logic/src/main/kotlin/base-conventions.gradle.kts
+    // list of public artifacts managed by build-logic/src/main/kotlin/ncj-base-conventions.gradle.kts
     val publicArtifacts = project.extra.get("public.artifacts")
     if (publicArtifacts is List<*>) {
       publicArtifacts.forEach {
@@ -116,7 +116,7 @@ val buildJavadocAll =
 val catalogs = extensions.getByType<VersionCatalogsExtension>()
 
 val docTheme =
-  "unidata-jekyll-docs:${catalogs.named("libs").findVersion("unidata-doc-theme").get().requiredVersion}"
+  "unidata-jekyll-docs:${catalogs.named("ncjLibs").findVersion("unidata-doc-theme").get().requiredVersion}"
 
 val isGitHub = System.getenv("GITHUB_ACTIONS") != null
 val imageBaseUrl = if (isGitHub) "ghcr.io/unidata" else "docker.io/unidata"
