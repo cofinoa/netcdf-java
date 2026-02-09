@@ -12,6 +12,7 @@ import opendap.dap.DAS;
 import opendap.dap.DDS;
 import opendap.dap.parsers.ParseException;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -106,6 +107,7 @@ public class TestDapParser extends TestFiles {
   }
 
   @Test
+  @Ignore("dods.mbari.org has been extremely unstable for the past several months")
   @Parameters(method = "extensionValues")
   @Category(NeedsExternalResource.class)
   public void testDapParserSpecial(String extension, String baseextension) throws Exception {
