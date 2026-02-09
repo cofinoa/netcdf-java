@@ -19,10 +19,10 @@ tasks.wrapper {
 }
 
 spotless {
-  // check all gradle build scripts (build-logic has its own formatting check)
+  // check all gradle build scripts (build-logic-ncj has its own formatting check)
   kotlinGradle {
     target("*.gradle.kts", "**/*.gradle.kts")
-    targetExclude("build-logic/**/*")
+    targetExclude("build-logic-ncj/**/*")
     ktfmt().googleStyle()
   }
 }
