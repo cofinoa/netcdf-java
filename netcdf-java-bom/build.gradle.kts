@@ -12,7 +12,7 @@ extra["project.title"] = "netCDF-Java BOM"
 dependencies {
   constraints {
     // list of public artifacts managed by
-    // build-logic/src/main/kotlin/ncj-base-conventions.gradle.kts
+    // build-logic-ncj/src/main/kotlin/ncj-base-conventions.gradle.kts
     val publicArtifacts = project.extra.get("public.artifacts")
     if (publicArtifacts is List<*>) {
       publicArtifacts.forEach { api(project(it.toString())) }
