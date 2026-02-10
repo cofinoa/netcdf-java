@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "build-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: 'Blosc/c-blosc2'
           ref: "v2.22.0"
@@ -58,7 +58,7 @@ jobs:
           cp -L ${{ matrix.build_env.lib }} resources/${{ matrix.build_env.jna_id }}
 
       - name: Upload ${{ matrix.build_env.jna_id }} artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: libblosc2-${{ matrix.build_env.jna_id }}
           path: ${{ steps.strings.outputs.build-dir }}/resources
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           pattern: libblosc2-*
           path: native/resources/
@@ -79,7 +79,7 @@ jobs:
         run: find native/ -type f -exec ls -lh {} \;
 
       - name: Upload merged artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: libblosc2-native-2.22.0-${{ github.sha }}
           path: native/

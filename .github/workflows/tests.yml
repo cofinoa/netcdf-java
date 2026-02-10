@@ -10,9 +10,9 @@ jobs:
         java-version: [8, 11, 17, 21]
         java-vendor: ['zulu', 'temurin', 'corretto']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build with ${{ matrix.java-vendor }} 17 and run tests with ${{ matrix.java-vendor }} ${{ matrix.java-version }}
-        uses: Unidata/thredds-test-action@v3
+        uses: Unidata/thredds-test-action@v4
         with:
           java-vendor: ${{ matrix.java-vendor }}
           java-version: 17
@@ -20,12 +20,11 @@ jobs:
           test-command: '-Dorg.gradle.java.installations.fromEnv=JDK8 --info --stacktrace test'
         env:
           JDK8: /usr/thredds-test-environment/${{ matrix.java-vendor }}8
-      - name: Prep for artifact upload
+      - name: Cleanup build-logic-ncj build directory
         if: failure()
-        run: rm -rf build-logic-ncj/build/tmp
-      - uses: actions/upload-artifact@v4
+        run: sudo rm -rf build-logic-ncj/build/
+      - uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: netCDF-Java_JUnit_Results_${{ github.sha }}_${{ matrix.java-vendor }}-${{ matrix.java-version }}
-          path: |
-            ${{ github.workspace }}/**/build/reports/tests/**/*
+          path: ${{ github.workspace }}/**/build/reports/*

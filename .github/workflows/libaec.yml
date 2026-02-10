@@ -32,7 +32,7 @@ jobs:
     runs-on: ${{ matrix.build_env.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: 'MathisRosenhauer/libaec'
           ref: 'v1.1.3'
@@ -67,7 +67,7 @@ jobs:
           cp ${{ matrix.build_env.lib }} resources/${{ matrix.build_env.jna_id }}
 
       - name: Upload ${{ matrix.build_env.jna_id }} artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: libaec-${{ matrix.build_env.jna_id }}
           path: ${{ steps.strings.outputs.build-dir }}/resources
@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           pattern: libaec-*
           path: native/resources/
@@ -88,7 +88,7 @@ jobs:
         run: find native/ -type f -exec ls -lh {} \;
 
       - name: Upload merged artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: libaec-native-1.1.3-${{ github.sha }}
           path: native/
