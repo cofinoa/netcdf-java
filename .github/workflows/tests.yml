@@ -11,15 +11,26 @@ jobs:
         java-vendor: ['zulu', 'temurin', 'corretto']
     steps:
       - uses: actions/checkout@v6
-      - name: Build with ${{ matrix.java-vendor }} 17 and run tests with ${{ matrix.java-vendor }} ${{ matrix.java-version }}
+      - name: Build with ${{ matrix.java-vendor }} 17 and run tests with ${{ matrix.java-vendor }} 8
+        if: ${{ matrix.java-version == 8 }}
         uses: Unidata/thredds-test-action@v4
         with:
           java-vendor: ${{ matrix.java-vendor }}
           java-version: 17
           build-tool: 'gradlew'
-          test-command: '-Dorg.gradle.java.installations.fromEnv=JDK8 --info --stacktrace test'
+          test-command: '-Dorg.gradle.java.installations.fromEnv=TEST_JDK --info --stacktrace test'
         env:
-          JDK8: /usr/thredds-test-environment/${{ matrix.java-vendor }}8
+          TEST_JDK: /usr/thredds-test-environment/${{ matrix.java-vendor }}8
+      - name: Build with ${{ matrix.java-vendor }} 17 and run tests with ${{ matrix.java-vendor }} ${{ matrix.java-version }}
+        if: ${{ matrix.java-version != 8 }}
+        uses: Unidata/thredds-test-action@v4
+        with:
+          java-vendor: ${{ matrix.java-vendor }}
+          java-version: 17
+          build-tool: 'gradlew'
+          test-command: '-Dorg.gradle.java.installations.fromEnv=TEST_JDK --info --stacktrace testWithJdk${{ matrix.java-version }}'
+        env:
+          TEST_JDK: /usr/thredds-test-environment/${{ matrix.java-vendor }}${{ matrix.java-version }}
       - name: Cleanup build-logic-ncj build directory
         if: failure()
         run: sudo rm -rf build-logic-ncj/build/
