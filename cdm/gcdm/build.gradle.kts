@@ -5,6 +5,7 @@
 
 import com.github.psxpaul.task.JavaExecFork
 import com.google.protobuf.gradle.id
+import org.gradle.kotlin.dsl.get
 
 plugins {
   id("ncj-java-library-conventions")
@@ -83,7 +84,6 @@ val startDaemon =
     waitForPort = 16111
     waitForOutput = "Server started, listening on 16111"
     dependsOn(tasks.testClasses)
-    doLast { stopAfter = tasks.named("test") }
   }
 
-tasks.test { dependsOn(startDaemon) }
+tasks.withType<Test> { dependsOn(startDaemon) }
