@@ -140,6 +140,8 @@ public class BufrTables {
     if (lookups == null)
       lookups = new ArrayList<>();
     File f = new File(filename);
+    if (f.isDirectory())
+      throw new FileNotFoundException(filename + " is a directory");
     if (!f.exists())
       throw new FileNotFoundException(filename + " not found");
     lookups.add(filename);
