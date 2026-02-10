@@ -69,7 +69,8 @@ public class Deflate extends Filter {
 
   @Override
   public byte[] decode(byte[] dataIn) throws IOException {
-    int len = Math.min(8 * dataIn.length, MAX_ARRAY_LEN);
+    long approxLen = (long) 8 * dataIn.length;
+    int len = approxLen > MAX_ARRAY_LEN ? MAX_ARRAY_LEN : (int) approxLen;
     try (ByteArrayInputStream in = new ByteArrayInputStream(dataIn);
         InflaterInputStream iis = new InflaterInputStream(in, new Inflater(), dataIn.length);
         ByteArrayOutputStream os = new ByteArrayOutputStream(len)) {
