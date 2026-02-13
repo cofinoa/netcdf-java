@@ -1,4 +1,4 @@
-![netcdf-java icon](https://www.unidata.ucar.edu/images/logos/thredds_netcdf-150x150.png)
+![netcdf-java icon](https://assets.unidata.ucar.edu/images/logos/thredds_netcdf-150x150.png)
 <br>
 <br>
 
