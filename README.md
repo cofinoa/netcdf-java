@@ -1,14 +1,17 @@
-![netcdf-java icon](https://assets.unidata.ucar.edu/images/logos/thredds_netcdf-150x150.png)
-<br>
-<br>
-
 # netCDF-Java/CDM
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://assets.unidata.ucar.edu/images/logos/thredds_netcdf-dm-150x150.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://assets.unidata.ucar.edu/images/logos/thredds_netcdf-150x150.png">
+  <img width=100 align="left" alt="Fallback image description" src="https://assets.unidata.ucar.edu/images/logos/thredds_netcdf-150x150.png">
+</picture>
 
 The netCDF Java library provides an interface for scientific data access.
 It can be used to read scientific data from a variety of file formats including netCDF, HDF, GRIB, BUFR, and many others.
 By itself, the netCDF-Java library can only write netCDF-3 files.
 It can write netCDF-4 files by using JNI to call the netCDF-C library.
 It also implements Unidata's Common Data Model (CDM) to provide data geolocation capabilities.
+</div>
 
 For more information about netCDF-Java/CDM, see the netCDF-Java web page at
 
